@@ -1,4 +1,4 @@
-import { Create, Update } from "../helpers";
+import { Create, Update } from "../helpers/helpers";
 import { CandidateVote } from "../models/candidate-vote";
 
 /**

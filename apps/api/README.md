@@ -1,11 +1,17 @@
 # welcome to the API
 
-# models is the table types
+# models - the table types
 
-# repository is the CRU functions
+# repositories - the CRU functions
 
-# data-layer is abstract CRU functions
+# data - abstract CRU functions
 
-# business-layer is rules
+# business - rules
 
-# service-layer is the routes
+# services - serialization and deserialization
+
+# routes - path to functions
+
+# errors - messages for http errors
+
+# helpers - functions to help
