@@ -15,3 +15,5 @@
 # errors - messages for http errors
 
 # helpers - functions to help
+
+# model -> repo -> data -> business -> service -> routes
