@@ -15,3 +15,4 @@ export const user = pgTable('user', {
 
 export type CreateUser = InferInsertModel<typeof user>;
 export type User = InferSelectModel<typeof user>;
+export type UpdateUser = Partial<CreateUser>;
