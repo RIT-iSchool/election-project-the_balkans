@@ -52,7 +52,7 @@ export const session = pgTable(
 );
 
 export const sessionRelations = relations(session, ({ one }) => ({
-  users: one(user),
+  user: one(user),
 }));
 
 export type CreateSession = InferInsertModel<typeof session>;
