@@ -71,7 +71,7 @@ export type UpdateSession = Partial<CreateSession>;
 //#region society
 export const society = pgTable('society', {
   id: serial('id'),
-  name: varchar('100'),
+  name: varchar('name', { length: 100 }).notNull(),
   owner: integer('user_id')
     .references(() => user.id, {
       onDelete: 'cascade',
@@ -106,7 +106,7 @@ export const societyMember = pgTable('societyMember', {
       onUpdate: 'cascade',
     })
     .notNull(),
-  role: pgEnum('role', ['Member', 'Officer', 'Employee'])('role'),
+  role: pgEnum('role', ['member', 'officer', 'employee'])('role').notNull(),
 });
 
 export const societyMemberRelations = relations(societyMember, ({ one }) => ({
@@ -124,16 +124,16 @@ export type UpdateSocietyMember = Partial<CreateSocietyMember>;
 
 export const election = pgTable('election', {
   id: serial('id'),
-  name: varchar('100'),
+  name: varchar('name', { length: 100 }).notNull(),
   societyId: integer('society_id')
     .references(() => society.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     })
     .notNull(),
-  startDate: timestamp('timestamp'),
-  endDate: timestamp('timestamp'),
-  photoURL: varchar('250'),
+  startDate: timestamp('start_date').notNull(),
+  endDate: timestamp('end_date').notNull(),
+  photoURL: varchar('photo_url', { length: 250 }),
 });
 
 export const electionRelations = relations(election, ({ one, many }) => ({
@@ -159,8 +159,8 @@ export const electionOffice = pgTable('electionOffice', {
       onUpdate: 'cascade',
     })
     .notNull(),
-  officeName: varchar('30'),
-  maxVotes: integer('int'),
+  officeName: varchar('office_name', { length: 30 }).notNull(),
+  maxVotes: integer('max_votes').notNull(),
 });
 
 export const electionOfficeRelations = relations(electionOffice, ({ one }) => ({
@@ -183,14 +183,17 @@ export const electionCandidate = pgTable('electionCandidate', {
       onUpdate: 'cascade',
     })
     .notNull(),
-  name: varchar('100'),
-  photoURL: varchar('250'),
-  description: text('text'),
+  name: varchar('name', { length: 100 }).notNull(),
+  photoURL: varchar('photo_url', { length: 250 }),
+  description: text('description').notNull(),
 });
 
-export const electionCandidateRelations = relations(electionCandidate, ({ one }) => ({
-  office: one(electionOffice),
-}));
+export const electionCandidateRelations = relations(
+  electionCandidate,
+  ({ one }) => ({
+    office: one(electionOffice),
+  }),
+);
 
 export type CreateElectionCandidate = InferInsertModel<
   typeof electionCandidate
@@ -239,15 +242,18 @@ export const electionInitiative = pgTable('electionInitiative', {
       onUpdate: 'cascade',
     })
     .notNull(),
-  initiativeName: varchar('30'),
-  description: text('text'),
+  initiativeName: varchar('initiative_name', { length: 30 }).notNull(),
+  description: text('description').notNull(),
 });
 
-export const electionInitiativeRelations = relations(electionInitiative, ({ one, many }) => ({
-  election: one(election),
-  options: many(initiativeOption),
-  votes: many(initiativeVote),
-}));
+export const electionInitiativeRelations = relations(
+  electionInitiative,
+  ({ one, many }) => ({
+    election: one(election),
+    options: many(initiativeOption),
+    votes: many(initiativeVote),
+  }),
+);
 
 export type CreateElectionInitiative = InferInsertModel<
   typeof electionInitiative
@@ -267,12 +273,15 @@ export const initiativeOption = pgTable('initiativeOption', {
       onUpdate: 'cascade',
     })
     .notNull(),
-  title: varchar('30'),
+  title: varchar('title', { length: 30 }).notNull(),
 });
 
-export const initiativeOptionRelations = relations(initiativeOption, ({ one }) => ({
-  initiative: one(electionInitiative),
-}));
+export const initiativeOptionRelations = relations(
+  initiativeOption,
+  ({ one }) => ({
+    initiative: one(electionInitiative),
+  }),
+);
 
 export type CreateInitiativeOption = InferInsertModel<typeof initiativeOption>;
 export type InitiativeOption = InferSelectModel<typeof initiativeOption>;
@@ -284,17 +293,30 @@ export type UpdateInitiativeOption = Partial<CreateInitiativeOption>;
 
 export const initiativeVote = pgTable('initiativeVote', {
   id: serial('id'),
+  memberId: integer('member_id')
+    .references(() => societyMember.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    })
+    .notNull(),
   electionInitiativeId: integer('election_initiative_id')
     .references(() => electionInitiative.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     })
     .notNull(),
-  title: varchar('30'),
+    electionInitiativeOptionId: integer('election_initiative_option_id')
+    .references(() => initiativeOption.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    })
+    .notNull(),
 });
 
 export const initiativeVoteRelations = relations(initiativeVote, ({ one }) => ({
+  member: one(societyMember),
   initiative: one(electionInitiative),
+  option: one(initiativeOption),
 }));
 
 export type CreateInitiativeVote = InferInsertModel<typeof initiativeVote>;
