@@ -1,0 +1,389 @@
+openapi: '3.0.0'
+info:
+  version: '1'
+  title: 'Societies API'
+  description: |
+    This is the OpenAPI specification for the societies application. Authentication is handled by passing a Bearer token as the authorization header.
+tags:
+  - name: 'Auth'
+    description: 'Routes related to authentication'
+  - name: 'Elections'
+    description: 'Routes related to elections'
+  - name: 'Election Offices'
+    description: 'Routes related to election offices'
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      operationId: 'AuthLogin'
+      description: 'Log in using an email and a password'
+      requestBody:
+        description: "Log in given a user's authentication details"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoginBody'
+      responses:
+        200:
+          description: 'Successful login'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        400:
+          description: 'Invalid authentication details'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidPasswordError'
+
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      operationId: 'AuthLogout'
+      description: 'Log out of and destroy an existing session'
+      responses:
+        200:
+          description: 'Successful logout'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+      security:
+        - bearer: []
+
+  /v1/elections:
+    get:
+      tags:
+        - Elections
+      operationId: 'ListElections'
+      description: 'List all elections'
+      parameters:
+        - in: 'query'
+          name: 'time'
+          schema:
+            type: 'string'
+        - in: 'header'
+          name: 'society-id'
+          schema:
+            type: 'string'
+            example: 'The ID of the society you want to act on'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Election'
+        400:
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Election'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+      security:
+        - bearer: []
+
+  /v1/elections/{id}:
+    put:
+      tags:
+        - Elections
+      operationId: 'UpdateElection'
+      description: 'Update an election by id'
+      parameters:
+        - in: 'path'
+          name: 'id'
+          required: true
+          schema:
+            type: 'string'
+        - in: 'header'
+          name: 'society-id'
+          schema:
+            type: 'string'
+            example: 'The ID of the society you want to act on'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Election'
+        400:
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+    get:
+      tags:
+        - Elections
+      operationId: 'RetrieveElection'
+      description: 'Retrieve an election by id'
+      parameters:
+        - in: 'path'
+          name: 'id'
+          required: true
+          schema:
+            type: 'string'
+        - in: 'header'
+          name: 'society-id'
+          schema:
+            type: 'string'
+            example: 'The ID of the society you want to act on'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Election'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        404:
+          description: 'Not Found'
+
+  /v1/election_offices:
+    get:
+      tags:
+        - Election Offices
+      operationId: 'ListElectionOffices'
+      description: 'List election offices'
+      parameters:
+        - in: 'query'
+          name: 'election_id'
+          required: true
+          schema:
+            type: 'string'
+        - in: 'header'
+          name: 'society-id'
+          schema:
+            type: 'string'
+            example: 'The ID of the society you want to act on'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/ElectionOffice'
+        400:
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+    put:
+      tags:
+        - Election Offices
+      operationId: 'CreateElectionOffice'
+      description: 'Create an election office'
+      parameters:
+        - in: 'query'
+          name: 'election_id'
+          required: true
+          description: 'The ID of the election this office should belong to'
+          schema:
+            type: 'string'
+        - in: 'header'
+          name: 'society-id'
+          example: 'The ID of the society you want to act on'
+          schema:
+            type: 'string'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElectionOffice'
+        400:
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+
+components:
+  securitySchemes:
+    bearer:
+      type: 'http'
+      scheme: 'bearer'
+  schemas:
+    # Primitives
+    Session:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        user_id:
+          nullable: false
+          type: 'string'
+          readOnly: true
+        token:
+          nullable: false
+          type: 'string'
+          readOnly: true
+        expires_at:
+          nullable: false
+          type: 'number'
+          readOnly: true
+    Election:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        name:
+          nullable: false
+          type: 'string'
+        society_id:
+          nullable: false
+          type: 'integer'
+        start_date:
+          nullable: false
+          type: 'number'
+        end_date:
+          nullable: false
+          type: 'number'
+        photo_url:
+          nullable: true
+          type: 'string'
+    User:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        email:
+          nullable: false
+          type: 'string'
+        first_name:
+          nullable: false
+          type: 'string'
+        last_name:
+          nullable: false
+          type: 'string'
+    ElectionOffice:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        election_id:
+          nullable: false
+          type: 'integer'
+          description: 'The id of the election this office belongs to'
+        office_name:
+          nullable: false
+          type: 'string'
+          example: 'The White House'
+        max_votes:
+          nullable: false
+          type: 'integer'
+          example: '5'
+    ElectionCandidate:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        election_office_id:
+          nullable: false
+          type: 'integer'
+          description: 'The id of the election office this candidate is running for'
+        name:
+          nullable: false
+          type: 'string'
+          example: 'John Doe'
+        photo_url:
+          nullable: false
+          type: 'string'
+          example: 'https://imgur.io/_________'
+        description:
+          nullable: false
+          type: 'string'
+          example: 'John Doe was born in 1985 in .......'
+
+    # Request bodies
+    CreateLoginBody:
+      properties:
+        email:
+          nullable: false
+          type: 'string'
+        password:
+          nullable: false
+          type: 'string'
+
+    # Error types
+    UnauthorizedError:
+      properties:
+        type:
+          nullable: false
+          type: 'string'
+          readOnly: true
+          example: 'invalid_authorization_header'
+        message:
+          nullable: false
+          type: 'string'
+          readOnly: true
+          example: 'Please make sure you are passing a bearer token in your authorization header'
+    InvalidRequestError:
+      properties:
+        type:
+          nullable: false
+          type: 'string'
+          readOnly: true
+          example: 'invalid_request_error'
+        message:
+          nullable: false
+          type: 'string'
+          readOnly: true
+          example: 'Invalid request body. Please check your PUT parameters and try again.'
+    InvalidPasswordError:
+      properties:
+        message:
+          nullable: false
+          type: 'string'
+          example: 'Invalid password'
+        type:
+          nullable: false
+          type: 'string'
+          example: 'invalid_password_error'
