@@ -38,7 +38,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvalidPasswordError'
-
   /auth/logout:
     post:
       tags:
@@ -56,7 +55,9 @@ paths:
                 $ref: '#/components/schemas/UnauthorizedError'
       security:
         - bearer: []
-
+  #/vl/society_members
+  #/vl/society_members
+  #/vl/society_members
   /v1/elections:
     get:
       tags:
@@ -96,7 +97,6 @@ paths:
                 $ref: '#/components/schemas/UnauthorizedError'
       security:
         - bearer: []
-
   /v1/elections/{id}:
     put:
       tags:
@@ -164,7 +164,7 @@ paths:
                 $ref: '#/components/schemas/UnauthorizedError'
         404:
           description: 'Not Found'
-
+  #needs to include /elections/{id}
   /v1/election_offices:
     get:
       tags:
@@ -239,6 +239,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnauthorizedError'
+  #/v1/election/{id}/election_offices
+  #/vl/election/{id}/election_candidates
+  #/vl/election/{id}/election_candidates
+  #/vl/election/{id}/election_initiatives
+  #/vl/election/{id}/election_initiatives
+  #/v1/ballot/submit
 
 components:
   securitySchemes:
