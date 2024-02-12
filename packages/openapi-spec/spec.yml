@@ -112,6 +112,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnauthorizedError'
+      security:
+        - bearer: []
 
   /v1/elections:
     parameters:
