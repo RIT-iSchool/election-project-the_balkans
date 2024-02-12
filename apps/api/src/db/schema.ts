@@ -305,7 +305,7 @@ export const initiativeVote = pgTable('initiativeVote', {
       onUpdate: 'cascade',
     })
     .notNull(),
-    electionInitiativeOptionId: integer('election_initiative_option_id')
+  electionInitiativeOptionId: integer('election_initiative_option_id')
     .references(() => initiativeOption.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',

@@ -247,6 +247,21 @@ components:
       scheme: 'bearer'
   schemas:
     # Primitives
+    User:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        email:
+          nullable: false
+          type: 'string'
+        first_name:
+          nullable: false
+          type: 'string'
+        last_name:
+          nullable: false
+          type: 'string'
     Session:
       properties:
         id:
@@ -265,6 +280,37 @@ components:
           nullable: false
           type: 'number'
           readOnly: true
+    Society:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        name:
+          nullable: false
+          type: 'string'
+        owner:
+          nullable: false
+          type: 'integer'
+    SocietyMember:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        user_id:
+          nullable: false
+          type: 'integer'
+        society_id:
+          nullable: false
+          type: 'integer'
+        role:
+          nullable: false
+          type: 'string'
+          enum:
+            - 'member'
+            - 'officer'
+            - 'employee'
     Election:
       properties:
         id:
@@ -285,21 +331,6 @@ components:
           type: 'number'
         photo_url:
           nullable: true
-          type: 'string'
-    User:
-      properties:
-        id:
-          nullable: false
-          type: 'integer'
-          readOnly: true
-        email:
-          nullable: false
-          type: 'string'
-        first_name:
-          nullable: false
-          type: 'string'
-        last_name:
-          nullable: false
           type: 'string'
     ElectionOffice:
       properties:
@@ -341,6 +372,60 @@ components:
           nullable: false
           type: 'string'
           example: 'John Doe was born in 1985 in .......'
+    CandidateVote:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        member_id:
+          nullable: false
+          type: 'integer'
+        election_candidate_id:
+          nullable: false
+          type: 'integer'
+    ElectionInitiative:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        election_id:
+          nullable: false
+          type: 'integer'
+        initiative_name:
+          nullable: false;
+          type: 'string'
+        description:
+          nullable: false
+          type: 'string'
+    InitiativeOption:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        election_initiative_id:
+          nullable: false
+          type: 'integer'
+        title:
+          nullable: false
+          type: 'string'
+    InitiativeVote:
+      properties:
+        id:
+          nullable: false
+          type: 'integer'
+          readOnly: true
+        member_id:
+          nullable: false
+          type: 'integer'
+        election_initiative_id:
+          nullable: false
+          type: 'integer'
+        election_initiative_option_id:
+          nullable: false
+          type: 'integer'
 
     # Request bodies
     CreateLoginBody:
