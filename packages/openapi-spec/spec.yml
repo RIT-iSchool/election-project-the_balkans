@@ -12,6 +12,10 @@ tags:
     description: 'Routes related to elections'
   - name: 'Election Offices'
     description: 'Routes related to election offices'
+  - name: 'Election Candidates'
+    description: 'Routes related to election candidates'
+  - name: 'Election Initiatives'
+    description: 'Routes related to election initiatves'
 
 paths:
   /auth/login:
@@ -189,10 +193,10 @@ paths:
       security:
         - bearer: []
 
-  /v1/elections/{id}:
+  /v1/elections/{election_id}:
     parameters:
       - in: 'path'
-        name: 'id'
+        name: 'election_id'
         required: true
         schema:
           type: 'string'
@@ -246,6 +250,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnauthorizedError'
+        404:
+          description: 'Not Found'
+      security:
+        - bearer: []
+
+  /v1/elections/{election_id}/ballot:
+    parameters:
+      - in: 'path'
+        name: 'election_id'
+        required: true
+        schema:
+          type: 'string'
+      - in: 'header'
+        name: 'society-id'
+        schema:
+          type: 'string'
+          example: 'The ID of the society you want to act on'
+    get:
+      tags:
+        - Elections
+      operationId: 'RetrieveElectionBallot'
+      description: 'Retrieve election ballot'
+      responses:
+        404:
+          description: 'Not Found'
+      security:
+        - bearer: []
+    put:
+      tags:
+        - Elections
+      operationId: 'SubmitElectionBallot'
+      description: 'Submit election ballot'
+      responses:
         404:
           description: 'Not Found'
       security:
@@ -342,6 +379,12 @@ paths:
                 type: 'array'
                 items:
                   $ref: '#/components/schemas/ElectionCandidate'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
       security:
         - bearer: []
 
@@ -372,7 +415,67 @@ paths:
       security:
         - bearer: []
 
-  #/v1/ballot/submit
+  /v1/elections/{election_id}/election_initiatives:
+    parameters:
+      - in: 'path'
+        name: 'election_id'
+        required: true
+        description: 'The ID of the election this office should belong to'
+        schema:
+          type: 'string'
+      - in: 'header'
+        name: 'society-id'
+        example: 'The ID of the society you want to act on'
+        schema:
+          type: 'string'
+    get:
+      tags:
+        - Election Initiatives
+      operationId: 'ListElectionInitiatives'
+      description: 'List election initiatives'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/ElectionInitiative'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+      security:
+        - bearer: []
+    put:
+      tags:
+        - Election Initiatives
+      operationId: 'CreateElectionInitiative'
+      description: 'Create an election initiative'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ElectionInitiative'
+        400:
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+      security:
+        - bearer: []
 
 components:
   securitySchemes:
