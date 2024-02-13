@@ -1,5 +1,5 @@
 {
-  "name": "openapi-spec",
+  "name": "@repo/openapi-spec",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
