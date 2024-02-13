@@ -273,6 +273,18 @@ paths:
       operationId: 'RetrieveElectionBallot'
       description: 'Retrieve election ballot'
       responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ballot'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
         404:
           description: 'Not Found'
       security:
@@ -283,6 +295,25 @@ paths:
       operationId: 'SubmitElectionBallot'
       description: 'Submit election ballot'
       responses:
+        200:
+          description: 'OK'
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Vote Submitted'
+        400:
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
         404:
           description: 'Not Found'
       security:
@@ -507,7 +538,7 @@ components:
           readOnly: true
         user_id:
           nullable: false
-          type: 'string'
+          type: 'integer'
           readOnly: true
         token:
           nullable: false
@@ -664,6 +695,33 @@ components:
         election_initiative_option_id:
           nullable: false
           type: 'integer'
+    Ballot:
+      allOf:
+        - $ref: '#/components/schemas/Election'
+        - type: object
+          properties:
+            offices:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/ElectionOffice'
+                  - type: object
+                    properties:
+                      candidates:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ElectionCandidate'
+            initiatives:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/ElectionInitiative'
+                  - type: object
+                    properties:
+                      options:
+                        type: array
+                        items:
+                          '#/components/schemas/InitiativeOption'
 
     # Request bodies
     CreateLoginBody:
@@ -682,57 +740,69 @@ components:
           nullable: false
           type: 'boolean'
           example: true
+          readOnly: true
         type:
           nullable: false
           type: 'string'
           readOnly: true
           example: 'invalid_authorization_header'
+          readOnly: true
         message:
           nullable: false
           type: 'string'
           readOnly: true
           example: 'Please make sure you are passing a bearer token in your authorization header'
+          readOnly: true
     InvalidRequestError:
       properties:
         error:
           nullable: false
           type: 'boolean'
           example: true
+          readOnly: true
         type:
           nullable: false
           type: 'string'
           readOnly: true
           example: 'invalid_request_error'
+          readOnly: true
         message:
           nullable: false
           type: 'string'
           readOnly: true
           example: 'Invalid request body. Please check your PUT parameters and try again.'
+          readOnly: true
     InvalidUsernameError:
       properties:
         error:
           nullable: false
           type: 'boolean'
           example: true
+          readOnly: true
         message:
           nullable: false
           type: 'string'
           example: 'Invalid username'
+          readOnly: true
         type:
           nullable: false
           type: 'string'
           example: 'invalid_username_error'
+          readOnly: true
     InvalidPasswordError:
       properties:
         error:
           nullable: false
           type: 'boolean'
           example: true
+          readOnly: true
         message:
           nullable: false
           type: 'string'
           example: 'Invalid password'
+          readOnly: true
         type:
           nullable: false
           type: 'string'
           example: 'invalid_password_error'
+          readOnly: true
