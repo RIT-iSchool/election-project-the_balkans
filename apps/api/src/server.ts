@@ -13,8 +13,8 @@ app.use(express.json());
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"], // Default policy for loading content. 'self' refers to the current origin.
-      scriptSrc: ["'self'", 'https://cdn.jsdelivr.net'], // Allows scripts from the current origin and cdn.jsdelivr.net.
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", 'https://cdn.jsdelivr.net'],
     },
   }),
 );
