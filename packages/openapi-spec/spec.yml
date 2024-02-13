@@ -159,7 +159,7 @@ paths:
                 $ref: '#/components/schemas/UnauthorizedError'
       security:
         - bearer: []
-    put:
+    post:
       tags:
         - Elections
       operationId: 'CreateElection'
@@ -289,7 +289,7 @@ paths:
           description: 'Not Found'
       security:
         - bearer: []
-    put:
+    post:
       tags:
         - Elections
       operationId: 'SubmitElectionBallot'
@@ -355,7 +355,7 @@ paths:
       security:
         - bearer: []
 
-    put:
+    post:
       tags:
         - Election Offices
       operationId: 'CreateElectionOffice'
@@ -419,7 +419,7 @@ paths:
       security:
         - bearer: []
 
-    put:
+    post:
       tags:
         - Election Candidates
       operationId: 'CreateElectionCandidate'
@@ -481,7 +481,7 @@ paths:
                 $ref: '#/components/schemas/UnauthorizedError'
       security:
         - bearer: []
-    put:
+    post:
       tags:
         - Election Initiatives
       operationId: 'CreateElectionInitiative'
