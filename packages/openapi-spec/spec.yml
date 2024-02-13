@@ -720,8 +720,7 @@ components:
                     properties:
                       options:
                         type: array
-                        items:
-                          '#/components/schemas/InitiativeOption'
+                        items: '#/components/schemas/InitiativeOption'
 
     # Request bodies
     CreateLoginBody:
@@ -746,13 +745,11 @@ components:
           type: 'string'
           readOnly: true
           example: 'invalid_authorization_header'
-          readOnly: true
         message:
           nullable: false
           type: 'string'
           readOnly: true
           example: 'Please make sure you are passing a bearer token in your authorization header'
-          readOnly: true
     InvalidRequestError:
       properties:
         error:
@@ -765,13 +762,11 @@ components:
           type: 'string'
           readOnly: true
           example: 'invalid_request_error'
-          readOnly: true
         message:
           nullable: false
           type: 'string'
           readOnly: true
           example: 'Invalid request body. Please check your PUT parameters and try again.'
-          readOnly: true
     InvalidUsernameError:
       properties:
         error:
