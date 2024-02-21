@@ -1,3 +1,3 @@
 # welcome to the API
-# models is the table types
-# 
+
+# schema -> data -> controller -> service -> routes
