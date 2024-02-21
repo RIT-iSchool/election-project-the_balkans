@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --config nodemon-server.json",
-    "start": "ts-node src/server.ts"
+    "start": "ts-node src/server.ts",
+    "db:generate": "drizzle-kit generate:pg --config=./src/db/drizzle.config.ts"
   },
   "keywords": [],
   "author": "",
