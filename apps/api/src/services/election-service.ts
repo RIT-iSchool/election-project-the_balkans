@@ -30,3 +30,38 @@ export const create = async (
     next(err);
   }
 };
+
+export const list = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Parse req body to make sure it is valid
+    const electionData = ElectionSchema.parse(req.body);
+
+    const listElection = await election.list({
+      societyId: res.locals.societyId,
+    });
+
+    res.send(listElection);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const retrieve = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    // Parse req body to make sure it is valid
+    const electionData = ElectionSchema.parse(req.body);
+
+    const retrieveElection = await election.retrieve({
+      societyId: res.locals.societyId,
+      electionId: res.locals.electionId,
+    });
+
+    res.send(retrieveElection);
+  } catch (err) {
+    next(err);
+  }
+};
