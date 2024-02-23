@@ -1,3 +1,3 @@
 # welcome to the API
 
-# schema -> data -> controller -> service -> routes
+# schema -> data (data-layer) -> controller (business layer) -> service (serialize layer) -> routes
