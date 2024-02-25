@@ -7,6 +7,9 @@ export type Create = {
   electionData: CreateElection;
 };
 
+/**
+ * Creates a new entry in the election table.
+ */
 export const create = async ({ electionData }: Create) => {
   try {
     const [newElection] = await db
@@ -22,6 +25,9 @@ export const create = async ({ electionData }: Create) => {
 
 export type List = { societyId: number };
 
+/**
+ * Lists all of a society's elections.
+ */
 export const list = async ({ societyId }: List) => {
   try {
     const electionData = await db
@@ -40,6 +46,9 @@ export type Retrieve = {
   societyId: number;
 };
 
+/**
+ * Retrieves all of a society's election's elections.
+ */
 export const retrieve = async ({ electionId, societyId }: Retrieve) => {
   try {
     const [electionData] = await db
