@@ -1,3 +1,7 @@
+/**
+ * Ballot type that includes Election, ElectionOffice, ElectionCandidate, ElectionInitiative, and InitiativeOption.
+ */
+
 import {
   Election,
   ElectionCandidate,
