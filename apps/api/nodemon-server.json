@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/nodemon.json",
   "verbose": true,
-  "watch": ["./src/*.ts", "./README.md"],
+  "watch": ["./src/**/*.ts", "./README.md"],
   "exec": "npx tsx src/server.ts"
 }
