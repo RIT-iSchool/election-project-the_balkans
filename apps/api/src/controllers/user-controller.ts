@@ -1,13 +1,19 @@
 import * as User from '../data/user-data';
 
-export const create = async (user: User.Create) => {
+/**
+ * Creates a new entry in the user table.
+ */
+export const create = async (userCreateParams: User.Create) => {
   // Enforce some business logic
-  const newUser = await User.create(user);
+  const newUser = await User.create(userCreateParams);
   return newUser;
 };
 
-export const retrieve = async ({ userId }: User.Retrieve) => {
+/**
+ * Retrieves a user by ID.
+ */
+export const retrieve = async (userRetrieveParams: User.Retrieve) => {
   // Enforce some business logic
-  const user = await User.retrieve({ userId });
+  const user = await User.retrieve(userRetrieveParams);
   return user;
 };

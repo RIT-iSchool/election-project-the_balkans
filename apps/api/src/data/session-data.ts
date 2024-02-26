@@ -22,19 +22,19 @@ export const create = async ({ sessionData }: Create) => {
 };
 
 export type Retrieve = {
-  sessionId: number;
+  sessionToken: string;
 };
 
 /**
  * Retrieves a session by ID.
  */
-export const retrieve = async ({ sessionId }: Retrieve) => {
+export const retrieve = async ({ sessionToken }: Retrieve) => {
   try {
     const [sessionData] = await db
       .select()
       .from(session)
       .innerJoin(user, eq(session.userId, user.id))
-      .where(eq(session.id, sessionId));
+      .where(eq(session.token, sessionToken));
 
     if (!sessionData) throw new Error('Session not found');
 

@@ -1,13 +1,19 @@
 import * as Session from '../data/session-data';
 
-export const create = async ({ sessionData }: Session.Create) => {
+/**
+ * Creates a new entry in the session table.
+ */
+export const create = async (sessionCreateParams: Session.Create) => {
   // Enforce some business logic
-  const newSociety = await Session.create({ sessionData });
-  return newSociety;
+  const newSession = await Session.create(sessionCreateParams);
+  return newSession;
 };
 
-export const retrieve = async ({ sessionId }: Session.Retrieve) => {
+/**
+ * Retrieves a session by ID.
+ */
+export const retrieve = async (sessionRetrieveParams: Session.Retrieve) => {
   // Enforce some business logic
-  const society = await Session.retrieve({ sessionId });
-  return society;
+  const session = await Session.retrieve(sessionRetrieveParams);
+  return session;
 };

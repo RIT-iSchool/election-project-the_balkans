@@ -1,19 +1,28 @@
 import * as Election from '../data/election-data';
 
-export const create = async (election: Election.Create) => {
+/**
+ * Creates a new entry in the election table.
+ */
+export const create = async (electionCreateParams: Election.Create) => {
   // Enforce some business logic
-
-  const newElection = await Election.create(election);
-
+  const newElection = await Election.create(electionCreateParams);
   return newElection;
 };
 
-export const list = async (election: Election.List) => {
-  const listElection = await Election.list(election);
+/**
+ * Lists a society's elections.
+ */
+export const list = async (electionListParams: Election.List) => {
+  // Enforce some business logic
+  const listElection = await Election.list(electionListParams);
   return listElection;
 };
 
-export const retrieve = async (election: Election.Retrieve) => {
-  const retrieveElection = await Election.retrieve(election);
+/**
+ * Retrieves a society's election's election.
+ */
+export const retrieve = async (electionRetrieveParams: Election.Retrieve) => {
+  // Enforce some business logic
+  const retrieveElection = await Election.retrieve(electionRetrieveParams);
   return retrieveElection;
 };

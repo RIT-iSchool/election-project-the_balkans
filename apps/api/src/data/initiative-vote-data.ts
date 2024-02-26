@@ -22,15 +22,15 @@ export const create = async ({ initiativeVoteData }: Create) => {
   }
 };
 
-export type Retrieve = {
+export type List = {
   electionId: number;
   societyId: number;
 };
 
 /**
- * Retrieves all of a society's election's initiative votes.
+ * Lists a society's election's initiative votes.
  */
-export const retrieve = async ({ electionId, societyId }: Retrieve) => {
+export const list = async ({ electionId, societyId }: List) => {
   try {
     const [initiativeVoteData] = await db
       .select()
@@ -45,8 +45,6 @@ export const retrieve = async ({ electionId, societyId }: Retrieve) => {
       );
     return initiativeVoteData!;
   } catch (err) {
-    throw new Error(
-      'Something went wrong retrieving election initative votes.',
-    );
+    throw new Error('Something went wrong listing election initative votes.');
   }
 };
