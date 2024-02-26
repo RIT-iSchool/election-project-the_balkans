@@ -22,7 +22,7 @@ export const create = async ({ sessionData }: Create) => {
 };
 
 export type Retrieve = {
-  sessionToken: number;
+  sessionToken: string;
 };
 
 /**
