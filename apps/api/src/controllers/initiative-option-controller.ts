@@ -3,18 +3,25 @@ import * as InitiativeOption from '../data/initiative-option-data';
 /**
  * Creates a new entry in the initiative option vote table.
  */
-export const create = async (initiatveOption: InitiativeOption.Create) => {
+export const create = async (
+  initiativeOptionCreateParams: InitiativeOption.Create,
+) => {
   // Enforce some business logic
-  const newInitiativeOption = await InitiativeOption.create(initiatveOption);
+  const newInitiativeOption = await InitiativeOption.create(
+    initiativeOptionCreateParams,
+  );
   return newInitiativeOption;
 };
 
 /**
  * Retrieves all of a society's election's initiative options.
  */
-export const retrieve = async (initiativeOption: InitiativeOption.Retrieve) => {
+export const retrieve = async (
+  initiativeOptionRetrieveParams: InitiativeOption.Retrieve,
+) => {
   // Enforce some business logic
-  const retrieveInitiativeOption =
-    await InitiativeOption.retrieve(initiativeOption);
+  const retrieveInitiativeOption = await InitiativeOption.retrieve(
+    initiativeOptionRetrieveParams,
+  );
   return retrieveInitiativeOption;
 };

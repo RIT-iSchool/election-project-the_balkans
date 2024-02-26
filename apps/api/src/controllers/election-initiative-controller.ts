@@ -3,10 +3,13 @@ import * as ElectionInitiative from '../data/election-initiative-data';
 /**
  * Creates a new entry in the election initiative table.
  */
-export const create = async (electionInitiative: ElectionInitiative.Create) => {
+export const create = async (
+  electionInitiativeCreateParams: ElectionInitiative.Create,
+) => {
   // Enforce some business logic
-  const newElectionInitiative =
-    await ElectionInitiative.create(electionInitiative);
+  const newElectionInitiative = await ElectionInitiative.create(
+    electionInitiativeCreateParams,
+  );
   return newElectionInitiative;
 };
 
@@ -14,10 +17,11 @@ export const create = async (electionInitiative: ElectionInitiative.Create) => {
  * Retrieves all of a society's election's initiatives.
  */
 export const retrieve = async (
-  electionInitiative: ElectionInitiative.Retrieve,
+  electionInitiativeRetrieveParams: ElectionInitiative.Retrieve,
 ) => {
   // Enforce some business logic
-  const retrieveElectionInitiative =
-    await ElectionInitiative.retrieve(electionInitiative);
+  const retrieveElectionInitiative = await ElectionInitiative.retrieve(
+    electionInitiativeRetrieveParams,
+  );
   return retrieveElectionInitiative;
 };
