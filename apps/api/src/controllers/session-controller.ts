@@ -5,8 +5,8 @@ import * as Session from '../data/session-data';
  */
 export const create = async ({ sessionData }: Session.Create) => {
   // Enforce some business logic
-  const newSociety = await Session.create({ sessionData });
-  return newSociety;
+  const newSession = await Session.create({ sessionData });
+  return newSession;
 };
 
 /**
@@ -14,6 +14,6 @@ export const create = async ({ sessionData }: Session.Create) => {
  */
 export const retrieve = async ({ sessionId }: Session.Retrieve) => {
   // Enforce some business logic
-  const society = await Session.retrieve({ sessionId });
-  return society;
+  const session = await Session.retrieve({ sessionId });
+  return session;
 };
