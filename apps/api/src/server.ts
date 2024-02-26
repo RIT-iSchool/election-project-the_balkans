@@ -1,6 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'path';
 import { apiReference } from '@scalar/express-api-reference';
 
 const PORT = process.env.port || 3000;
@@ -22,12 +23,18 @@ app.use(morgan('dev'));
 
 // Docs
 app.use(
-  '/docs',
+  '/api-docs',
   apiReference({
     spec: {
       content: require('@repo/openapi-spec/spec.json'),
     },
   }),
+);
+
+// Internal docs
+app.use(express.static(path.join(__dirname, '..', 'public')));
+app.get('/', (_req, res) =>
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html')),
 );
 
 // Listen for requests

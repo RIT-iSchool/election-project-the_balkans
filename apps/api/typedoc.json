@@ -1,9 +1,13 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": [
-    "./src/server.ts",
-    "./src/controllers/*.ts",
-    "./src/data/*.ts"
-  ],
-  "out": "doc"
+  "entryPoints": ["./src/**/*.ts"],
+  "out": "public/internal-docs",
+  "exclude": [
+    "./src/db/*.ts",
+    "./src/models/*.ts",
+    "./src/services/*.ts",
+    "./src/routes/*.ts",
+    "./src/errors/*.ts",
+    "./src/server.ts"
+  ]
 }
