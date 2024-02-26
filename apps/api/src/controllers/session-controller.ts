@@ -12,8 +12,8 @@ export const create = async ({ sessionData }: Session.Create) => {
 /**
  * Retrieves a session by ID.
  */
-export const retrieve = async ({ sessionId }: Session.Retrieve) => {
+export const retrieve = async ({ sessionToken }: Session.Retrieve) => {
   // Enforce some business logic
-  const session = await Session.retrieve({ sessionId });
+  const session = await Session.retrieve({ sessionToken });
   return session;
 };
