@@ -14,14 +14,12 @@ export const create = async (
 };
 
 /**
- * Retrieves all of a society's election's candidate votes.
+ * Lists a society's election's candidate votes.
  */
-export const retrieve = async (
-  candidateVoteRetrieveParams: CandidateVote.Retrieve,
-) => {
+export const list = async (candidateVoteRetrieveParams: CandidateVote.List) => {
   // Enforce some business logic
-  const retrieveCandidateVote = await CandidateVote.retrieve(
+  const listCandidateVote = await CandidateVote.list(
     candidateVoteRetrieveParams,
   );
-  return retrieveCandidateVote;
+  return listCandidateVote;
 };

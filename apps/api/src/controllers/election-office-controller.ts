@@ -14,14 +14,14 @@ export const create = async (
 };
 
 /**
- * Retrieves all of a society's election's offices.
+ * Lists a society's election's offices.
  */
-export const retrieve = async (
-  electionOfficeRetrieveParams: ElectionOffice.Retrieve,
+export const list = async (
+  electionOfficeRetrieveParams: ElectionOffice.List,
 ) => {
   // Enforce some business logic
-  const retrieveElectionOffice = await ElectionOffice.retrieve(
+  const listElectionOffice = await ElectionOffice.list(
     electionOfficeRetrieveParams,
   );
-  return retrieveElectionOffice;
+  return listElectionOffice;
 };

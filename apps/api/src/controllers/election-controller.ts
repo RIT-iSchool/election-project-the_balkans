@@ -10,7 +10,7 @@ export const create = async (electionCreateParams: Election.Create) => {
 };
 
 /**
- * Lists all of a society's elections.
+ * Lists a society's elections.
  */
 export const list = async (electionListParams: Election.List) => {
   // Enforce some business logic
@@ -19,7 +19,7 @@ export const list = async (electionListParams: Election.List) => {
 };
 
 /**
- * Retrieves all of a society's election's elections.
+ * Retrieves a society's election's election.
  */
 export const retrieve = async (electionRetrieveParams: Election.Retrieve) => {
   // Enforce some business logic
