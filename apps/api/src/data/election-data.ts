@@ -1,4 +1,4 @@
-import { CreateElection } from '../db/schema';
+import { CreateElection, UpdateElection } from '../db/schema';
 import { db } from '../db';
 import { election } from '../db/schema';
 import { and, eq } from 'drizzle-orm';
@@ -63,5 +63,34 @@ export const retrieve = async ({ electionId, societyId }: Retrieve) => {
     return electionData;
   } catch (err) {
     throw new Error('Something went wrong retrieving an election');
+  }
+};
+
+export type Update = {
+  electionId: number;
+  societyId: number;
+  electionData: UpdateElection;
+};
+/**
+ * Updates an election by ID
+ */
+export const update = async ({
+  electionId,
+  societyId,
+  electionData,
+}: Update) => {
+  try {
+    const [updatedElection] = await db
+      .update(election)
+      .set(electionData)
+      .where(
+        and(eq(election.id, electionId), eq(election.societyId, societyId)),
+      );
+
+    if (!updatedElection) throw new Error('Election not found');
+
+    return updatedElection;
+  } catch (err) {
+    throw new Error('Something went wrong updating an election');
   }
 };
