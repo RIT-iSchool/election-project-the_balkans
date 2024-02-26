@@ -26,7 +26,7 @@ export const create = async ({ electionData }: Create) => {
 export type List = { societyId: number };
 
 /**
- * Lists all of a society's elections.
+ * Lists a society's elections.
  */
 export const list = async ({ societyId }: List) => {
   try {
@@ -47,7 +47,7 @@ export type Retrieve = {
 };
 
 /**
- * Retrieves all of a society's election's elections.
+ * Retrieves a society's election's election.
  */
 export const retrieve = async ({ electionId, societyId }: Retrieve) => {
   try {
