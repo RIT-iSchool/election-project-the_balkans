@@ -1,19 +1,20 @@
 import { CreateSocietyMember, societyMember } from '../db/schema';
 import { db } from '../db';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 export type Create = {
   societyMemberData: CreateSocietyMember;
+  societyId: number;
 };
 
 /**
  * Creates a new entry in the society member table.
  */
-export const create = async ({ societyMemberData }: Create) => {
+export const create = async ({ societyMemberData, societyId }: Create) => {
   try {
     const [newSocietyMember] = await db
       .insert(societyMember)
-      .values(societyMemberData)
+      .values({ ...societyMemberData, societyId })
       .returning();
     return newSocietyMember!;
   } catch (err) {
@@ -23,17 +24,23 @@ export const create = async ({ societyMemberData }: Create) => {
 
 export type Retrieve = {
   societyMemberId: number;
+  societyId: number;
 };
 
 /**
  * Retrieves a society member by ID
  */
-export const retrieve = async ({ societyMemberId }: Retrieve) => {
+export const retrieve = async ({ societyMemberId, societyId }: Retrieve) => {
   try {
     const [societyMemberData] = await db
       .select()
       .from(societyMember)
-      .where(eq(societyMember.id, societyMemberId));
+      .where(
+        and(
+          eq(societyMember.id, societyMemberId),
+          eq(societyMember.societyId, societyId),
+        ),
+      );
 
     if (!societyMemberData) throw new Error('Society member not found');
 

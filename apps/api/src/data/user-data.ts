@@ -3,7 +3,14 @@ import { db } from '../db';
 import { user } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
-export const create = async (userData: CreateUser) => {
+export type Create = {
+  userData: CreateUser;
+};
+
+/**
+ * Creates a new entry in the user table.
+ */
+export const create = async ({ userData }: Create) => {
   try {
     const [newUser] = await db.insert(user).values(userData).returning();
 
@@ -13,7 +20,14 @@ export const create = async (userData: CreateUser) => {
   }
 };
 
-export const retrieve = async (userId: number) => {
+export type Retrieve = {
+  userId: number;
+};
+
+/**
+ * Retrieves a user by ID.
+ */
+export const retrieve = async ({ userId }: Retrieve) => {
   try {
     const [userData] = await db.select().from(user).where(eq(user.id, userId));
 
