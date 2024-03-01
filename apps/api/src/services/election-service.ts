@@ -45,11 +45,11 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
       return res.send(400).send('invalid societyId');
     }
 
-    const listElection = await election.list({
+    const listElections = await election.list({
       societyId: societyIdNumber,
     });
 
-    res.send(listElection);
+    res.send(listElections);
   } catch (err) {
     next(err);
   }
