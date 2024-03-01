@@ -26,3 +26,12 @@ export const retrieve = async (electionRetrieveParams: Election.Retrieve) => {
   const retrieveElection = await Election.retrieve(electionRetrieveParams);
   return retrieveElection;
 };
+
+/**
+ * Updates a society's election's election.
+ */
+export const update = async (electionRetrieveParams: Election.Update) => {
+  // Enforce some business logic
+  const updateElection = await Election.update(electionRetrieveParams);
+  return updateElection;
+};
