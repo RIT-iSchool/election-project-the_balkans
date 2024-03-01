@@ -17,3 +17,11 @@ export const retrieve = async (sessionRetrieveParams: Session.Retrieve) => {
   const session = await Session.retrieve(sessionRetrieveParams);
   return session;
 };
+
+/**
+ * Removes a session by ID.
+ */
+export const remove = async (sessionRemoveParams: Session.Remove) => {
+  // Enforce some business logic
+  await Session.remove(sessionRemoveParams);
+};

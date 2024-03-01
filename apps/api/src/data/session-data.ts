@@ -43,3 +43,18 @@ export const retrieve = async ({ sessionToken }: Retrieve) => {
     throw new Error('Something went wrong retrieving a session.');
   }
 };
+
+export type Remove = {
+  sessionToken: string;
+};
+
+/**
+ * Deletes a session by Token
+ */
+export const remove = async ({ sessionToken }: Remove) => {
+  try {
+    await db.delete(session).where(eq(session.token, sessionToken));
+  } catch (err) {
+    throw new Error('Something went wrong deleting a session');
+  }
+};

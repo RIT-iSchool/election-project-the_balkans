@@ -17,3 +17,12 @@ export const retrieve = async (userRetrieveParams: User.Retrieve) => {
   const user = await User.retrieve(userRetrieveParams);
   return user;
 };
+
+/**
+ * Login a user.
+ */
+export const login = async (userLoginParams: User.Login) => {
+  // Enforce some business log
+  const loginUser = await User.login(userLoginParams);
+  return loginUser;
+};

@@ -39,10 +39,15 @@ export const retrieve = async ({ userId }: Retrieve) => {
   }
 };
 
+export type Login = {
+  email: string;
+  password: string;
+};
+
 /**
  * Login a user.
  */
-export const login = async (email: string, password: string): Promise<User> => {
+export const login = async ({ email, password }: Login) => {
   try {
     const [loginUser] = await db
       .select()

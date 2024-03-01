@@ -36,7 +36,7 @@ export const retrieve = async (
   try {
     const sessionTokenString = req.params.sessionToken;
 
-    if (sessionTokenString === undefined || sessionTokenString === undefined) {
+    if (sessionTokenString === undefined) {
       return res.send(400).send('sessionToken is required');
     }
 
@@ -45,6 +45,28 @@ export const retrieve = async (
     });
 
     res.send(retrieveSession);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const remove = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const sessionTokenString = req.params.sessionToken;
+
+    if (sessionTokenString === undefined) {
+      return res.send(400).send('sessionToken is required');
+    }
+
+    await session.remove({
+      sessionToken: sessionTokenString,
+    });
+
+    res.send(202);
   } catch (err) {
     next(err);
   }

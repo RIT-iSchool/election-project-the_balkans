@@ -57,3 +57,27 @@ export const retrieve = async (
     next(err);
   }
 };
+
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const userEmail = req.params.email;
+    const userPassword = req.params.password;
+
+    if (userEmail === undefined || userPassword === undefined) {
+      return res.send(400).send('email and password are required');
+    }
+
+    const loginUser = await user.login({
+      email: userEmail,
+      password: userPassword,
+    });
+
+    res.send(loginUser);
+  } catch (err) {
+    next(err);
+  }
+};

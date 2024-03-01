@@ -14,8 +14,8 @@ import * as user from './src/services/user-service';
 export const router = Router();
 
 //auth
-//router.post('/auth/login', user.login);
-//router.post('/auth/logout', user.logout);
+router.get('/auth/login', user.login);
+router.post('/auth/logout', session.remove);
 router.get('/auth/session', session.retrieve);
 router.get('/auth/society', society.retrieve);
 
