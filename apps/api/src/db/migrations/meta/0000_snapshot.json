@@ -1,5 +1,5 @@
 {
-  "id": "e8660f4d-7b92-4896-a300-8d6e3e3072b2",
+  "id": "b0c8950d-e7d4-4d15-9030-86fc64be35d4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -57,7 +57,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "candidateVote_id_unique": {
+          "name": "candidateVote_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "election": {
       "name": "election",
@@ -117,7 +125,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "election_id_unique": {
+          "name": "election_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "electionCandidate": {
       "name": "electionCandidate",
@@ -171,7 +187,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "electionCandidate_id_unique": {
+          "name": "electionCandidate_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "electionInitiative": {
       "name": "electionInitiative",
@@ -219,7 +243,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "electionInitiative_id_unique": {
+          "name": "electionInitiative_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "electionOffice": {
       "name": "electionOffice",
@@ -267,7 +299,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "electionOffice_id_unique": {
+          "name": "electionOffice_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "initiativeOption": {
       "name": "initiativeOption",
@@ -309,7 +349,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "initiativeOption_id_unique": {
+          "name": "initiativeOption_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "initiativeVote": {
       "name": "initiativeVote",
@@ -383,7 +431,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "initiativeVote_id_unique": {
+          "name": "initiativeVote_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "session": {
       "name": "session",
@@ -439,7 +495,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "session_id_unique": {
+          "name": "session_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "society": {
       "name": "society",
@@ -481,7 +545,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "society_id_unique": {
+          "name": "society_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "societyMember": {
       "name": "societyMember",
@@ -542,7 +614,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "societyMember_id_unique": {
+          "name": "societyMember_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     },
     "user": {
       "name": "user",
@@ -597,10 +677,27 @@
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "user_id_unique": {
+          "name": "user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      }
     }
   },
-  "enums": {},
+  "enums": {
+    "role": {
+      "name": "role",
+      "values": {
+        "member": "member",
+        "officer": "officer",
+        "employee": "employee"
+      }
+    }
+  },
   "schemas": {},
   "_meta": {
     "columns": {},

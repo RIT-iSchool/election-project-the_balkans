@@ -3,11 +3,12 @@ DO $$ BEGIN
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
-
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "candidateVote" (
 	"id" serial NOT NULL,
 	"member_id" integer NOT NULL,
-	"election_candidate_id" integer NOT NULL
+	"election_candidate_id" integer NOT NULL,
+	CONSTRAINT "candidateVote_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "election" (
@@ -16,7 +17,8 @@ CREATE TABLE IF NOT EXISTS "election" (
 	"society_id" integer NOT NULL,
 	"start_date" timestamp NOT NULL,
 	"end_date" timestamp NOT NULL,
-	"photo_url" varchar(250)
+	"photo_url" varchar(250),
+	CONSTRAINT "election_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "electionCandidate" (
@@ -24,54 +26,62 @@ CREATE TABLE IF NOT EXISTS "electionCandidate" (
 	"election_office_id" integer NOT NULL,
 	"name" varchar(100) NOT NULL,
 	"photo_url" varchar(250),
-	"description" text NOT NULL
+	"description" text NOT NULL,
+	CONSTRAINT "electionCandidate_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "electionInitiative" (
 	"id" serial NOT NULL,
 	"election_id" integer NOT NULL,
 	"initiative_name" varchar(30) NOT NULL,
-	"description" text NOT NULL
+	"description" text NOT NULL,
+	CONSTRAINT "electionInitiative_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "electionOffice" (
 	"id" serial NOT NULL,
 	"election_id" integer NOT NULL,
 	"office_name" varchar(30) NOT NULL,
-	"max_votes" integer NOT NULL
+	"max_votes" integer NOT NULL,
+	CONSTRAINT "electionOffice_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "initiativeOption" (
 	"id" serial NOT NULL,
 	"election_initiative_id" integer NOT NULL,
-	"title" varchar(30) NOT NULL
+	"title" varchar(30) NOT NULL,
+	CONSTRAINT "initiativeOption_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "initiativeVote" (
 	"id" serial NOT NULL,
 	"member_id" integer NOT NULL,
 	"election_initiative_id" integer NOT NULL,
-	"election_initiative_option_id" integer NOT NULL
+	"election_initiative_option_id" integer NOT NULL,
+	CONSTRAINT "initiativeVote_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
 	"token" varchar(250) NOT NULL,
-	"expires_at" timestamp NOT NULL
+	"expires_at" timestamp NOT NULL,
+	CONSTRAINT "session_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "society" (
 	"id" serial NOT NULL,
 	"name" varchar(100) NOT NULL,
-	"user_id" integer NOT NULL
+	"user_id" integer NOT NULL,
+	CONSTRAINT "society_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "societyMember" (
 	"id" serial NOT NULL,
 	"user_id" integer NOT NULL,
 	"society_id" integer NOT NULL,
-	"role" "role" NOT NULL
+	"role" "role" NOT NULL,
+	CONSTRAINT "societyMember_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
@@ -80,7 +90,8 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"password" varchar(250) NOT NULL,
 	"first_name" varchar(50) NOT NULL,
 	"last_name" varchar(50) NOT NULL,
-	"admin" boolean DEFAULT false NOT NULL
+	"admin" boolean DEFAULT false NOT NULL,
+	CONSTRAINT "user_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "session_token_index" ON "session" ("token");--> statement-breakpoint

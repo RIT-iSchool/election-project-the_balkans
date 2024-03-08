@@ -13,7 +13,7 @@ import { pgTable } from 'drizzle-orm/pg-core';
 export const user = pgTable(
   'user',
   {
-    id: serial('id'),
+    id: serial('id').unique(),
     email: varchar('email', { length: 100 }).notNull(),
     password: varchar('password', { length: 250 }).notNull(),
     firstName: varchar('first_name', { length: 50 }).notNull(),
@@ -41,7 +41,7 @@ export type UpdateUser = Partial<CreateUser>;
 export const session = pgTable(
   'session',
   {
-    id: serial('id'),
+    id: serial('id').unique(),
     userId: integer('user_id')
       .references(() => user.id, {
         onDelete: 'cascade',
@@ -70,7 +70,7 @@ export type UpdateSession = Partial<CreateSession>;
 
 //#region society
 export const society = pgTable('society', {
-  id: serial('id'),
+  id: serial('id').unique(),
   name: varchar('name', { length: 100 }).notNull(),
   owner: integer('user_id')
     .references(() => user.id, {
@@ -95,7 +95,7 @@ export type UpdateSociety = Partial<CreateSociety>;
 export const role = pgEnum('role', ['member', 'officer', 'employee']);
 
 export const societyMember = pgTable('societyMember', {
-  id: serial('id'),
+  id: serial('id').unique(),
   userId: integer('user_id')
     .references(() => user.id, {
       onDelete: 'cascade',
@@ -125,7 +125,7 @@ export type UpdateSocietyMember = Partial<CreateSocietyMember>;
 //#region election
 
 export const election = pgTable('election', {
-  id: serial('id'),
+  id: serial('id').unique(),
   name: varchar('name', { length: 100 }).notNull(),
   societyId: integer('society_id')
     .references(() => society.id, {
@@ -154,7 +154,7 @@ export type UpdateElection = Partial<CreateElection>;
 //#region electionOffice
 
 export const electionOffice = pgTable('electionOffice', {
-  id: serial('id'),
+  id: serial('id').unique(),
   electionId: integer('election_id')
     .references(() => election.id, {
       onDelete: 'cascade',
@@ -178,7 +178,7 @@ export type UpdateElectionOffice = Partial<CreateElectionOffice>;
 //#region electionCandidate
 
 export const electionCandidate = pgTable('electionCandidate', {
-  id: serial('id'),
+  id: serial('id').unique(),
   electionOfficeId: integer('election_office_id')
     .references(() => electionOffice.id, {
       onDelete: 'cascade',
@@ -208,7 +208,7 @@ export type UpdateElectionCandidate = Partial<CreateElectionCandidate>;
 //#region candidateVote
 
 export const candidateVote = pgTable('candidateVote', {
-  id: serial('id'),
+  id: serial('id').unique(),
   memberId: integer('member_id')
     .references(() => societyMember.id, {
       onDelete: 'cascade',
@@ -237,7 +237,7 @@ export type UpdateCandidateVote = Partial<CreateCandidateVote>;
 //#region electionInitiative
 
 export const electionInitiative = pgTable('electionInitiative', {
-  id: serial('id'),
+  id: serial('id').unique(),
   electionId: integer('election_id')
     .references(() => election.id, {
       onDelete: 'cascade',
@@ -268,7 +268,7 @@ export type UpdateElectionInitiative = Partial<CreateElectionInitiative>;
 //#region initiativeOption
 
 export const initiativeOption = pgTable('initiativeOption', {
-  id: serial('id'),
+  id: serial('id').unique(),
   electionInitiativeId: integer('election_initiative_id')
     .references(() => electionInitiative.id, {
       onDelete: 'cascade',
@@ -294,7 +294,7 @@ export type UpdateInitiativeOption = Partial<CreateInitiativeOption>;
 //#region initiativeVote
 
 export const initiativeVote = pgTable('initiativeVote', {
-  id: serial('id'),
+  id: serial('id').unique(),
   memberId: integer('member_id')
     .references(() => societyMember.id, {
       onDelete: 'cascade',
