@@ -92,6 +92,8 @@ export type UpdateSociety = Partial<CreateSociety>;
 
 //#region societyMember
 
+export const role = pgEnum('role', ['member', 'officer', 'employee']);
+
 export const societyMember = pgTable('societyMember', {
   id: serial('id'),
   userId: integer('user_id')
@@ -106,7 +108,7 @@ export const societyMember = pgTable('societyMember', {
       onUpdate: 'cascade',
     })
     .notNull(),
-  role: pgEnum('role', ['member', 'officer', 'employee'])('role').notNull(),
+  role: role('role').notNull(),
 });
 
 export const societyMemberRelations = relations(societyMember, ({ one }) => ({
