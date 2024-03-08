@@ -13,7 +13,7 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const sql = postgres(DATABASE_URL, { max: 1 });
 const db = drizzle(sql);
 
-migrate(db, { migrationsFolder: 'lib/db/migrations' })
+migrate(db, { migrationsFolder: 'src/db/migrations' })
   .then(() => {
     console.log('Migrations complete!');
     process.exit(0);
