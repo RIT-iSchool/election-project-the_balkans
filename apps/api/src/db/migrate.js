@@ -10,7 +10,9 @@ const postgres = require('postgres');
 // eslint-disable-next-line no-process-env
 const DATABASE_URL = process.env.DATABASE_URL;
 
+console.log('Connecting to the database...');
 const sql = postgres(DATABASE_URL, { max: 1 });
+console.log('Connected to the database.');
 const db = drizzle(sql);
 
 migrate(db, { migrationsFolder: 'src/db/migrations' })
@@ -20,5 +22,6 @@ migrate(db, { migrationsFolder: 'src/db/migrations' })
   })
   .catch((err) => {
     console.error('Error running migrations', err);
+    console.error('Failed migration SQL:', err.query);
     process.exit(1);
   });
