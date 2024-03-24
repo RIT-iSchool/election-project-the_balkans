@@ -2,7 +2,7 @@ PG_USER="postgres"
 PG_DATABASE="americandream"
 
 # PSV file
-PSV_FILE="societies.psv"
+PSV_FILE="./scripts/societies.psv"
 OWNER_ID=1
 
 

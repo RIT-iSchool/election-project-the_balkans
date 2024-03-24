@@ -2,7 +2,7 @@ PG_USER="postgres"
 PG_DATABASE="americandream"
 
 # PSV file
-PSV_FILE="elections.psv"
+PSV_FILE="./scripts/elections.psv"
 
 
 

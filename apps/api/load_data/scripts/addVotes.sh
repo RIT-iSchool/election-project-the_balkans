@@ -1,11 +1,11 @@
 PG_USER="postgres"
 PG_DATABASE="americandream"
 
-PSV_FILE="votes.psv"
+PSV_FILE="./scripts/votes.psv"
 COUNT=1
 insert_votes() {
     psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"candidateVote\" (id, member_id, election_candidate_id) VALUES ($COUNT, $1, $2)";
-    (($COUNT++))
+    ((COUNT++))
 }
 
 while IFS='|' read -r MemberID ElectionID OfficeID CandidateID; do

@@ -1,7 +1,7 @@
 PG_USER="postgres"
 PG_DATABASE="americandream"
 
-PSV_FILE="candidates.psv"
+PSV_FILE="./scripts/candidates.psv"
 
 
 if [ ! -f "$PSV_FILE" ]; then
