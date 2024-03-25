@@ -1,4 +1,4 @@
-import { CreateUser, User } from '../db/schema';
+import { CreateUser } from '../db/schema';
 import { db } from '../db';
 import { user } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -50,15 +50,18 @@ export type Login = {
  */
 export const login = async ({ email, password }: Login) => {
   try {
+    console.log('123123123123')
     const [loginUser] = await db
       .select()
       .from(user)
       .where(and(eq(user.email, email), eq(user.password, password)));
+    console.log(loginUser);
 
     if (!loginUser) throw new AuthenticationError('Wrong email or password');
 
     return loginUser;
   } catch (err) {
+    console.log(err)
     throw new AuthenticationError('Wrong email or password');
   }
 };
