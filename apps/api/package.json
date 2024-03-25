@@ -8,7 +8,8 @@
     "start": "npx typedoc && ts-node src/server.ts",
     "db:generate": "drizzle-kit generate:pg --config=./src/db/drizzle.config.ts",
     "test": "jest",
-    "dev:docs": "nodemon --config nodemon-docs.json"
+    "dev:docs": "nodemon --config nodemon-docs.json",
+    "db:migrate": "node ./src/db/migrate.js"
   },
   "keywords": [],
   "author": "",

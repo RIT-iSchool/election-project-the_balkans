@@ -1,11 +1,17 @@
+DO $$ BEGIN
+ CREATE TYPE "role" AS ENUM('member', 'officer', 'employee');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "candidateVote" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"member_id" integer NOT NULL,
 	"election_candidate_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "election" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(100) NOT NULL,
 	"society_id" integer NOT NULL,
 	"start_date" timestamp NOT NULL,
@@ -14,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "election" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "electionCandidate" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"election_office_id" integer NOT NULL,
 	"name" varchar(100) NOT NULL,
 	"photo_url" varchar(250),
@@ -22,54 +28,54 @@ CREATE TABLE IF NOT EXISTS "electionCandidate" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "electionInitiative" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"election_id" integer NOT NULL,
 	"initiative_name" varchar(30) NOT NULL,
 	"description" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "electionOffice" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"election_id" integer NOT NULL,
 	"office_name" varchar(30) NOT NULL,
 	"max_votes" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "initiativeOption" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"election_initiative_id" integer NOT NULL,
 	"title" varchar(30) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "initiativeVote" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"member_id" integer NOT NULL,
 	"election_initiative_id" integer NOT NULL,
 	"election_initiative_option_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" integer NOT NULL,
 	"token" varchar(250) NOT NULL,
 	"expires_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "society" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"name" varchar(100) NOT NULL,
 	"user_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "societyMember" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" integer NOT NULL,
 	"society_id" integer NOT NULL,
 	"role" "role" NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
-	"id" serial NOT NULL,
+	"id" serial PRIMARY KEY NOT NULL,
 	"email" varchar(100) NOT NULL,
 	"password" varchar(250) NOT NULL,
 	"first_name" varchar(50) NOT NULL,
