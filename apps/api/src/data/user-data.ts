@@ -2,6 +2,7 @@ import { CreateUser, User } from '../db/schema';
 import { db } from '../db';
 import { user } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
+import { AuthenticationError } from '../errors/AuthenticationError';
 
 export type Create = {
   userData: CreateUser;
@@ -54,10 +55,10 @@ export const login = async ({ email, password }: Login) => {
       .from(user)
       .where(and(eq(user.email, email), eq(user.password, password)));
 
-    if (!loginUser) throw new Error('Wrong email or password');
+    if (!loginUser) throw new AuthenticationError('Wrong email or password');
 
     return loginUser;
   } catch (err) {
-    throw new Error('Wrong email or password');
+    throw new AuthenticationError('Wrong email or password');
   }
 };

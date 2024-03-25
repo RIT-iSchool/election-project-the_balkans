@@ -64,11 +64,11 @@ export const login = async (
   next: NextFunction,
 ) => {
   try {
-    const userEmail = req.params.email;
-    const userPassword = req.params.password;
+    const userEmail = req.body.email;
+    const userPassword = req.body.password;
 
     if (userEmail === undefined || userPassword === undefined) {
-      return res.send(400).send('email and password are required');
+      return res.status(400).send('Invalid request body');
     }
 
     const loginUser = await user.login({

@@ -1,20 +1,20 @@
 import { Router } from 'express';
-import * as candidateVote from './src/services/candidate-vote-service';
-import * as electionCandidate from './src/services/election-candidate-service';
-import * as electionInitiative from './src/services/election-initiative-service';
-import * as electionOffice from './src/services/election-office-service';
-import * as election from './src/services/election-service';
-import * as initiativeOption from './src/services/initiative-option-service';
-import * as initiativeVote from './src/services/initiative-vote-service';
-import * as session from './src/services/session-service';
-import * as societyMember from './src/services/society-member-service';
-import * as society from './src/services/society-service';
-import * as user from './src/services/user-service';
+import * as candidateVote from './services/candidate-vote-service';
+import * as electionCandidate from './services/election-candidate-service';
+import * as electionInitiative from './services/election-initiative-service';
+import * as electionOffice from './services/election-office-service';
+import * as election from './services/election-service';
+import * as initiativeOption from './services/initiative-option-service';
+import * as initiativeVote from './services/initiative-vote-service';
+import * as session from './services/session-service';
+import * as societyMember from './services/society-member-service';
+import * as society from './services/society-service';
+import * as user from './services/user-service';
 
-export const router = Router();
+const router = Router();
 
 //auth
-router.get('/auth/login', user.login);
+router.post('/auth/login', user.login);
 router.post('/auth/logout', session.remove);
 router.get('/auth/session', session.retrieve);
 router.get('/auth/society', society.retrieve);
@@ -47,3 +47,5 @@ router.post(
   '/v1/elections/{election_id}/election_initiatives',
   electionInitiative.create,
 );
+
+export { router };

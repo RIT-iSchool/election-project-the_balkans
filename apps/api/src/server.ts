@@ -1,10 +1,12 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 import { apiReference } from '@scalar/express-api-reference';
+import { router } from './router';
+import { AuthenticationError } from './errors/AuthenticationError';
 
-const PORT = process.env.port || 3000;
+const PORT = process.env.port || 3001;
 
 // Initialize app
 const app = express();
@@ -21,6 +23,9 @@ app.use(
 );
 app.use(morgan('dev'));
 
+// API Routes
+app.use(router);
+
 // Docs
 app.use(
   '/api-docs',
@@ -36,6 +41,18 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.get('/', (_req, res) =>
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html')),
 );
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof AuthenticationError) {
+    return res.status(400).json({
+      error: true,
+      message: err.message
+    })
+  }
+
+  next();
+})
+
 
 // Listen for requests
 app.listen(PORT, () => {
