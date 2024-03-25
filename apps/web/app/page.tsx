@@ -3,6 +3,8 @@ import { Button, Card, Input, Text } from '@geist-ui/core';
 import CardContent from '@geist-ui/core/esm/card/card-content';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const initialValues = {
   email: '',
@@ -10,6 +12,8 @@ const initialValues = {
 };
 
 export default function Home() {
+  const router = useRouter();
+
   const { getFieldProps, submitForm, errors } = useFormik({
     initialValues: initialValues,
     onSubmit: async (values, actions) => {
@@ -28,8 +32,11 @@ export default function Home() {
         actions.setErrors({
           password: 'Invalid account details.'
         })
+        return;
       }
-      return;
+
+      Cookies.set('session', responseData.token);
+      router.push('/home');
     },
     validationSchema: yup.object().shape({
       email: yup.string().email('Please enter a valid email').required('Please enter an email'),

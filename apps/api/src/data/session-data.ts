@@ -2,14 +2,10 @@ import { CreateSession, session, user } from '../db/schema';
 import { db } from '../db';
 import { eq } from 'drizzle-orm';
 
-export type Create = {
-  sessionData: CreateSession;
-};
-
 /**
  * Creates a new entry in the session table.
  */
-export const create = async ({ sessionData }: Create) => {
+export const create = async ({ ...sessionData }: CreateSession) => {
   try {
     const [newSession] = await db
       .insert(session)

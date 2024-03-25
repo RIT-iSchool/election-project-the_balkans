@@ -1,4 +1,6 @@
 import * as User from '../data/user-data';
+import * as Session from '../data/session-data';
+import { v4 as uuid } from 'uuid';
 
 /**
  * Creates a new entry in the user table.
@@ -24,5 +26,7 @@ export const retrieve = async (userRetrieveParams: User.Retrieve) => {
 export const login = async (userLoginParams: User.Login) => {
   // Enforce some business log
   const loginUser = await User.login(userLoginParams);
-  return loginUser;
+  const token = await Session.create({ userId: loginUser.id, token: uuid(), expiresAt: new Date(new Date().getTime() + 604_800) /** 1 week */  });
+
+  return token;
 };
