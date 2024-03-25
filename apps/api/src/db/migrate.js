@@ -7,11 +7,8 @@ const { migrate } = require('drizzle-orm/postgres-js/migrator');
 const { drizzle } = require('drizzle-orm/postgres-js');
 const postgres = require('postgres');
 
-// eslint-disable-next-line no-process-env
-const DATABASE_URL = process.env.DATABASE_URL;
-
 console.log('Connecting to the database...');
-const sql = postgres(DATABASE_URL, { max: 1 });
+const sql = postgres('postgresql://localhost:5432/americandream', { max: 1 });
 console.log('Connected to the database.');
 const db = drizzle(sql);
 

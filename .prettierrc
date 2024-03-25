@@ -3,5 +3,6 @@
   "printWidth": 80,
   "arrowParens": "always",
   "trailingComma": "all",
-  "semi": true
+  "semi": true,
+  "plugins": ["prettier-plugin-tailwindcss"]
 }

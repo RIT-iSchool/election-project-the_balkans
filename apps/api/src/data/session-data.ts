@@ -2,14 +2,10 @@ import { CreateSession, session, user } from '../db/schema';
 import { db } from '../db';
 import { eq } from 'drizzle-orm';
 
-export type Create = {
-  sessionData: CreateSession;
-};
-
 /**
  * Creates a new entry in the session table.
  */
-export const create = async ({ sessionData }: Create) => {
+export const create = async ({ ...sessionData }: CreateSession) => {
   try {
     const [newSession] = await db
       .insert(session)
@@ -41,5 +37,20 @@ export const retrieve = async ({ sessionToken }: Retrieve) => {
     return sessionData;
   } catch (err) {
     throw new Error('Something went wrong retrieving a session.');
+  }
+};
+
+export type Remove = {
+  sessionToken: string;
+};
+
+/**
+ * Deletes a session by Token
+ */
+export const remove = async ({ sessionToken }: Remove) => {
+  try {
+    await db.delete(session).where(eq(session.token, sessionToken));
+  } catch (err) {
+    throw new Error('Something went wrong deleting a session');
   }
 };

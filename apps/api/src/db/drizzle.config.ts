@@ -4,6 +4,6 @@ export default {
   schema: 'src/db/schema.ts',
   out: 'src/db/migrations',
   dbCredentials: {
-    connectionString: process.env.DATABASE_URL!,
+    connectionString: 'postgresql://localhost:5432/americandream',
   },
 } satisfies Config;

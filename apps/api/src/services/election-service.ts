@@ -45,11 +45,11 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
       return res.send(400).send('invalid societyId');
     }
 
-    const listElection = await election.list({
+    const listElections = await election.list({
       societyId: societyIdNumber,
     });
 
-    res.send(listElection);
+    res.send(listElections);
   } catch (err) {
     next(err);
   }
@@ -81,6 +81,28 @@ export const retrieve = async (
     });
 
     res.send(retrieveElection);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const update = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    // Parse req body to make sure it is valid
+    const electionData = ElectionSchema.parse(req.body);
+
+    const updateElection = await election.create({
+      electionData: {
+        ...electionData,
+        societyId: res.locals.societyId,
+      },
+    });
+
+    res.send(updateElection);
   } catch (err) {
     next(err);
   }
