@@ -2,6 +2,8 @@ import { CreateSession, session, user } from '../db/schema';
 import { db } from '../db';
 import { eq } from 'drizzle-orm';
 
+export type Create = CreateSession;
+
 /**
  * Creates a new entry in the session table.
  */

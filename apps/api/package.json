@@ -23,6 +23,7 @@
     "nodemon": "^3.0.3"
   },
   "dependencies": {
+    "@repo/typescript-config": "^0.0.0",
     "@scalar/express-api-reference": "^0.2.48",
     "drizzle-kit": "^0.20.14",
     "drizzle-orm": "^0.29.3",

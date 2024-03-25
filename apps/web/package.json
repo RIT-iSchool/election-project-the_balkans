@@ -5,11 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next build && next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@geist-ui/core": "^2.3.8",
+    "@repo/typescript-config": "^0.0.0",
     "formik": "^2.4.5",
     "geist": "^1.2.2",
     "js-cookie": "^3.0.5",

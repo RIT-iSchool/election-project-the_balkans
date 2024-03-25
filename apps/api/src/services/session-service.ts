@@ -16,11 +16,7 @@ export const create = async (
   try {
     const sessionData = SessionSchema.parse(req.body);
 
-    const newSession = await session.create({
-      sessionData: {
-        ...sessionData,
-      },
-    });
+    const newSession = await session.create(sessionData);
 
     res.send(newSession);
   } catch (err) {
