@@ -5,6 +5,7 @@ import path from 'path';
 import { apiReference } from '@scalar/express-api-reference';
 import { router } from './router';
 import { AuthenticationError } from './errors/AuthenticationError';
+import cookieParser from 'cookie-parser';
 
 const PORT = process.env.port || 3001;
 
@@ -12,6 +13,7 @@ const PORT = process.env.port || 3001;
 const app = express();
 
 // Middleware
+app.use(cookieParser());
 app.use(express.json());
 app.use(
   helmet.contentSecurityPolicy({

@@ -18,7 +18,7 @@ export const create = async (
 
     const newSession = await session.create(sessionData);
 
-    res.send(newSession);
+    res.json(newSession);
   } catch (err) {
     next(err);
   }
@@ -30,17 +30,7 @@ export const retrieve = async (
   next: NextFunction,
 ) => {
   try {
-    const sessionTokenString = req.params.sessionToken;
-
-    if (sessionTokenString === undefined) {
-      return res.send(400).send('sessionToken is required');
-    }
-
-    const retrieveSession = await session.retrieve({
-      sessionToken: sessionTokenString,
-    });
-
-    res.send(retrieveSession);
+    res.json(req.user);
   } catch (err) {
     next(err);
   }

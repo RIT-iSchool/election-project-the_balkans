@@ -10,14 +10,15 @@ import * as session from './services/session-service';
 import * as societyMember from './services/society-member-service';
 import * as society from './services/society-service';
 import * as user from './services/user-service';
+import { auth } from './middleware/auth';
 
 const router = Router();
 
 //auth
 router.post('/auth/login', user.login);
-router.post('/auth/logout', session.remove);
-router.get('/auth/session', session.retrieve);
-router.get('/auth/society', society.retrieve);
+router.post('/auth/logout', auth(false), session.remove);
+router.get('/auth/session', auth(false), session.retrieve);
+router.get('/auth/society', auth(false), society.retrieve);
 
 //v1
 router.get('/v1/elections', election.list);

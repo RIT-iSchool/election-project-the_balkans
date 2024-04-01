@@ -55,13 +55,13 @@ export default function Home() {
             <div className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Email</label>
-                <Input type="default" placeholder="elon@tesla.com" width="100%" crossOrigin  {...getFieldProps('email')}  />
+                <Input type="default" placeholder="elon@tesla.com" width="100%" crossOrigin={undefined} {...getFieldProps('email')}  />
                 {errors.email && <div className="text-sm text-red-500">{errors.email}</div>}
               </div>
 
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Password</label>
-                <Input type="default" placeholder="hunter2" width="100%" crossOrigin {...getFieldProps('password')}  />
+                <Input type="default" placeholder="hunter2" width="100%" crossOrigin={undefined} {...getFieldProps('password')}  />
                 {errors.password && <div className="text-sm text-red-500">{errors.password}</div>}
               </div>
             </div>
