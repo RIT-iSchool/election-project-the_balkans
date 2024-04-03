@@ -12,16 +12,3 @@ export const create = async (
   );
   return newInitiativeVote;
 };
-
-/**
- * Lists a society's election's initiative votes.
- */
-export const list = async (
-  initiativeVoteRetrieveParams: InitiativeVote.List,
-) => {
-  // Enforce some business logic
-  const listInitiativeVote = await InitiativeVote.list(
-    initiativeVoteRetrieveParams,
-  );
-  return listInitiativeVote;
-};
