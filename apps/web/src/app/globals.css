@@ -1,3 +1,21 @@
-@tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'frosted-ui/styles.css' layer(frosted_ui);
+
+.frosted-ui {
+  --default-font-family: 'Inter', sans-serif;
+}
+
+:root {
+  font-feature-settings: 'liga' 1, 'calt' 1 !important;
+}
+
+@supports (font-variation-settings: normal) {
+  .frosted-ui {
+    --default-font-family: 'InterVariable', sans-serif;
+  }
+}
+
+@layer frosted_ui {
+  @tailwind base;
+}

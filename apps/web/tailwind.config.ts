@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { frostedThemePlugin } from 'frosted-ui';
 
 const config: Config = {
   content: [
@@ -14,6 +15,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [frostedThemePlugin({})],
 };
 export default config;
