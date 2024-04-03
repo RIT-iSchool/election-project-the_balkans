@@ -18,13 +18,13 @@ const router = Router();
 router.post('/auth/login', user.login);
 router.post('/auth/logout', auth(), session.remove);
 router.get('/auth/session', auth(), session.retrieve);
-router.get('/auth/society', auth("member"), society.retrieve);
+router.get('/auth/society', auth('member'), society.retrieve);
 
 //v1
-router.get('/v1/elections', auth("member"), election.list);
-router.post('/v1/elections', auth("officer"), election.create);
-router.put('/v1/elections/:electionId', auth("officer"), election.update);
-router.get('/v1/elections/:electionId', auth("member"), election.retrieve);
+router.get('/v1/elections', auth('member'), election.list);
+router.post('/v1/elections', auth('officer'), election.create);
+router.put('/v1/elections/:electionId', auth('officer'), election.update);
+router.get('/v1/elections/:electionId', auth('member'), election.retrieve);
 //router.get('/v1/elections/{election_id}/ballot', ballot.retrieve);
 //router.post('/v1/elections/{election_id}/ballot', ballot.submit);
 router.get('/v1/elections/{election_id}/election_offices', electionOffice.list);
@@ -40,6 +40,8 @@ router.post(
   '/v1/elections/{election_id}/election_candidates',
   electionCandidate.create,
 );
+router.get('/v1/elections/{election_id}/candidate_vote', candidateVote.list);
+router.post('/v1/elections/{election_id}/candidate_vote', candidateVote.create);
 router.get(
   '/v1/elections/{election_id}/election_initiatives',
   electionInitiative.list,
@@ -48,5 +50,23 @@ router.post(
   '/v1/elections/{election_id}/election_initiatives',
   electionInitiative.create,
 );
+router.get(
+  '/v1/elections/{election_id}/initiatives_options',
+  initiativeOption.list,
+);
+router.post(
+  '/v1/elections/{election_id}/initiatives_options',
+  initiativeOption.create,
+);
+router.get('/v1/elections/{election_id}/initiative_vote', initiativeVote.list);
+router.post(
+  '/v1/elections/{election_id}/initiative_vote',
+  initiativeVote.create,
+);
+router.get(
+  '/v1/society_member/{society_Id}/{society_member_id}',
+  societyMember.retrieve,
+);
+router.post('/v1/society_member/{society_id}', societyMember.create);
 
 export { router };
