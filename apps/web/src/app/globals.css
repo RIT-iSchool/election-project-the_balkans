@@ -7,7 +7,9 @@
 }
 
 :root {
-  font-feature-settings: 'liga' 1, 'calt' 1 !important;
+  font-feature-settings:
+    'liga' 1,
+    'calt' 1 !important;
 }
 
 @supports (font-variation-settings: normal) {

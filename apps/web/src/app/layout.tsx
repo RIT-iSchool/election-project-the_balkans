@@ -24,10 +24,8 @@ export default function RootLayout({
         <link href="https://rsms.me/inter/inter.css" rel="stylesheet" />
       </head>
       <ClientProviders>
-        <body className={cn(inter.className, "overscroll-none")}>
-          <Theme>
-            {children}
-          </Theme>
+        <body className={cn(inter.className, 'overscroll-none')}>
+          <Theme>{children}</Theme>
         </body>
       </ClientProviders>
     </html>
