@@ -22,30 +22,24 @@ export const create = async ({ societyMemberData, societyId }: Create) => {
   }
 };
 
-export type Retrieve = {
-  societyMemberId: number;
+export type List = {
   societyId: number;
 };
 
 /**
- * Retrieves a society member by ID
+ * Lists a society's members
  */
-export const retrieve = async ({ societyMemberId, societyId }: Retrieve) => {
+export const list = async ({ societyId }: List) => {
   try {
     const [societyMemberData] = await db
       .select()
       .from(societyMember)
-      .where(
-        and(
-          eq(societyMember.id, societyMemberId),
-          eq(societyMember.societyId, societyId),
-        ),
-      );
+      .where(and(eq(societyMember.societyId, societyId)));
 
     if (!societyMemberData) throw new Error('Society member not found');
 
     return societyMemberData;
   } catch (err) {
-    throw new Error('Something went wrong retrieving a society member.');
+    throw new Error('Something went wrong listing society members.');
   }
 };

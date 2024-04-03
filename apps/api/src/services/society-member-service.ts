@@ -29,32 +29,25 @@ export const create = async (
   }
 };
 
-export const retrieve = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const societyMemberIdString = req.params.societyMemberId;
     const societyIdString = req.params.societyId;
 
-    if (societyMemberIdString === undefined || societyIdString === undefined) {
-      return res.send(400).send('societyMemberId and societyId are required');
+    if (societyIdString === undefined) {
+      return res.send(400).send('societyId is required');
     }
 
-    const societyMemberIdNumber = parseInt(societyMemberIdString);
     const societyIdNumber = parseInt(societyIdString);
 
-    if (isNaN(societyMemberIdNumber) || isNaN(societyIdNumber)) {
-      return res.send(400).send('invalid societyMemberId or societyId');
+    if (isNaN(societyIdNumber)) {
+      return res.send(400).send('invalid societyId');
     }
 
-    const retrieveSocietyMember = await societyMember.retrieve({
-      societyMemberId: societyMemberIdNumber,
+    const listSocietyMember = await societyMember.list({
       societyId: societyIdNumber,
     });
 
-    res.send(retrieveSocietyMember);
+    res.send(listSocietyMember);
   } catch (err) {
     next(err);
   }

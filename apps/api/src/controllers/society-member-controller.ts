@@ -14,14 +14,10 @@ export const create = async (
 };
 
 /**
- * Retrieves a society member by ID
+ * Lists a society's members
  */
-export const retrieve = async (
-  societyMemberRetrieveParams: SocietyMember.Retrieve,
-) => {
+export const list = async (societyMemberListParams: SocietyMember.List) => {
   // Enforce some business logic
-  const societyMember = await SocietyMember.retrieve(
-    societyMemberRetrieveParams,
-  );
+  const societyMember = await SocietyMember.list(societyMemberListParams);
   return societyMember;
 };

@@ -694,6 +694,64 @@ paths:
       security:
         - bearer: []
 
+  /v1/society_members/{society_id}:
+    parameters:
+      - in: 'header'
+        name: 'society-id'
+        schema:
+          type: 'string'
+          example: 'The ID of the society you want to act on'
+
+    get:
+      tags:
+        - Society Members
+      operationId: 'ListSocietyMembers'
+      description: 'List society members'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/SocietyMembers'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+      security:
+        - bearer: []
+
+    post:
+      tags:
+        - Society Members
+      operationId: 'CreateSocietyMembers'
+      description: 'Create a society member'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocietyMember'
+        400:
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+      security:
+        - bearer: []
+
 components:
   securitySchemes:
     bearer:
