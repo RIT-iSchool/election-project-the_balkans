@@ -1,10 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
 import { AuthenticationError } from '../errors/AuthenticationError';
 import { db } from '../db';
-import { session, user, societyMember, type Role, type User, society } from '../db/schema';
+import {
+  session,
+  user,
+  societyMember,
+  type Role,
+  type User,
+  society,
+} from '../db/schema';
 import { and, eq } from 'drizzle-orm';
 
-const hasAccess = ({ user, role, requiredRole }: { user: User, role?: Role, requiredRole: Role }) => {
+type HasAccessOptions = {
+  user: User;
+  role?: Role;
+  requiredRole: Role;
+};
+
+const hasAccess = ({ user, role, requiredRole }: HasAccessOptions) => {
   // If the user is a global admin, they can access any endpoint
   if (user.admin) return true;
 
@@ -22,7 +35,7 @@ const hasAccess = ({ user, role, requiredRole }: { user: User, role?: Role, requ
   return true;
 };
 
-export const auth = (role?: Role | "admin") => {
+export const auth = (role?: Role | 'admin') => {
   return async function (req: Request, _res: Response, next: NextFunction) {
     try {
       // Make sure that the request has a session cookie
@@ -35,8 +48,6 @@ export const auth = (role?: Role | "admin") => {
         .from(session)
         .where(eq(session.token, cookie));
       if (!sessionData) throw new AuthenticationError('Invalid headers');
-
-      console.log(sessionData.expiresAt);
 
       // Make sure the session is not expired
       if (new Date() > sessionData.expiresAt) {
@@ -86,6 +97,9 @@ export const auth = (role?: Role | "admin") => {
             eq(societyMember.societyId, parseInt(societyId)),
           ),
         );
+
+      // If the user is not a member of this society and they are not a global admin,
+      // deny their request
       if (!societyMemberData && !userData.admin)
         throw new Error('User does not have access to this society');
 
@@ -94,7 +108,11 @@ export const auth = (role?: Role | "admin") => {
       if (
         role &&
         role !== 'admin' &&
-        !hasAccess({ user: userData, requiredRole: role, role: societyMemberData?.role  })
+        !hasAccess({
+          user: userData,
+          requiredRole: role,
+          role: societyMemberData?.role,
+        })
       ) {
         throw new AuthenticationError(
           'Role is not able to access this resource.',

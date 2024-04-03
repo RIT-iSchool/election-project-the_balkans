@@ -16,17 +16,14 @@ const NavLink = ({ href, title }: NavLinkProps) => {
   return (
     <Link
       className={cn(
-        'flex items-center gap-3 rounded-lg px-3 py-2 text-gray-11 hover:text-gray-12 hover:bg-gray-3 active:bg-gray-3 cursor-default',
+        'text-gray-11 hover:text-gray-12 hover:bg-gray-3 active:bg-gray-3 flex cursor-default items-center gap-3 rounded-lg px-3 py-2',
         {
-          'bg-gray-3 text-gray-12 dark:bg-zinc-800 dark:text-zinc-300':
-            active,
+          'bg-gray-3 text-gray-12 dark:bg-zinc-800 dark:text-zinc-300': active,
         },
       )}
       href={href}
     >
-      <Text size="2">
-        {title}
-      </Text>
+      <Text size="2">{title}</Text>
     </Link>
   );
 };

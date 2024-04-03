@@ -9,11 +9,11 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <main>
       <div className="grid min-h-screen w-full lg:grid-cols-[250px_1fr]">
-        <div className="hidden border-r border-gray-6 bg-gray-1 lg:block">
-          <div className="flex fixed w-[250px] h-screen flex-col gap-2">
-            <div className="flex h-[60px] items-center border-b border-gray-6 px-6">
+        <div className="border-gray-6 bg-gray-1 hidden border-r lg:block">
+          <div className="fixed flex h-screen w-[250px] flex-col gap-2">
+            <div className="border-gray-6 flex h-[60px] items-center border-b px-6">
               <Link
-                className="flex text-lg items-center font-semibold cursor-default"
+                className="flex cursor-default items-center text-lg font-semibold"
                 href="#"
               >
                 American Dream
@@ -23,7 +23,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </div>
         <div className="flex flex-col">
-          <div className="flex flex-1 flex-col gap-4 md:gap-8 p-4 dark:bg-zinc-900">
+          <div className="flex flex-1 flex-col gap-4 p-4 md:gap-8 dark:bg-zinc-900">
             {children}
           </div>
         </div>

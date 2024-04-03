@@ -20,17 +20,17 @@ export default function Home() {
         method: 'POST',
         body: JSON.stringify(values),
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
       });
 
       const responseData = await response.json();
-      
+
       if (responseData.error) {
         actions.setErrors({
-          password: 'Invalid account details.'
-        })
+          password: 'Invalid account details.',
+        });
         return;
       }
 
@@ -38,38 +38,55 @@ export default function Home() {
       router.push('/home');
     },
     validationSchema: yup.object().shape({
-      email: yup.string().email('Please enter a valid email').required('Please enter an email'),
-      password: yup.string().required('Please enter a password')
+      email: yup
+        .string()
+        .email('Please enter a valid email')
+        .required('Please enter an email'),
+      password: yup.string().required('Please enter a password'),
     }),
     validateOnChange: false,
     validateOnBlur: false,
-  })
+  });
 
   return (
     <main className="flex h-screen items-center justify-center">
       <div className="w-[300px]">
         <Card size="2">
           <div className="flex flex-col gap-2">
-            <Text className="font-semibold text-xl m-0">Login</Text>
+            <Text className="m-0 text-xl font-semibold">Login</Text>
             <div className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Email</label>
                 <TextFieldRoot>
-                  <TextFieldInput placeholder="elon@tesla.com" className="w-full" {...getFieldProps('email')} />
+                  <TextFieldInput
+                    placeholder="elon@tesla.com"
+                    className="w-full"
+                    {...getFieldProps('email')}
+                  />
                 </TextFieldRoot>
-                {errors.email && <div className="text-sm text-red-500">{errors.email}</div>}
+                {errors.email && (
+                  <div className="text-sm text-red-500">{errors.email}</div>
+                )}
               </div>
 
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Password</label>
                 <TextFieldRoot>
-                  <TextFieldInput placeholder="hunter2" className="w-full" {...getFieldProps('password')} />
+                  <TextFieldInput
+                    placeholder="hunter2"
+                    className="w-full"
+                    {...getFieldProps('password')}
+                  />
                 </TextFieldRoot>
-                {errors.password && <div className="text-sm text-red-500">{errors.password}</div>}
+                {errors.password && (
+                  <div className="text-sm text-red-500">{errors.password}</div>
+                )}
               </div>
             </div>
 
-            <Button variant="surface" onClick={submitForm}>Login</Button>
+            <Button variant="surface" onClick={submitForm}>
+              Login
+            </Button>
           </div>
         </Card>
       </div>
