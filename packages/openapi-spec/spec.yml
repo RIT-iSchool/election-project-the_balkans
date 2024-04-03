@@ -459,8 +459,7 @@ paths:
         example: 'The ID of the society you want to act on'
         schema:
           type: 'string'
-
-      get:
+    get:
       tags:
         - Candidate Vote
       operationId: 'ListCandidateVote'
@@ -482,8 +481,7 @@ paths:
                 $ref: '#/components/schemas/UnauthorizedError'
       security:
         - bearer: []
-
-      post:
+    post:
       tags:
         - Canddiate Vote
       operationId: 'CreateCandidateVote'

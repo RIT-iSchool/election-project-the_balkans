@@ -9,10 +9,8 @@ type Election = {
   photoURL?: string;
 };
 
-export const useElection = (electionId: string) => {
-  const { data, error, isLoading } = useSWR<Election[]>(
-    `/api/v1/elections/${electionId}`,
-  );
+export const useElections = () => {
+  const { data, error, isLoading } = useSWR<Election[]>('/api/v1/elections');
 
   return {
     data,

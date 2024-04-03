@@ -264,7 +264,7 @@
           }
         ]
       },
-      "put": {
+      "post": {
         "tags": [
           "Elections"
         ],
@@ -447,6 +447,26 @@
         "operationId": "RetrieveElectionBallot",
         "description": "Retrieve election ballot",
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ballot"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found"
           }
@@ -457,13 +477,44 @@
           }
         ]
       },
-      "put": {
+      "post": {
         "tags": [
           "Elections"
         ],
         "operationId": "SubmitElectionBallot",
         "description": "Submit election ballot",
         "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Vote Submitted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found"
           }
@@ -531,7 +582,7 @@
           }
         ]
       },
-      "put": {
+      "post": {
         "tags": [
           "Election Offices"
         ],
@@ -633,7 +684,7 @@
           }
         ]
       },
-      "put": {
+      "post": {
         "tags": [
           "Election Candidates"
         ],
@@ -646,6 +697,108 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ElectionCandidate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/elections/{election_id}/candidate_vote": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "election_id",
+          "required": true,
+          "description": "The ID of the election this office should belong to",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "header",
+          "name": "society-id",
+          "example": "The ID of the society you want to act on",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Candidate Vote"
+        ],
+        "operationId": "ListCandidateVote",
+        "description": "List candidate votes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CandidateVote"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Canddiate Vote"
+        ],
+        "operationId": "CreateCandidateVote",
+        "description": "Create a candidate vote",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateVote"
                 }
               }
             }
@@ -735,7 +888,7 @@
           }
         ]
       },
-      "put": {
+      "post": {
         "tags": [
           "Election Initiatives"
         ],
@@ -748,6 +901,210 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ElectionInitiative"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/elections/{election_id}/initiative_options": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "election_id",
+          "required": true,
+          "description": "The ID of the election this office should belong to",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "header",
+          "name": "society-id",
+          "example": "The ID of the society you want to act on",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Initiative Options"
+        ],
+        "operationId": "ListInitiativeOptions",
+        "description": "List initiative options",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InitiativeOption"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Initiatives Option"
+        ],
+        "operationId": "CreateInitiativeOptions",
+        "description": "Create an initiative options",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitiativeOption"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/elections/{election_id}/initiative_vote": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "election_id",
+          "required": true,
+          "description": "The ID of the election this office should belong to",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "header",
+          "name": "society-id",
+          "example": "The ID of the society you want to act on",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Initiative Vote"
+        ],
+        "operationId": "ListInitiativesVotes",
+        "description": "List initiatives votes",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InitiativeVote"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Initiatives Vote"
+        ],
+        "operationId": "CreateInitiativeVote",
+        "description": "Create an initiative vote",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitiativeVote"
                 }
               }
             }
@@ -819,7 +1176,7 @@
           },
           "user_id": {
             "nullable": false,
-            "type": "string",
+            "type": "integer",
             "readOnly": true
           },
           "token": {
@@ -1036,6 +1393,58 @@
           }
         }
       },
+      "Ballot": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Election"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "offices": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ElectionOffice"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "candidates": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/ElectionCandidate"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "initiatives": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/ElectionInitiative"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "options": {
+                          "type": "array",
+                          "items": "#/components/schemas/InitiativeOption"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
       "CreateLoginBody": {
         "properties": {
           "email": {
@@ -1053,7 +1462,8 @@
           "error": {
             "nullable": false,
             "type": "boolean",
-            "example": true
+            "example": true,
+            "readOnly": true
           },
           "type": {
             "nullable": false,
@@ -1074,7 +1484,8 @@
           "error": {
             "nullable": false,
             "type": "boolean",
-            "example": true
+            "example": true,
+            "readOnly": true
           },
           "type": {
             "nullable": false,
@@ -1095,17 +1506,20 @@
           "error": {
             "nullable": false,
             "type": "boolean",
-            "example": true
+            "example": true,
+            "readOnly": true
           },
           "message": {
             "nullable": false,
             "type": "string",
-            "example": "Invalid username"
+            "example": "Invalid username",
+            "readOnly": true
           },
           "type": {
             "nullable": false,
             "type": "string",
-            "example": "invalid_username_error"
+            "example": "invalid_username_error",
+            "readOnly": true
           }
         }
       },
@@ -1114,17 +1528,20 @@
           "error": {
             "nullable": false,
             "type": "boolean",
-            "example": true
+            "example": true,
+            "readOnly": true
           },
           "message": {
             "nullable": false,
             "type": "string",
-            "example": "Invalid password"
+            "example": "Invalid password",
+            "readOnly": true
           },
           "type": {
             "nullable": false,
             "type": "string",
-            "example": "invalid_password_error"
+            "example": "invalid_password_error",
+            "readOnly": true
           }
         }
       }
