@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { AuthenticationError } from '../errors/AuthenticationError';
 import { db } from '../db';
-import { session, user, societyMember, Role, society } from '../db/schema';
+import { session, user, societyMember, type Role, type User, society } from '../db/schema';
 import { and, eq } from 'drizzle-orm';
 
-//TODO: auth admin
-const roleHasAccess = (role: Role, requiredRole: Role) => {
+const hasAccess = ({ user, role, requiredRole }: { user: User, role?: Role, requiredRole: Role }) => {
+  // If the user is a global admin, they can access any endpoint
+  if (user.admin) return true;
+
   // If the required role is employee, only employees can access this endpoint
   if (requiredRole === 'employee') {
     return role === 'employee';
@@ -20,7 +22,7 @@ const roleHasAccess = (role: Role, requiredRole: Role) => {
   return true;
 };
 
-export const auth = (role?: Role) => {
+export const auth = (role?: Role | "admin") => {
   return async function (req: Request, _res: Response, next: NextFunction) {
     try {
       // Make sure that the request has a session cookie
@@ -84,14 +86,15 @@ export const auth = (role?: Role) => {
             eq(societyMember.societyId, parseInt(societyId)),
           ),
         );
-      if (!societyMemberData)
+      if (!societyMemberData && !userData.admin)
         throw new Error('User does not have access to this society');
 
       // If this endpoint requires a specific role, check that the society member has this role or a role greater than the specified role
       // Also, allow any user with the god-mode flag to access any society, regardless of the societies they belong to
       if (
         role &&
-        !(roleHasAccess(societyMemberData.role, role) || userData.admin)
+        role !== 'admin' &&
+        !hasAccess({ user: userData, requiredRole: role, role: societyMemberData?.role  })
       ) {
         throw new AuthenticationError(
           'Role is not able to access this resource.',
