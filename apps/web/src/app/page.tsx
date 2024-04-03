@@ -1,7 +1,6 @@
 'use client';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { Button, Card, Text, TextFieldRoot, TextFieldInput } from 'frosted-ui';
 
@@ -34,7 +33,6 @@ export default function Home() {
         return;
       }
 
-      Cookies.set('session', responseData.token);
       router.push('/home');
     },
     validationSchema: yup.object().shape({

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import * as ballot from '../controllers/ballot-controller';
 import { z } from 'zod';
+import { AuthenticationError } from '../errors/AuthenticationError';
 
 const BallotSchema = z.object({
   candidateVoteData: z.object({
@@ -34,6 +35,8 @@ export const retrieve = async (
   next: NextFunction,
 ) => {
   try {
+    if (!req.society) throw new AuthenticationError('Society ID missing');
+
     const electionIdString = req.params.electionId;
 
     if (electionIdString === undefined) {
@@ -48,6 +51,7 @@ export const retrieve = async (
 
     const retrieveBallot = await ballot.retrieve({
       electionId: electionIdNumber,
+      societyId: req.society.id,
     });
 
     res.send(retrieveBallot);

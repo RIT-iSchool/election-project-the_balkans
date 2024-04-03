@@ -1,6 +1,5 @@
 'use client';
-import { useUser } from "@/hooks/use-user";
-import Cookies from "js-cookie";
+import { useUser } from '@/hooks/use-user';
 
 export default function Page() {
   const { data: user } = useUser();
@@ -10,12 +9,11 @@ export default function Page() {
   return (
     <>
       <div>
-        Congrats! you have logged in and been granted the session token: {Cookies.get('session')}
+        Congrats! you have logged in and been granted the session token:{' '}
+        {document.cookie}
       </div>
       User data:
-      <pre>
-        {JSON.stringify(user, null, 2)}
-      </pre>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
     </>
-  )
+  );
 }

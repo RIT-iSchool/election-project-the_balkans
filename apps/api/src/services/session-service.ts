@@ -18,6 +18,9 @@ export const create = async (
 
     const newSession = await session.create(sessionData);
 
+    res.cookie('session', newSession.token, {
+      maxAge: Date.now() + 1000 * 60 * 60 * 24 * 7 /* 1 week */,
+    });
     res.json(newSession);
   } catch (err) {
     next(err);
@@ -42,17 +45,12 @@ export const remove = async (
   next: NextFunction,
 ) => {
   try {
-    const sessionTokenString = req.params.sessionToken;
-
-    if (sessionTokenString === undefined) {
-      return res.send(400).send('sessionToken is required');
-    }
-
     await session.remove({
-      sessionToken: sessionTokenString,
+      sessionToken: req.cookies.session,
     });
 
-    res.send(202);
+    res.clearCookie('session');
+    res.sendStatus(202);
   } catch (err) {
     next(err);
   }

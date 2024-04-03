@@ -6,6 +6,7 @@ import { apiReference } from '@scalar/express-api-reference';
 import { router } from './router';
 import { AuthenticationError } from './errors/AuthenticationError';
 import cookieParser from 'cookie-parser';
+import { UnauthorizedError } from './errors/UnauthorizedError';
 
 const PORT = process.env.port || 3001;
 
@@ -14,6 +15,7 @@ const app = express();
 
 // Middleware
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
   helmet.contentSecurityPolicy({
@@ -23,7 +25,8 @@ app.use(
     },
   }),
 );
-app.use(morgan('dev'));
+
+if (!process.env.TEST) app.use(morgan('dev'));
 
 // API Routes
 app.use(router);
@@ -52,12 +55,21 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     });
   }
 
+  if (err instanceof UnauthorizedError) {
+    return res.status(401).json({
+      error: true,
+      message: err.message,
+    });
+  }
+
   console.error(err);
 
   next();
 });
 
 // Listen for requests
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+export const server = app.listen(PORT, () => {
+  if (!process.env.TEST) {
+    console.log(`Listening on port ${PORT}`);
+  }
 });
