@@ -55,7 +55,7 @@ router.get('/v1/elections/:election_id/initiative_votes', auth('officer'), initi
 router.post('/v1/elections/:election_id/initiative_votes', auth('officer'), initiativeVote.create);
 
 // Society Members
-router.get('/v1/society_members/:society_id/:society_member_id', auth('admin'), societyMember.retrieve);
+router.get('/v1/society_members/:society_id', auth('admin'), societyMember.list);
 router.post('/v1/society_members/:society_id', auth('admin'), societyMember.create);
 
 export { router };
