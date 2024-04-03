@@ -93,7 +93,7 @@ export type UpdateSociety = Partial<CreateSociety>;
 //#region societyMember
 
 export const role = pgEnum('role', ['member', 'officer', 'employee']);
-export type Role = typeof role['enumValues'][number];
+export type Role = (typeof role)['enumValues'][number];
 
 export const societyMember = pgTable('societyMember', {
   id: serial('id').primaryKey(),
@@ -142,7 +142,6 @@ export const election = pgTable('election', {
 export const electionRelations = relations(election, ({ one, many }) => ({
   society: one(society),
   offices: many(electionOffice),
-  candidates: many(electionCandidate),
   initiatives: many(electionInitiative),
 }));
 
@@ -166,9 +165,13 @@ export const electionOffice = pgTable('electionOffice', {
   maxVotes: integer('max_votes').notNull(),
 });
 
-export const electionOfficeRelations = relations(electionOffice, ({ one }) => ({
-  election: one(election),
-}));
+export const electionOfficeRelations = relations(
+  electionOffice,
+  ({ one, many }) => ({
+    election: one(election),
+    candidates: many(electionCandidate),
+  }),
+);
 
 export type CreateElectionOffice = InferInsertModel<typeof electionOffice>;
 export type ElectionOffice = InferSelectModel<typeof electionOffice>;
