@@ -34,6 +34,8 @@ export const auth = (role?: Role) => {
         .where(eq(session.token, cookie));
       if (!sessionData) throw new AuthenticationError('Invalid headers');
 
+      console.log(sessionData.expiresAt);
+
       // Make sure the session is not expired
       if (new Date() > sessionData.expiresAt) {
         throw new AuthenticationError(

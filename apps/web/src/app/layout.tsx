@@ -4,6 +4,7 @@ import { Theme } from 'frosted-ui';
 import 'frosted-ui/styles.css';
 import './globals.css';
 import { ClientProviders } from './client-providers';
+import { cn } from '@/lib/cn';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,7 +24,7 @@ export default function RootLayout({
         <link href="https://rsms.me/inter/inter.css" rel="stylesheet" />
       </head>
       <ClientProviders>
-        <body className={inter.className}>
+        <body className={cn(inter.className, "overscroll-none")}>
           <Theme>
             {children}
           </Theme>

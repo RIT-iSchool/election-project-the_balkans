@@ -26,7 +26,7 @@ export const retrieve = async (userRetrieveParams: User.Retrieve) => {
 export const login = async (userLoginParams: User.Login) => {
   // Enforce some business log
   const loginUser = await User.login(userLoginParams);
-  const token = await Session.create({ userId: loginUser.id, token: uuid(), expiresAt: new Date(new Date().getTime() + 604_800) /** 1 week */  });
+  const token = await Session.create({ userId: loginUser.id, token: uuid(), expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) /** 1 week */  });
 
   return token;
 };

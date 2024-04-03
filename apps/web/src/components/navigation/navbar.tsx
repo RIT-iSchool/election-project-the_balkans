@@ -1,4 +1,7 @@
+'use client';
+import { useUser } from '@/hooks/use-user';
 import { NavLink } from './nav-link';
+import { Text } from 'frosted-ui';
 
 type Route = {
   title: string;
@@ -7,49 +10,54 @@ type Route = {
 
 export const routes: Route[] = [
   {
-    title: 'Home',
-    href: '/home',
+    title: 'Testing',
+    href: '/testing',
   },
   {
-    title: 'Aircraft',
-    href: '/aircraft',
+    title: 'Testing',
+    href: '/testing',
   },
   {
-    title: 'Airlines',
-    href: '/airlines',
+    title: 'Testing',
+    href: '/testing',
   },
   {
-    title: 'Airports',
-    href: '/airports',
+    title: 'Testing',
+    href: '/testing',
   },
   {
-    title: 'Saved Routes',
-    href: '/saved-routes',
+    title: 'Testing',
+    href: '/testing',
   },
 ] as const;
 
 export const adminRoutes = [
   {
-    title: 'Feedback',
-    href: '/admin/feedback',
+    title: 'Testing',
+    href: '/testing',
   },
   {
-    title: 'Airlines',
-    href: '/admin/airlines',
+    title: 'Testing',
+    href: '/testing',
   },
 ] as const;
 
-const Navbar = async () => {
+const Navbar = () => {
+  const { data: user } = useUser();
+
+  console.log(user)
+
   return (
     <div className="flex-1 overflow-auto py-2">
-      <nav className="px-4 text-sm font-medium flex flex-col h-full">
-        {routes.map((r) => (
-          <NavLink key={r.href} href={r.href} title={r.title} />
-        ))}
+      <nav className="px-4 pb-2 text-sm font-medium flex flex-col h-full justify-between">
         <div>
-            <div className="text-sm font-medium my-1 text-gray-9">
+          {routes.map((r) => (
+            <NavLink key={r.href} href={r.href} title={r.title} />
+          ))}
+          <div>
+            <Text size="2" weight="medium" className="my-1 text-gray-11">
               Admin
-            </div>
+            </Text>
             {adminRoutes.map((r) => (
               <NavLink
                 key={r.href}
@@ -58,6 +66,18 @@ const Navbar = async () => {
               />
             ))}
           </div>
+        </div>
+        {user && <div className="flex items-center self-start gap-2">
+          <div className="rounded bg-iris-a4 size-6 flex items-center justify-center border border-iris-6">
+            <Text size="1" weight="medium" color="iris">
+              {user?.firstName.slice(0, 1)}
+              {user?.lastName.slice(0, 1)}
+            </Text>
+          </div>
+          <Text size="2">
+              Welcome back, {user.firstName}
+          </Text>
+        </div>}
       </nav>
     </div>
   );
