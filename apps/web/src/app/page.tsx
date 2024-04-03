@@ -1,10 +1,9 @@
 'use client';
-import { Button, Card, Input, Text } from '@geist-ui/core';
-import CardContent from '@geist-ui/core/esm/card/card-content';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { Button, Card, Text, TextFieldRoot, TextFieldInput } from 'frosted-ui';
 
 const initialValues = {
   email: '',
@@ -49,25 +48,29 @@ export default function Home() {
   return (
     <main className="flex h-screen items-center justify-center">
       <div className="w-[300px]">
-        <Card>
-          <CardContent className="flex flex-col gap-2">
+        <Card size="2">
+          <div className="flex flex-col gap-2">
             <Text className="font-semibold text-xl m-0">Login</Text>
             <div className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Email</label>
-                <Input type="default" placeholder="elon@tesla.com" width="100%" crossOrigin={undefined} {...getFieldProps('email')}  />
+                <TextFieldRoot>
+                  <TextFieldInput placeholder="elon@tesla.com" className="w-full" {...getFieldProps('email')} />
+                </TextFieldRoot>
                 {errors.email && <div className="text-sm text-red-500">{errors.email}</div>}
               </div>
 
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Password</label>
-                <Input type="default" placeholder="hunter2" width="100%" crossOrigin={undefined} {...getFieldProps('password')}  />
+                <TextFieldRoot>
+                  <TextFieldInput placeholder="hunter2" className="w-full" {...getFieldProps('password')} />
+                </TextFieldRoot>
                 {errors.password && <div className="text-sm text-red-500">{errors.password}</div>}
               </div>
             </div>
 
-            <Button color="black" type="secondary" placeholder="" onClick={submitForm}>Login</Button>
-          </CardContent>
+            <Button variant="surface" onClick={submitForm}>Login</Button>
+          </div>
         </Card>
       </div>
     </main>
