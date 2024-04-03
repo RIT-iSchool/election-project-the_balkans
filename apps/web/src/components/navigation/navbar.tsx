@@ -45,8 +45,6 @@ export const adminRoutes = [
 const Navbar = () => {
   const { data: user } = useUser();
 
-  console.log(user);
-
   return (
     <div className="flex-1 overflow-auto py-2">
       <nav className="flex h-full flex-col justify-between px-4 pb-2 text-sm font-medium">
