@@ -7,6 +7,7 @@ import * as initiativeOption from './services/initiative-option-service';
 import * as session from './services/session-service';
 import * as societyMember from './services/society-member-service';
 import * as user from './services/user-service';
+import * as ballot from './services/ballot-service';
 import { auth } from './middleware/auth';
 
 const router = Router();
@@ -23,8 +24,8 @@ router.put('/v1/elections/:electionId', auth('update_election'), election.update
 router.get('/v1/elections/:electionId', auth('retrieve_election'), election.retrieve);
 
 // Ballots
-//router.get('/v1/elections/{election_id}/ballot', ballot.retrieve);
-//router.post('/v1/elections/{election_id}/ballot', ballot.submit);
+router.get('/v1/elections/:election_id/ballot', ballot.retrieve);
+router.post('/v1/elections/:election_id/ballot', ballot.submit);
 
 // Offices
 router.get('/v1/elections/:election_id/election_offices', auth('list_offices'), electionOffice.list);
