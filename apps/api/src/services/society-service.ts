@@ -33,23 +33,7 @@ export const retrieve = async (
   next: NextFunction,
 ) => {
   try {
-    const societyIdString = req.params.societyId;
-
-    if (societyIdString === undefined) {
-      return res.send(400).send('societyId are required');
-    }
-
-    const societyIdNumber = parseInt(societyIdString);
-
-    if (isNaN(societyIdNumber)) {
-      return res.send(400).send('invalid societyId');
-    }
-
-    const retrieveSocietyMember = await society.retrieve({
-      societyId: societyIdNumber,
-    });
-
-    res.send(retrieveSocietyMember);
+    res.send(req.society);
   } catch (err) {
     next(err);
   }

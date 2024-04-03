@@ -93,6 +93,7 @@ export type UpdateSociety = Partial<CreateSociety>;
 //#region societyMember
 
 export const role = pgEnum('role', ['member', 'officer', 'employee']);
+export type Role = typeof role['enumValues'][number];
 
 export const societyMember = pgTable('societyMember', {
   id: serial('id').primaryKey(),

@@ -16,15 +16,15 @@ const router = Router();
 
 //auth
 router.post('/auth/login', user.login);
-router.post('/auth/logout', auth(false), session.remove);
-router.get('/auth/session', auth(false), session.retrieve);
-router.get('/auth/society', auth(false), society.retrieve);
+router.post('/auth/logout', auth(), session.remove);
+router.get('/auth/session', auth(), session.retrieve);
+router.get('/auth/society', auth("member"), society.retrieve);
 
 //v1
-router.get('/v1/elections', election.list);
-router.post('/v1/elections', election.create);
-router.put('/v1/elections/:electionId', election.update);
-router.get('/v1/elections/:electionId', election.retrieve);
+router.get('/v1/elections', auth("member"), election.list);
+router.post('/v1/elections', auth("officer"), election.create);
+router.put('/v1/elections/:electionId', auth("officer"), election.update);
+router.get('/v1/elections/:electionId', auth("member"), election.retrieve);
 //router.get('/v1/elections/{election_id}/ballot', ballot.retrieve);
 //router.post('/v1/elections/{election_id}/ballot', ballot.submit);
 router.get('/v1/elections/{election_id}/election_offices', electionOffice.list);
