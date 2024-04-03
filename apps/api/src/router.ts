@@ -27,46 +27,76 @@ router.put('/v1/elections/:electionId', auth('officer'), election.update);
 router.get('/v1/elections/:electionId', auth('member'), election.retrieve);
 //router.get('/v1/elections/{election_id}/ballot', ballot.retrieve);
 //router.post('/v1/elections/{election_id}/ballot', ballot.submit);
-router.get('/v1/elections/{election_id}/election_offices', electionOffice.list);
 router.get(
-  '/v1/elections/{election_id}/election_offices',
+  '/v1/elections/:election_id/election_offices',
+  auth('officer'),
+  electionOffice.list,
+);
+router.get(
+  '/v1/elections/:election_id/election_offices',
   electionOffice.create,
 );
 router.get(
-  '/v1/elections/{election_id}/election_candidates',
+  '/v1/elections/:election_id/election_candidates',
+  auth('officer'),
   electionCandidate.list,
 );
 router.post(
-  '/v1/elections/{election_id}/election_candidates',
+  '/v1/elections/:election_id/election_candidates',
+  auth('officer'),
   electionCandidate.create,
 );
-router.get('/v1/elections/{election_id}/candidate_vote', candidateVote.list);
-router.post('/v1/elections/{election_id}/candidate_vote', candidateVote.create);
 router.get(
-  '/v1/elections/{election_id}/election_initiatives',
+  '/v1/elections/:election_id/candidate_vote',
+  auth('officer'),
+  candidateVote.list,
+);
+router.post(
+  '/v1/elections/:election_id/candidate_vote',
+  auth('officer'),
+  candidateVote.create,
+);
+router.get(
+  '/v1/elections/:election_id/election_initiatives',
+  auth('officer'),
   electionInitiative.list,
 );
 router.post(
-  '/v1/elections/{election_id}/election_initiatives',
+  '/v1/elections/:election_id/election_initiatives',
+  auth('officer'),
   electionInitiative.create,
 );
 router.get(
-  '/v1/elections/{election_id}/initiatives_options',
+  '/v1/elections/:election_id/initiatives_options',
+  auth('officer'),
   initiativeOption.list,
 );
 router.post(
-  '/v1/elections/{election_id}/initiatives_options',
+  '/v1/elections/:election_id/initiatives_options',
+  auth('officer'),
   initiativeOption.create,
 );
-router.get('/v1/elections/{election_id}/initiative_vote', initiativeVote.list);
+router.get(
+  '/v1/elections/:election_id/initiative_vote',
+  auth('officer'),
+  initiativeVote.list,
+);
 router.post(
-  '/v1/elections/{election_id}/initiative_vote',
+  '/v1/elections/:election_id/initiative_vote',
+  auth('officer'),
   initiativeVote.create,
 );
+//TODO: auth admin
 router.get(
-  '/v1/society_member/{society_Id}/{society_member_id}',
+  '/v1/society_member/:society_Id/:society_member_id',
+  auth(),
   societyMember.retrieve,
 );
-router.post('/v1/society_member/{society_id}', societyMember.create);
+//TODO: auth admin
+router.post(
+  '/v1/society_member/:society_id',
+  auth(),
+  societyMember.create,
+);
 
 export { router };
