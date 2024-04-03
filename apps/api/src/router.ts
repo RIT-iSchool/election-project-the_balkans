@@ -32,15 +32,15 @@ router.get('/v1/elections/:electionId', auth('member'), election.retrieve);
 
 // Offices
 router.get('/v1/elections/:election_id/election_offices', auth('officer'), electionOffice.list);
-router.get('/v1/elections/:election_id/election_offices', auth('officer'), electionOffice.create);
+router.post('/v1/elections/:election_id/election_offices', auth('officer'), electionOffice.create);
 
 // Candidates
 router.get('/v1/elections/:election_id/election_candidates', auth('officer'), electionCandidate.list);
 router.post('/v1/elections/:election_id/election_candidates', auth('officer'), electionCandidate.create);
 
 // Candidate Votes
-router.get('/v1/elections/:election_id/candidate_vote', auth('officer'), candidateVote.list);
-router.post('/v1/elections/:election_id/candidate_vote', auth('officer'), candidateVote.create);
+router.get('/v1/elections/:election_id/candidate_votes', auth('officer'), candidateVote.list);
+router.post('/v1/elections/:election_id/candidate_votes', auth('officer'), candidateVote.create);
 
 // Election Initiatives
 router.get('/v1/elections/:election_id/election_initiatives', auth('officer'), electionInitiative.list);
@@ -51,8 +51,8 @@ router.get('/v1/elections/:election_id/initiative_options', auth('officer'), ini
 router.post('/v1/elections/:election_id/initiative_options', auth('officer'), initiativeOption.create);
 
 // Initiative Votes
-router.get('/v1/elections/:election_id/initiative_vote', auth('officer'), initiativeVote.list);
-router.post('/v1/elections/:election_id/initiative_vote', auth('officer'), initiativeVote.create);
+router.get('/v1/elections/:election_id/initiative_votes', auth('officer'), initiativeVote.list);
+router.post('/v1/elections/:election_id/initiative_votes', auth('officer'), initiativeVote.create);
 
 // Society Members
 router.get('/v1/society_members/:society_id/:society_member_id', auth('admin'), societyMember.retrieve);
