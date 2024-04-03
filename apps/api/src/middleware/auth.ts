@@ -1,41 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { AuthenticationError } from '../errors/AuthenticationError';
 import { db } from '../db';
-import {
-  session,
-  user,
-  societyMember,
-  type Role,
-  type User,
-  society,
-} from '../db/schema';
+import { session, user, societyMember, type Role, society } from '../db/schema';
 import { and, eq } from 'drizzle-orm';
+import { Permission, permissions } from '../constants/permissions';
 
 type HasAccessOptions = {
-  user: User;
-  role?: Role;
-  requiredRole: Role;
+  role: Role | 'admin';
+  permission: Permission;
 };
 
-const hasAccess = ({ user, role, requiredRole }: HasAccessOptions) => {
-  // If the user is a global admin, they can access any endpoint
-  if (user.admin) return true;
-
-  // If the required role is employee, only employees can access this endpoint
-  if (requiredRole === 'employee') {
-    return role === 'employee';
-  }
-
-  // If the required role is officer, only officers and employees can access this endpoint
-  if (requiredRole === 'officer') {
-    return role === 'officer' || role === 'employee';
-  }
-
-  // Otherwise, everyone can access this endpoint as long as they are logged in
-  return true;
-};
-
-export const auth = (role?: Role | 'admin') => {
+export const auth = (permission: Permission) => {
   return async function (req: Request, _res: Response, next: NextFunction) {
     try {
       // Make sure that the request has a session cookie
@@ -69,7 +44,7 @@ export const auth = (role?: Role | 'admin') => {
       // If the society ID is empty and the endpoint does not require a specific role,
       // we do not care about checking their role or fetching the society. We assign the
       // user to the request and call the next handler
-      if (typeof societyId !== 'string' && !role) {
+      if (typeof societyId !== 'string' && !permission) {
         req.user = userData;
         return next();
       }
@@ -105,17 +80,12 @@ export const auth = (role?: Role | 'admin') => {
 
       // If this endpoint requires a specific role, check that the society member has this role or a role greater than the specified role
       // Also, allow any user with the god-mode flag to access any society, regardless of the societies they belong to
-      if (
-        role &&
-        role !== 'admin' &&
-        !hasAccess({
-          user: userData,
-          requiredRole: role,
-          role: societyMemberData?.role,
-        })
-      ) {
+      const userRole = userData.admin ? 'admin' : societyMemberData!.role;
+
+      // If the user's permissions do not include the specified permission, throw an error.
+      if (!permissions[userRole].includes(permission)) {
         throw new AuthenticationError(
-          'Role is not able to access this resource.',
+          `Role is not able to access this resource. Role ${userRole} does not have permission ${permission}`,
         );
       }
 

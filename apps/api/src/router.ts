@@ -58,4 +58,6 @@ router.post('/v1/elections/:election_id/initiative_votes', auth('officer'), init
 router.get('/v1/society_members/:society_id', auth('admin'), societyMember.list);
 router.post('/v1/society_members/:society_id', auth('admin'), societyMember.create);
 
+// Admin endpoint to list societies
+
 export { router };
