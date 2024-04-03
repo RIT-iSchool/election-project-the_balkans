@@ -48,13 +48,14 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof AuthenticationError) {
     return res.status(400).json({
       error: true,
-      message: err.message
-    })
+      message: err.message,
+    });
   }
 
-  next();
-})
+  console.error(err);
 
+  next();
+});
 
 // Listen for requests
 app.listen(PORT, () => {
