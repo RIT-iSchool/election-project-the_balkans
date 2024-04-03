@@ -1,5 +1,5 @@
 'use client';
-import { useUser } from "@/src/hooks/use-user";
+import { useUser } from "@/hooks/use-user";
 import Cookies from "js-cookie";
 
 export default function Page() {

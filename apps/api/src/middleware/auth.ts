@@ -73,8 +73,8 @@ export const auth = (role?: Role) => {
       req.society = societyData;
 
       next();
-    } catch {
-      throw new AuthenticationError("Unauthorized");
+    } catch (err) {
+      next(err);
     }
   }
 }

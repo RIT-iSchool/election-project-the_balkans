@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@repo/typescript-config": "^0.0.0",
+    "clsx": "^2.1.0",
     "formik": "^2.4.5",
     "frosted-ui": "^0.0.1-canary.27",
     "js-cookie": "^3.0.5",
@@ -17,6 +18,7 @@
     "react": "^18",
     "react-dom": "^18",
     "swr": "^2.2.5",
+    "tw-merge": "^0.0.1-alpha.3",
     "yup": "^1.4.0"
   },
   "devDependencies": {
