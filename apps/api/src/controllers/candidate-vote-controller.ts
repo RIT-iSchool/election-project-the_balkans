@@ -12,14 +12,3 @@ export const create = async (
   );
   return newCandidateVote;
 };
-
-/**
- * Lists a society's election's candidate votes.
- */
-export const list = async (candidateVoteRetrieveParams: CandidateVote.List) => {
-  // Enforce some business logic
-  const listCandidateVote = await CandidateVote.list(
-    candidateVoteRetrieveParams,
-  );
-  return listCandidateVote;
-};
