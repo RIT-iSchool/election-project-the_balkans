@@ -446,7 +446,7 @@ paths:
       security:
         - bearer: []
 
-  /v1/elections/{election_id}/candidate_vote:
+  /v1/elections/{election_id}/candidate_votes:
     parameters:
       - in: 'path'
         name: 'election_id'
@@ -632,7 +632,7 @@ paths:
       security:
         - bearer: []
 
-  /v1/elections/{election_id}/initiative_vote:
+  /v1/elections/{election_id}/initiative_votes:
     parameters:
       - in: 'path'
         name: 'election_id'
