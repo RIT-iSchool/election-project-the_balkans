@@ -10,7 +10,7 @@ type HasAccessOptions = {
   permission: Permission;
 };
 
-export const auth = (permission: Permission) => {
+export const auth = (permission?: Permission) => {
   return async function (req: Request, _res: Response, next: NextFunction) {
     try {
       // Make sure that the request has a session cookie
@@ -83,7 +83,7 @@ export const auth = (permission: Permission) => {
       const userRole = userData.admin ? 'admin' : societyMemberData!.role;
 
       // If the user's permissions do not include the specified permission, throw an error.
-      if (!permissions[userRole].includes(permission)) {
+      if (!permissions[userRole].includes(permission!)) {
         throw new AuthenticationError(
           `Role is not able to access this resource. Role ${userRole} does not have permission ${permission}`,
         );

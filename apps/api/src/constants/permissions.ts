@@ -1,8 +1,9 @@
-enum Permissions {
+export enum Permissions {
   // Elections
   create_election = 'create_election',
   list_elections = 'list_elections',
   retrieve_election = 'retrieve_election',
+  update_election = 'update_election',
 
   // Offices
   list_offices = 'list_offices',
@@ -12,17 +13,13 @@ enum Permissions {
   list_candidates = 'list_candidates',
   create_candidate = 'create_candidate',
 
-  // Candidate votes
-  list_candidate_votes = 'list_candidate_votes',
-  create_candidate_vote = 'create_candidate_vote',
-
   // Election initiatives
   list_initiatives = 'list_election_initiatives',
   create_initiative = 'create_election_initiative',
 
   // Initiative options
-  list_initiative_votes = 'list_initiative_votes',
-  create_initiative_vote = 'create_initiative_vote',
+  list_initiative_options = 'list_initiative_options',
+  create_initiative_option = 'create_initiative_option',
 
   // Society members
   list_society_members = 'list_society_members',
@@ -42,6 +39,7 @@ export const permissions = {
     Permissions.create_election,
     Permissions.list_elections,
     Permissions.retrieve_election,
+    Permissions.update_election,
 
     // Offices
     Permissions.create_office,
@@ -63,6 +61,7 @@ export const permissions = {
     Permissions.create_election,
     Permissions.list_elections,
     Permissions.retrieve_election,
+    Permissions.update_election,
 
     // Offices
     Permissions.create_office,
@@ -81,6 +80,7 @@ export const permissions = {
     Permissions.create_election,
     Permissions.list_elections,
     Permissions.retrieve_election,
+    Permissions.update_election,
 
     // Offices
     Permissions.create_office,
