@@ -1,14 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { AuthenticationError } from '../errors/AuthenticationError';
 import { db } from '../db';
-import { session, user, societyMember, type Role, society } from '../db/schema';
+import { session, user, societyMember, society } from '../db/schema';
 import { and, eq } from 'drizzle-orm';
 import { Permission, permissions } from '../constants/permissions';
-
-type HasAccessOptions = {
-  role: Role | 'admin';
-  permission: Permission;
-};
 
 export const auth = (permission?: Permission) => {
   return async function (req: Request, _res: Response, next: NextFunction) {
