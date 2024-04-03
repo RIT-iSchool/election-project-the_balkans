@@ -1,5 +1,9 @@
 import * as Ballot from '../data/ballot-data';
 
+//TODO: max votes check
+//TODO: many votes
+//TODO: no options allowed
+//TODO: candidate vote required
 /**
  * Submits a ballot.
  */
