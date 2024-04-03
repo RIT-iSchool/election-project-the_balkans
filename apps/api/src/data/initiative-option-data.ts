@@ -32,7 +32,7 @@ export type List = {
  */
 export const list = async ({ electionId, societyId }: List) => {
   try {
-    const [initiativeOptionData] = await db
+    const initiativeOptionData = await db
       .select()
       .from(initiativeOption)
       .innerJoin(

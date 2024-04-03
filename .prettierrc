@@ -4,5 +4,13 @@
   "arrowParens": "always",
   "trailingComma": "all",
   "semi": true,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "overrides": [
+    {
+      "files": ["apps/api/src/router.ts"],
+      "options": {
+        "printWidth": 150
+      }
+    }
+  ]
 }
