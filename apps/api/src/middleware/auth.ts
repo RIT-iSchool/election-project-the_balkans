@@ -4,6 +4,7 @@ import { session, user, societyMember, society } from '../db/schema';
 import { and, eq } from 'drizzle-orm';
 import { Permission, permissions } from '../constants/permissions';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
+import { BadRequestError } from '../errors/BadRequestError';
 
 export const auth = (permission?: Permission) => {
   return async function (req: Request, _res: Response, next: NextFunction) {
@@ -17,7 +18,7 @@ export const auth = (permission?: Permission) => {
         .select()
         .from(session)
         .where(eq(session.token, cookie));
-      if (!sessionData) throw new UnauthorizedError('Invalid headers');
+      if (!sessionData) throw new UnauthorizedError('Invalid cookie');
 
       // Make sure the session is not expired
       if (new Date() > sessionData.expiresAt) {
@@ -29,7 +30,7 @@ export const auth = (permission?: Permission) => {
         .select()
         .from(user)
         .where(eq(user.id, sessionData.userId));
-      if (!userData) throw new UnauthorizedError('Invalid user');
+      if (!userData) throw new BadRequestError('Invalid user');
 
       // Retrieve the society ID from the headers
       const societyId = req.headers['x-society-id'];
@@ -43,7 +44,7 @@ export const auth = (permission?: Permission) => {
       }
 
       if (typeof societyId !== 'string') {
-        throw new UnauthorizedError('Invalid society ID. Check your headers.');
+        throw new BadRequestError('Invalid society ID. Check your headers.');
       }
 
       // Make sure the society exists in our database
@@ -51,7 +52,7 @@ export const auth = (permission?: Permission) => {
         .select()
         .from(society)
         .where(eq(society.id, parseInt(societyId)));
-      if (!userData) throw new UnauthorizedError('Invalid society');
+      if (!userData) throw new BadRequestError('Invalid society');
 
       // Make sure the current user has access to this society in our database
       const [societyMemberData] = await db

@@ -76,7 +76,11 @@ export const login = async (
       password: userPassword,
     });
 
-    res.send(loginUser);
+    res.cookie('session', loginUser.token, {
+      maxAge: Date.now() + 1000 * 60 * 60 * 24 * 7 /* 1 week */,
+    });
+
+    res.send(201);
   } catch (err) {
     next(err);
   }

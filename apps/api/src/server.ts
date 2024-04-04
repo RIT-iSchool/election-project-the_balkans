@@ -7,6 +7,7 @@ import { router } from './router';
 import { AuthenticationError } from './errors/AuthenticationError';
 import cookieParser from 'cookie-parser';
 import { UnauthorizedError } from './errors/UnauthorizedError';
+import { BadRequestError } from './errors/BadRequestError';
 
 const PORT = process.env.port || 3001;
 
@@ -26,6 +27,7 @@ app.use(
   }),
 );
 
+// Log requests if not running tests
 if (!process.env.TEST) app.use(morgan('dev'));
 
 // API Routes
@@ -47,8 +49,8 @@ app.get('/', (_req, res) =>
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html')),
 );
 
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (err instanceof AuthenticationError) {
+app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof AuthenticationError || err instanceof BadRequestError) {
     return res.status(400).json({
       error: true,
       message: err.message,
@@ -62,6 +64,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     });
   }
 
+  // If we reach this statement, it means the application has an unhandled error. It should be logged.
   console.error(err);
 
   next();

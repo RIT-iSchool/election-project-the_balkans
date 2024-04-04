@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 import * as societyMember from '../controllers/society-member-controller';
+import { BadRequestError } from '../errors/BadRequestError';
 
 const SocietyMemberSchema = z.object({
   userId: z.number(),
@@ -14,13 +15,17 @@ export const create = async (
   next: NextFunction,
 ) => {
   try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
     const societyMemberData = SocietyMemberSchema.parse(req.body);
 
     const newSocietyMember = await societyMember.create({
       societyMemberData: {
         ...societyMemberData,
       },
-      societyId: res.locals.societyId,
+      societyId: req.society.id,
     });
 
     res.send(newSocietyMember);
@@ -31,20 +36,12 @@ export const create = async (
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const societyIdString = req.params.societyId;
-
-    if (societyIdString === undefined) {
-      return res.send(400).send('societyId is required');
-    }
-
-    const societyIdNumber = parseInt(societyIdString);
-
-    if (isNaN(societyIdNumber)) {
-      return res.send(400).send('invalid societyId');
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
     }
 
     const listSocietyMember = await societyMember.list({
-      societyId: societyIdNumber,
+      societyId: req.society.id,
     });
 
     res.send(listSocietyMember);

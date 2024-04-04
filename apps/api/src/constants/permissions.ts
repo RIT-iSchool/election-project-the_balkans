@@ -1,3 +1,5 @@
+// This enum serves as the source of truth for the names and accessor names of all
+// permissions for the application. The key and value should always match.
 export enum Permissions {
   // Elections
   create_election = 'create_election',
@@ -30,8 +32,14 @@ export enum Permissions {
   retrieve_ballot = 'retrieve_ballot',
 }
 
+// This type is used to ensure that only valid permission strings
+// are passed to the auth middleware
 export type Permission = keyof typeof Permissions;
 
+// This hash is used to determine which roles have which permissions. Each role
+// has an array of permissions that are assigned to that role. They are down-casted to
+// string arrays to make typescript happy elsewhere in the codebase. If you change this hash,
+// you must adjust the tests to accomodate these changes, otherwise the tests will fail!
 export const permissions = {
   member: [Permissions.list_elections, Permissions.submit_ballot] as string[],
   officer: [
@@ -55,6 +63,9 @@ export const permissions = {
 
     // Ballots
     Permissions.submit_ballot,
+
+    // Society Members
+    Permissions.list_society_members,
   ] as string[],
   employee: [
     // Elections
@@ -93,5 +104,9 @@ export const permissions = {
     // Initiatives
     Permissions.create_initiative,
     Permissions.list_initiatives,
+
+    // Society Members
+    Permissions.create_society_member,
+    Permissions.list_society_members,
   ] as string[],
 };
