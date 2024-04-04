@@ -20,8 +20,8 @@ router.get('/auth/session', auth(), session.retrieve);
 // Elections
 router.get('/v1/elections', auth('list_elections'), election.list);
 router.post('/v1/elections', auth('create_election'), election.create);
-router.put('/v1/elections/:electionId', auth('update_election'), election.update);
-router.get('/v1/elections/:electionId', auth('retrieve_election'), election.retrieve);
+router.put('/v1/elections/:election_id', auth('update_election'), election.update);
+router.get('/v1/elections/:election_id', auth('retrieve_election'), election.retrieve);
 
 // Ballots
 router.get('/v1/elections/:election_id/ballot', ballot.retrieve);

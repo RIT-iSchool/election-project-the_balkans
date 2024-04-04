@@ -1,6 +1,6 @@
 import { CreateInitiativeOption } from '../db/schema';
 import { db } from '../db';
-import { initiativeOption, electionInitiative, election } from '../db/schema';
+import { initiativeOption, electionInitiative } from '../db/schema';
 import { and, eq } from 'drizzle-orm';
 
 export type Create = {
@@ -39,11 +39,14 @@ export const list = async ({ electionId, societyId }: List) => {
         electionInitiative,
         eq(initiativeOption.electionInitiativeId, electionInitiative.id),
       )
-      .innerJoin(election, eq(electionInitiative.electionId, election.id))
       .where(
-        and(eq(election.id, electionId), eq(election.societyId, societyId)),
+        and(
+          eq(electionInitiative.electionId, electionId),
+          eq(electionInitiative.societyId, societyId),
+        ),
       );
-    return initiativeOptionData!;
+
+    return initiativeOptionData;
   } catch (err) {
     throw new Error('Something went wrong listing election initative options.');
   }

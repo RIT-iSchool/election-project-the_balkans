@@ -30,8 +30,8 @@ export const retrieve = async (electionRetrieveParams: Election.Retrieve) => {
 /**
  * Updates a society's election's election.
  */
-export const update = async (electionRetrieveParams: Election.Update) => {
+export const update = async (electionUpdateParams: Election.Update) => {
   // Enforce some business logic
-  const updateElection = await Election.update(electionRetrieveParams);
+  const updateElection = await Election.update(electionUpdateParams);
   return updateElection;
 };

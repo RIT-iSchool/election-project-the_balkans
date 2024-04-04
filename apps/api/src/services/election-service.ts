@@ -52,6 +52,10 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const RetrieveElectionParamsSchema = z.object({
+  election_id: z.string().transform((id) => parseInt(id)),
+});
+
 export const retrieve = async (
   req: Request,
   res: Response,
@@ -62,20 +66,12 @@ export const retrieve = async (
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const electionIdString = req.params.electionId;
-
-    if (electionIdString === undefined) {
-      return res.send(400).send('electionId is required');
-    }
-
-    const electionIdNumber = parseInt(electionIdString);
-
-    if (isNaN(electionIdNumber)) {
-      return res.send(400).send('invalid electionId');
-    }
+    const { election_id: electionId } = RetrieveElectionParamsSchema.parse(
+      req.params,
+    );
 
     const retrieveElection = await election.retrieve({
-      electionId: electionIdNumber,
+      electionId,
       societyId: req.society.id,
     });
 
@@ -84,6 +80,10 @@ export const retrieve = async (
     next(err);
   }
 };
+
+const UpdateElectionParamsSchema = z.object({
+  election_id: z.string().transform((id) => parseInt(id)),
+});
 
 export const update = async (
   req: Request,
@@ -97,12 +97,14 @@ export const update = async (
 
     // Parse req body to make sure it is valid
     const electionData = ElectionSchema.parse(req.body);
+    const { election_id: electionId } = UpdateElectionParamsSchema.parse(
+      req.params,
+    );
 
-    const updateElection = await election.create({
-      electionData: {
-        ...electionData,
-        societyId: res.locals.societyId,
-      },
+    const updateElection = await election.update({
+      electionData,
+      electionId,
+      societyId: req.society.id,
     });
 
     res.send(updateElection);

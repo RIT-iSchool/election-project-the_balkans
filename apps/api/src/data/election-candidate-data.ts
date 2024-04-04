@@ -33,7 +33,7 @@ export type List = {
  */
 export const list = async ({ electionId, societyId }: List) => {
   try {
-    const [electionCandidateData] = await db
+    const electionCandidateData = await db
       .select()
       .from(electionCandidate)
       .innerJoin(
@@ -44,7 +44,8 @@ export const list = async ({ electionId, societyId }: List) => {
       .where(
         and(eq(election.id, electionId), eq(election.societyId, societyId)),
       );
-    return electionCandidateData!;
+
+    return electionCandidateData;
   } catch (err) {
     throw new Error('Something went wrong listing election candidates.');
   }

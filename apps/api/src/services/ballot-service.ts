@@ -29,6 +29,10 @@ export const submit = async (
   }
 };
 
+const RetrieveBallotParamsSchema = z.object({
+  election_id: z.string().transform((id) => parseInt(id)),
+});
+
 export const retrieve = async (
   req: Request,
   res: Response,
@@ -37,20 +41,12 @@ export const retrieve = async (
   try {
     if (!req.society) throw new AuthenticationError('Society ID missing');
 
-    const electionIdString = req.params.electionId;
-
-    if (electionIdString === undefined) {
-      return res.send(400).send('electionId is required');
-    }
-
-    const electionIdNumber = parseInt(electionIdString);
-
-    if (isNaN(electionIdNumber)) {
-      return res.send(400).send('invalid electionId');
-    }
+    const { election_id: electionId } = RetrieveBallotParamsSchema.parse(
+      req.params,
+    );
 
     const retrieveBallot = await ballot.retrieve({
-      electionId: electionIdNumber,
+      electionId,
       societyId: req.society.id,
     });
 

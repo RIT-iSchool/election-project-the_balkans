@@ -35,26 +35,22 @@ export const create = async (
   }
 };
 
+const ListElectionCandidateParamsSchema = z.object({
+  election_id: z.string().transform((id) => parseInt(id)),
+});
+
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const electionIdString = req.params.electionId;
-
-    if (electionIdString === undefined) {
-      return res.send(400).send('electionId is required');
-    }
-
-    const electionIdNumber = parseInt(electionIdString);
-
-    if (isNaN(electionIdNumber)) {
-      return res.send(400).send('invalid electionId');
-    }
+    const { election_id: electionId } = ListElectionCandidateParamsSchema.parse(
+      req.params,
+    );
 
     const listElectionCandidates = await electionCandidate.list({
-      electionId: electionIdNumber,
+      electionId,
       societyId: req.society.id,
     });
 

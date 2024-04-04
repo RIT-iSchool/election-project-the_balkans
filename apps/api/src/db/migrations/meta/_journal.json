@@ -15,6 +15,13 @@
       "when": 1712243309093,
       "tag": "0001_fresh_newton_destine",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1712245244340,
+      "tag": "0002_thankful_the_anarchist",
+      "breakpoints": true
     }
   ]
 }

@@ -72,7 +72,7 @@ export type UpdateSession = Partial<CreateSession>;
 export const society = pgTable('society', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 100 }).notNull(),
-  owner: integer('user_id')
+  ownerId: integer('owner_id')
     .references(() => user.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',

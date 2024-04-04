@@ -31,12 +31,10 @@ export type List = {
  */
 export const list = async ({ societyId }: List) => {
   try {
-    const [societyMemberData] = await db
+    const societyMemberData = await db
       .select()
       .from(societyMember)
       .where(and(eq(societyMember.societyId, societyId)));
-
-    if (!societyMemberData) throw new Error('Society member not found');
 
     return societyMemberData;
   } catch (err) {
