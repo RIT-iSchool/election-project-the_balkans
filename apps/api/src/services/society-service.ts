@@ -4,7 +4,7 @@ import * as society from '../controllers/society-controller';
 
 const SocietySchema = z.object({
   name: z.string(),
-  owner: z.number(),
+  ownerId: z.number(),
 });
 
 export const create = async (
