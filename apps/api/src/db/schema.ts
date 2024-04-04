@@ -163,6 +163,12 @@ export const electionOffice = pgTable('electionOffice', {
     .notNull(),
   officeName: varchar('office_name', { length: 30 }).notNull(),
   maxVotes: integer('max_votes').notNull(),
+  societyId: integer('society_id')
+    .references(() => society.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    })
+    .notNull(),
 });
 
 export const electionOfficeRelations = relations(
@@ -170,6 +176,7 @@ export const electionOfficeRelations = relations(
   ({ one, many }) => ({
     election: one(election),
     candidates: many(electionCandidate),
+    society: one(society),
   }),
 );
 
@@ -192,12 +199,19 @@ export const electionCandidate = pgTable('electionCandidate', {
   name: varchar('name', { length: 100 }).notNull(),
   photoURL: varchar('photo_url', { length: 250 }),
   description: text('description').notNull(),
+  societyId: integer('society_id')
+    .references(() => society.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    })
+    .notNull(),
 });
 
 export const electionCandidateRelations = relations(
   electionCandidate,
   ({ one }) => ({
     office: one(electionOffice),
+    society: one(society),
   }),
 );
 
@@ -250,6 +264,12 @@ export const electionInitiative = pgTable('electionInitiative', {
     .notNull(),
   initiativeName: varchar('initiative_name', { length: 30 }).notNull(),
   description: text('description').notNull(),
+  societyId: integer('society_id')
+    .references(() => society.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    })
+    .notNull(),
 });
 
 export const electionInitiativeRelations = relations(
@@ -258,6 +278,7 @@ export const electionInitiativeRelations = relations(
     election: one(election),
     options: many(initiativeOption),
     votes: many(initiativeVote),
+    society: one(society),
   }),
 );
 
@@ -280,12 +301,19 @@ export const initiativeOption = pgTable('initiativeOption', {
     })
     .notNull(),
   title: varchar('title', { length: 30 }).notNull(),
+  societyId: integer('society_id')
+    .references(() => society.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    })
+    .notNull(),
 });
 
 export const initiativeOptionRelations = relations(
   initiativeOption,
   ({ one }) => ({
     initiative: one(electionInitiative),
+    society: one(society),
   }),
 );
 
