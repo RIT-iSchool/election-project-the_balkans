@@ -18,3 +18,85 @@ describe('test member permissions', () => {
     });
   });
 });
+
+describe('test officer permissions', () => {
+  const officerPermissions = [
+    Permissions.list_elections,
+    Permissions.retrieve_election,
+    Permissions.update_election,
+    Permissions.create_election,
+    Permissions.create_office,
+    Permissions.list_offices,
+    Permissions.create_candidate,
+    Permissions.list_candidates,
+    Permissions.create_initiative,
+    Permissions.list_initiatives,
+    Permissions.submit_ballot,
+  ];
+
+  test('an officer has all the correct permissions', () => {
+    officerPermissions.forEach((p) => {
+      expect(permissions.officer).toContain(p);
+    });
+  });
+
+  test('an officer does not have any more than the correct permissions', () => {
+    permissions.officer.forEach((p) => {
+      expect(officerPermissions).toContain(p);
+    });
+  });
+});
+
+describe('test employee permissions', () => {
+  const employeePermissions = [
+    Permissions.list_elections,
+    Permissions.retrieve_election,
+    Permissions.update_election,
+    Permissions.create_election,
+    Permissions.create_office,
+    Permissions.list_offices,
+    Permissions.create_candidate,
+    Permissions.list_candidates,
+    Permissions.create_initiative,
+    Permissions.list_initiatives,
+  ];
+
+  test('an employee has all the correct permissions', () => {
+    employeePermissions.forEach((p) => {
+      expect(permissions.employee).toContain(p);
+    });
+  });
+
+  test('an employee does not have any more than the correct permissions', () => {
+    permissions.employee.forEach((p) => {
+      expect(employeePermissions).toContain(p);
+    });
+  });
+});
+
+describe('test admin permissions', () => {
+  const adminPermissions = [
+    Permissions.list_elections,
+    Permissions.retrieve_election,
+    Permissions.update_election,
+    Permissions.create_election,
+    Permissions.create_office,
+    Permissions.list_offices,
+    Permissions.create_candidate,
+    Permissions.list_candidates,
+    Permissions.create_initiative,
+    Permissions.list_initiatives,
+  ];
+
+  test('an admin has all the correct permissions', () => {
+    adminPermissions.forEach((p) => {
+      expect(permissions.admin).toContain(p);
+    });
+  });
+
+  test('an admin does not have any more than the correct permissions', () => {
+    permissions.admin.forEach((p) => {
+      expect(adminPermissions).toContain(p);
+    });
+  });
+});
