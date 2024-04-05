@@ -10,7 +10,7 @@ type Election = {
 };
 
 export const useElections = () => {
-  const { data, error, isLoading } = useSWR<Election[]>('/api/v1/elections');
+  const { data, error, isLoading } = useSWR<Election[]>(`/api/v1/elections`);
 
   return {
     data,

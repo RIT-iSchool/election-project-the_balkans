@@ -10,7 +10,7 @@ type ElectionCandidate = {
 
 export const useElectionsCandidates = (electionId: string) => {
   const { data, error, isLoading } = useSWR<ElectionCandidate[]>(
-    '/v1/elections/${election_id}/election_candidates',
+    `/v1/elections/${electionId}/election_candidates`,
   );
 
   return {

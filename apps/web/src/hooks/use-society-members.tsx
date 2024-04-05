@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type societyMember = {
+type SocietyMember = {
   id: number;
   electionId: number;
   officeName: string;
@@ -8,7 +8,7 @@ type societyMember = {
 };
 
 export const useSocietyMembers = (society_id: string) => {
-  const { data, error, isLoading } = useSWR<societyMember[]>(
+  const { data, error, isLoading } = useSWR<SocietyMember[]>(
     `/api/v1/society_members/${society_id}`,
     );
 

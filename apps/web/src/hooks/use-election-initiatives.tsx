@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type electionInitiative = {
+type ElectionInitiative = {
     id: number;
     electionId: number;
     initiativeName: string;
@@ -8,7 +8,7 @@ type electionInitiative = {
   };
   
   export const useSocietyMembers = (electionId: string) => {
-    const { data, error, isLoading } = useSWR<electionInitiative[]>(
+    const { data, error, isLoading } = useSWR<ElectionInitiative[]>(
       `/api/v1/elections/${electionId}/election_initiatives`,
       );
   
