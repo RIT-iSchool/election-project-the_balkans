@@ -12,12 +12,13 @@ export type Create = {
  */
 export const create = async ({ electionData }: Create) => {
   try {
-    const [newElection] = await db
-      .insert(election)
-      .values(electionData)
-      .returning();
-
-    return newElection!;
+    await db.transaction(async (dbClient) => {
+      const [newElection] = await dbClient
+        .insert(election)
+        .values(electionData)
+        .returning();
+      return newElection!;
+    });
   } catch (err) {
     throw new Error('Something went wrong creating an election');
   }

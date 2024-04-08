@@ -9,11 +9,13 @@ export type Create = CreateSession;
  */
 export const create = async ({ ...sessionData }: CreateSession) => {
   try {
-    const [newSession] = await db
-      .insert(session)
-      .values(sessionData)
-      .returning();
-    return newSession!;
+    await db.transaction(async (dbClient) => {
+      const [newSession] = await dbClient
+        .insert(session)
+        .values(sessionData)
+        .returning();
+      return newSession!;
+    });
   } catch (err) {
     throw new Error('Something went wrong creating a session.');
   }

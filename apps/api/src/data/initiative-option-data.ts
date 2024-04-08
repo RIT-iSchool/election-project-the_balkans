@@ -12,11 +12,13 @@ export type Create = {
  */
 export const create = async ({ initiativeOptionData }: Create) => {
   try {
-    const [newInitiativeOption] = await db
-      .insert(initiativeOption)
-      .values(initiativeOptionData)
-      .returning();
-    return newInitiativeOption!;
+    await db.transaction(async (dbClient) => {
+      const [newInitiativeOption] = await dbClient
+        .insert(initiativeOption)
+        .values(initiativeOptionData)
+        .returning();
+      return newInitiativeOption!;
+    });
   } catch (err) {
     throw new Error('Something went wrong creating a initiative option.');
   }
