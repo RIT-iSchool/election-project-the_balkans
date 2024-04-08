@@ -85,6 +85,10 @@ export const permissions = {
     // Initiatives
     Permissions.create_initiative,
     Permissions.list_initiatives,
+
+    // Society Members
+    Permissions.create_society_member,
+    Permissions.list_society_members,
   ] as string[],
   admin: [
     // Elections

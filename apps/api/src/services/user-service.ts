@@ -80,7 +80,7 @@ export const login = async (
       maxAge: Date.now() + 1000 * 60 * 60 * 24 * 7 /* 1 week */,
     });
 
-    res.send(201);
+    res.sendStatus(204);
   } catch (err) {
     next(err);
   }

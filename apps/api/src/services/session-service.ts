@@ -24,7 +24,7 @@ export const remove = async (
     });
 
     res.clearCookie('session');
-    res.sendStatus(202);
+    res.sendStatus(204);
   } catch (err) {
     next(err);
   }

@@ -32,6 +32,7 @@ describe('test officer permissions', () => {
     Permissions.create_initiative,
     Permissions.list_initiatives,
     Permissions.submit_ballot,
+    Permissions.list_society_members,
   ];
 
   test('an officer has all the correct permissions', () => {
@@ -59,6 +60,8 @@ describe('test employee permissions', () => {
     Permissions.list_candidates,
     Permissions.create_initiative,
     Permissions.list_initiatives,
+    Permissions.create_society_member,
+    Permissions.list_society_members,
   ];
 
   test('an employee has all the correct permissions', () => {
@@ -86,6 +89,8 @@ describe('test admin permissions', () => {
     Permissions.list_candidates,
     Permissions.create_initiative,
     Permissions.list_initiatives,
+    Permissions.create_society_member,
+    Permissions.list_society_members,
   ];
 
   test('an admin has all the correct permissions', () => {
