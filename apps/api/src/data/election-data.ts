@@ -80,14 +80,18 @@ export const update = async ({
   electionData,
 }: Update) => {
   try {
-    const [updatedElection] = await db
-      .update(election)
-      .set(electionData)
-      .where(
-        and(eq(election.id, electionId), eq(election.societyId, societyId)),
-      );
+    const updatedElection = await db.transaction(async (dbClient) => {
+      const [electionRow] = await db
+        .update(election)
+        .set(electionData)
+        .where(
+          and(eq(election.id, electionId), eq(election.societyId, societyId)),
+        );
 
-    if (!updatedElection) throw new Error('Election not found');
+      if (!updatedElection) throw new Error('Election not found');
+
+      return electionRow;
+    });
 
     return updatedElection;
   } catch (err) {

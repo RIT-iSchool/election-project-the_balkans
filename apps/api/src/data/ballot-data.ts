@@ -21,8 +21,10 @@ export const submit = async ({
   initiativeVoteData,
 }: Submit) => {
   try {
-    await db.insert(candidateVote).values(candidateVoteData);
-    await db.insert(initiativeVote).values(initiativeVoteData);
+    await db.transaction(async (dbClient) => {
+      await dbClient.insert(candidateVote).values(candidateVoteData);
+      await dbClient.insert(initiativeVote).values(initiativeVoteData);
+    });
   } catch (err) {
     throw new Error('Something went wrong submitting a ballot');
   }
