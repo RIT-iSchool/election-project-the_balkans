@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { db } from '../db';
 import { session, user, societyMember, society } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 import { Permission, permissions } from '../constants/permissions';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { BadRequestError } from '../errors/BadRequestError';
@@ -25,9 +25,11 @@ export const auth = (permission?: Permission) => {
         throw new UnauthorizedError('Session is expired. Please log in again.');
       }
 
+      const { password: _, ...userColumns } = getTableColumns(user);
+
       // Make sure the user associated with that session exists in our database
       const [userData] = await db
-        .select()
+        .select(userColumns)
         .from(user)
         .where(eq(user.id, sessionData.userId));
       if (!userData) throw new BadRequestError('Invalid user');
