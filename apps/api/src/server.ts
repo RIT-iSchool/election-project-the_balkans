@@ -8,6 +8,7 @@ import { AuthenticationError } from './errors/AuthenticationError';
 import cookieParser from 'cookie-parser';
 import { UnauthorizedError } from './errors/UnauthorizedError';
 import { BadRequestError } from './errors/BadRequestError';
+import { audit } from './middleware/audit';
 
 const PORT = process.env.port || 3001;
 
@@ -15,6 +16,7 @@ const PORT = process.env.port || 3001;
 const app = express();
 
 // Middleware
+app.use(audit);
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

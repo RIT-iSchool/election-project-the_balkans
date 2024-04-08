@@ -1,0 +1,22 @@
+diff --git a/node_modules/express-requests-logger/lib/logger-helper.js b/node_modules/express-requests-logger/lib/logger-helper.js
+index ed05283..221701a 100644
+--- a/node_modules/express-requests-logger/lib/logger-helper.js
++++ b/node_modules/express-requests-logger/lib/logger-helper.js
+@@ -90,6 +90,7 @@ function getRequestAudit(req, options) {
+     var timestamp = req && req.timestamp ? req.timestamp.toISOString() : NA;
+     var timestamp_ms = req && req.timestamp ? req.timestamp.valueOf() : NA;
+     var requestBody = _.get(req, 'body');  //handle body clone the original body
++    var user = _.get(req, 'user');
+ 
+     if (options.request.customMaskBodyFunc) {
+         requestBody = options.request.customMaskBodyFunc(req);
+@@ -112,7 +113,8 @@ function getRequestAudit(req, options) {
+         headers: _.isEmpty(headers) ? NA : headers,
+         timestamp: timestamp,
+         timestamp_ms: timestamp_ms,
+-        body: utils.getBodyStr(requestBody, options.request.maxBodyLength)
++        body: utils.getBodyStr(requestBody, options.request.maxBodyLength),
++        user_id: user?.id,
+     };
+ 
+     return auditObject;
