@@ -45,6 +45,7 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
     const listElections = await election.list({
       societyId: req.society.id,
     });
+    // Set Content-Type header
 
     res.send(listElections);
   } catch (err) {

@@ -6,8 +6,8 @@ describe('POST /auth/login', () => {
     await request(server)
       .post('/auth/login')
       .send({
-        email: 'connor@admin.com',
-        password: 'admin123',
+        email: 'shpend.ismaili1@gmail.com',
+        password: 'shpend123',
       })
       .set('Accept', 'application/json')
       .expect(204);
@@ -30,8 +30,8 @@ describe('POST /auth/logout', () => {
     const response = await request(server)
       .post('/auth/login')
       .send({
-        email: 'connor@admin.com',
-        password: 'admin123',
+        email: 'shpend.ismaili1@gmail.com',
+        password: 'shpend123',
       })
       .set('Accept', 'application/json')
       .expect(204);
