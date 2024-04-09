@@ -16,7 +16,7 @@ const PORT = process.env.port || 3001;
 const app = express();
 
 // Middleware
-app.use(audit);
+app.use(audit());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
