@@ -12,13 +12,14 @@ export type Create = {
  */
 export const create = async ({ initiativeVoteData }: Create) => {
   try {
-    await db.transaction(async (dbClient) => {
-      const [newInitiativeVote] = await dbClient
-        .insert(initiativeVote)
-        .values(initiativeVoteData)
-        .returning();
-      return newInitiativeVote!;
-    });
+    const [newInitiativeVote] = await db.transaction(
+      async (dbClient) =>
+        await dbClient
+          .insert(initiativeVote)
+          .values(initiativeVoteData)
+          .returning(),
+    );
+    return newInitiativeVote!;
   } catch (err) {
     throw new Error('Something went wrong creating a initiative vote.');
   }
