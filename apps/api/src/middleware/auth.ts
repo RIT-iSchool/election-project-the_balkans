@@ -54,7 +54,7 @@ export const auth = (permission?: Permission) => {
         .select()
         .from(society)
         .where(eq(society.id, parseInt(societyId)));
-      if (!userData) throw new BadRequestError('Invalid society');
+      if (!societyData) throw new BadRequestError('Invalid society');
 
       // Make sure the current user has access to this society in our database
       const [societyMemberData] = await db
@@ -63,7 +63,7 @@ export const auth = (permission?: Permission) => {
         .where(
           and(
             eq(societyMember.userId, userData.id),
-            eq(societyMember.societyId, parseInt(societyId)),
+            eq(societyMember.societyId, societyData.id),
           ),
         );
 
