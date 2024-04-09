@@ -13,13 +13,11 @@ export type Create = {
  */
 export const create = async ({ userData }: Create) => {
   try {
-    await db.transaction(async (dbClient) => {
-      const [newUser] = await dbClient
-        .insert(user)
-        .values(userData)
-        .returning();
-      return newUser!;
-    });
+    const [newUser] = await db.transaction(
+      async (dbClient) =>
+        await dbClient.insert(user).values(userData).returning(),
+    );
+    return newUser!;
   } catch (err) {
     throw new Error('Something went wrong creating a user');
   }

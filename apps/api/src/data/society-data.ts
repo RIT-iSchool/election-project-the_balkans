@@ -11,13 +11,11 @@ export type Create = {
  */
 export const create = async ({ societyData }: Create) => {
   try {
-    await db.transaction(async (dbClient) => {
-      const [newSociety] = await dbClient
-        .insert(society)
-        .values(societyData)
-        .returning();
-      return newSociety!;
-    });
+    const [newSociety] = await db.transaction(
+      async (dbClient) =>
+        await dbClient.insert(society).values(societyData).returning(),
+    );
+    return newSociety!;
   } catch (err) {
     throw new Error('Something went wrong creating a society.');
   }
