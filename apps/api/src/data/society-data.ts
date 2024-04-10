@@ -60,7 +60,7 @@ export const list = async ({ search }: List) => {
       .from(society)
       .leftJoin(user, eq(user.id, society.ownerId));
 
-    if (search) societiesQuery.where(ilike(society.name, search));
+    if (search) societiesQuery.where(ilike(society.name, `%${search}%`));
 
     const societies = await societiesQuery;
 
