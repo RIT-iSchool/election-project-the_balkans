@@ -14,6 +14,7 @@ type User = {
       ownerId: number;
     };
   }[];
+  role: 'admin' | 'member' | 'officer' | 'employee';
 };
 
 export const useUser = () => {
