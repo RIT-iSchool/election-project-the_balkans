@@ -1,4 +1,4 @@
-PG_USER="postgres"
+PG_USER=""
 PG_DATABASE="americandream"
 
 PSV_FILE="./scripts/candidates.psv"
