@@ -10,7 +10,7 @@ type ElectionOffice = {
 export const useElectionOffices = (electionId: string) => {
   const { data, error, isLoading } = useSWR<ElectionOffice[]>(
     `/api/v1/elections/${electionId}/election_offices`,
-    );
+  );
 
   return {
     data,
