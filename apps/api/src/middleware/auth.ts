@@ -88,6 +88,7 @@ export const auth = (permission?: Permission) => {
       // Assign the user and society to the request object
       req.user = userData;
       req.society = societyData;
+      req.role = userRole;
 
       next();
     } catch (err) {

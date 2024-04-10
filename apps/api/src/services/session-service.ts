@@ -22,6 +22,7 @@ export const retrieve = async (
     res.json({
       ...req.user,
       societies,
+      role: req.role,
     });
   } catch (err) {
     next(err);

@@ -77,11 +77,14 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/Session'
+                type: object
                 properties:
+                  session:
+                    $ref: '#/components/schemas/Session'
                   user:
                     $ref: '#/components/schemas/User'
+                  role:
+                    type: string
         401:
           description: 'Unauthorized'
           content:
@@ -572,8 +575,9 @@ paths:
 
   /v1/society_members/{society_id}:
     parameters:
-      - in: 'header'
-        name: 'society-id'
+      - in: 'path'
+        required: true
+        name: 'society_id'
         schema:
           type: 'string'
           example: 'The ID of the society you want to act on'
@@ -591,7 +595,7 @@ paths:
               schema:
                 type: 'array'
                 items:
-                  $ref: '#/components/schemas/SocietyMembers'
+                  $ref: '#/components/schemas/SocietyMember'
         401:
           description: 'Unauthorized'
           content:
@@ -868,7 +872,8 @@ components:
                     properties:
                       options:
                         type: array
-                        items: '#/components/schemas/InitiativeOption'
+                        items:
+                          $ref: '#/components/schemas/InitiativeOption'
 
     # Request bodies
     CreateLoginBody:
