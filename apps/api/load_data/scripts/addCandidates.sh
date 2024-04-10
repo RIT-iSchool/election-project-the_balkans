@@ -1,3 +1,4 @@
+# TODO: update columns
 PG_USER=""
 PG_DATABASE="americandream"
 
