@@ -1,4 +1,5 @@
-PG_USER="postgres"
+# TODO: update columns
+PG_USER=""
 PG_DATABASE="americandream"
 
 PSV_FILE="./scripts/candidates.psv"

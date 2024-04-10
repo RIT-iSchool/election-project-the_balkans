@@ -1,4 +1,4 @@
-PG_USER="postgres"
+PG_USER=""
 PG_DATABASE="americandream"
 
 # PSV file
@@ -15,7 +15,7 @@ insert_data() {
     else
         ((OWNER_ID++))
     fi
-    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO society (id, name, user_id) VALUES ($1, '$2', $OWNER_ID)";
+    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO society (id, name, owner_id) VALUES ($1, '$2', $OWNER_ID)";
 }
 
 # Check if PSV file exists
