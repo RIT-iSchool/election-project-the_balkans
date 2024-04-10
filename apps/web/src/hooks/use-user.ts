@@ -7,6 +7,13 @@ type User = {
   firstName: string;
   lastName: string;
   admin: boolean;
+  societies: {
+    society: {
+      id: number;
+      name: string;
+      ownerId: number;
+    };
+  }[];
 };
 
 export const useUser = () => {

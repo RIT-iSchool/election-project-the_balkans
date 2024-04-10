@@ -19,14 +19,11 @@ export default function Home() {
         method: 'POST',
         body: JSON.stringify(values),
         headers: {
-          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       });
 
-      const responseData = await response.json();
-
-      if (responseData.error) {
+      if (response.status > 299) {
         actions.setErrors({
           password: 'Invalid account details.',
         });

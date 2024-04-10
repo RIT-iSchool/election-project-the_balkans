@@ -30,6 +30,9 @@ export enum Permissions {
   // Ballots
   submit_ballot = 'submit_ballot',
   retrieve_ballot = 'retrieve_ballot',
+
+  // Admin
+  list_societies = 'list_societies',
 }
 
 // This type is used to ensure that only valid permission strings
@@ -112,5 +115,8 @@ export const permissions = {
     // Society Members
     Permissions.create_society_member,
     Permissions.list_society_members,
+
+    // Admin
+    Permissions.list_societies,
   ] as string[],
 };

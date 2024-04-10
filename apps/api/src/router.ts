@@ -6,16 +6,18 @@ import * as election from './services/election-service';
 import * as initiativeOption from './services/initiative-option-service';
 import * as session from './services/session-service';
 import * as societyMember from './services/society-member-service';
-import * as user from './services/user-service';
+import * as userService from './services/user-service';
 import * as ballot from './services/ballot-service';
+import * as society from './services/society-service';
 import { auth } from './middleware/auth';
+import { user } from './middleware/user';
 
 const router = Router();
 
 // Auth
-router.post('/auth/login', user.login);
-router.post('/auth/logout', auth(), session.remove);
-router.get('/auth/session', auth(), session.retrieve);
+router.post('/auth/login', userService.login);
+router.post('/auth/logout', user(), session.remove);
+router.get('/auth/session', user(), session.retrieve);
 
 // Elections
 router.get('/v1/elections', auth('list_elections'), election.list);
@@ -47,6 +49,7 @@ router.post('/v1/elections/:election_id/initiative_options', auth('create_initia
 router.get('/v1/society_members/:society_id', auth('list_society_members'), societyMember.list);
 router.post('/v1/society_members/:society_id', auth('create_society_member'), societyMember.create);
 
-// Admin endpoint to list societies
+// Admin
+router.get('/v1/societies', auth('list_societies'), society.list);
 
 export { router };

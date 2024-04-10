@@ -6,7 +6,6 @@ import { v4 as uuid } from 'uuid';
  * Creates a new entry in the user table.
  */
 export const create = async (userCreateParams: User.Create) => {
-  // Enforce some business logic
   const newUser = await User.create(userCreateParams);
   return newUser;
 };
@@ -24,7 +23,6 @@ export const retrieve = async (userRetrieveParams: User.Retrieve) => {
  * Login a user.
  */
 export const login = async (userLoginParams: User.Login) => {
-  // Enforce some business log
   const loginUser = await User.login(userLoginParams);
   const token = await Session.create({
     userId: loginUser.id,

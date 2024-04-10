@@ -17,3 +17,11 @@ export const retrieve = async (societyRetrieveParams: Society.Retrieve) => {
   const society = await Society.retrieve(societyRetrieveParams);
   return society;
 };
+
+/**
+ * Lists societies
+ */
+export const list = async (societyListParams: Society.List) => {
+  const societies = await Society.list(societyListParams);
+  return societies;
+};

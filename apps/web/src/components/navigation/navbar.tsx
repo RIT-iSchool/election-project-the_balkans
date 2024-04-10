@@ -33,12 +33,12 @@ export const routes: Route[] = [
 
 export const adminRoutes = [
   {
-    title: 'Testing',
-    href: '/testing',
+    title: 'Societies',
+    href: '/admin/societies',
   },
   {
-    title: 'Testing',
-    href: '/testing',
+    title: 'Users',
+    href: '/admin/users',
   },
 ] as const;
 
@@ -52,14 +52,16 @@ const Navbar = () => {
           {routes.map((r) => (
             <NavLink key={r.href} href={r.href} title={r.title} />
           ))}
-          <div>
-            <Text size="2" weight="medium" className="text-gray-11 my-1">
-              Admin
-            </Text>
-            {adminRoutes.map((r) => (
-              <NavLink key={r.href} href={r.href} title={r.title} />
-            ))}
-          </div>
+          {user?.admin && (
+            <div>
+              <Text size="2" weight="medium" className="text-gray-11 my-1">
+                Admin
+              </Text>
+              {adminRoutes.map((r) => (
+                <NavLink key={r.href} href={r.href} title={r.title} />
+              ))}
+            </div>
+          )}
         </div>
         {user && (
           <div className="flex items-center gap-2 self-start">
@@ -69,7 +71,7 @@ const Navbar = () => {
                 {user?.lastName.slice(0, 1)}
               </Text>
             </div>
-            <Text size="2">Welcome back, {user.firstName}</Text>
+            <Text size="2">Welcome back, {user?.firstName}</Text>
           </div>
         )}
       </nav>

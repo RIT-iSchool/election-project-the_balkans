@@ -38,3 +38,18 @@ export const retrieve = async (
     next(err);
   }
 };
+
+const ListSocietiesSchema = z.object({
+  search: z.string().optional(),
+});
+
+export const list = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { search } = ListSocietiesSchema.parse(req.query);
+    const listSocieties = await society.list({ search });
+
+    res.send(listSocieties);
+  } catch (err) {
+    next(err);
+  }
+};

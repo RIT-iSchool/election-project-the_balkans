@@ -1,6 +1,6 @@
-import { CreateSociety, society } from '../db/schema';
+import { CreateSociety, society, user } from '../db/schema';
 import { db } from '../db';
-import { eq } from 'drizzle-orm';
+import { eq, getTableColumns, ilike } from 'drizzle-orm';
 
 export type Create = {
   societyData: CreateSociety;
@@ -40,5 +40,32 @@ export const retrieve = async ({ societyId }: Retrieve) => {
     return societyData;
   } catch (err) {
     throw new Error('Something went wrong retrieving a society.');
+  }
+};
+
+export type List = {
+  search?: string;
+};
+
+/**
+ * Lists societies based on a search query
+ */
+export const list = async ({ search }: List) => {
+  try {
+    const societiesQuery = db
+      .select({
+        ...getTableColumns(society),
+        owner: getTableColumns(user),
+      })
+      .from(society)
+      .leftJoin(user, eq(user.id, society.ownerId));
+
+    if (search) societiesQuery.where(ilike(society.name, search));
+
+    const societies = await societiesQuery;
+
+    return societies;
+  } catch (err) {
+    throw new Error('Something went wrong listing societies.');
   }
 };
