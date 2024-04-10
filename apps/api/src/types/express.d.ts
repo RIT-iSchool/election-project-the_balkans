@@ -5,5 +5,6 @@ declare module 'express-serve-static-core' {
   interface Request {
     user: Omit<User, 'password'> | undefined;
     society: Society | undefined;
+    role: 'admin' | 'member' | 'officer' | 'employee';
   }
 }
