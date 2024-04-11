@@ -51,5 +51,6 @@ router.post('/v1/society_members/:society_id', auth('create_society_member'), so
 
 // Admin
 router.get('/v1/societies', auth('list_societies'), society.list);
+router.get('/v1/societies/:society_id', auth('retrieve_society'), society.retrieve);
 
 export { router };

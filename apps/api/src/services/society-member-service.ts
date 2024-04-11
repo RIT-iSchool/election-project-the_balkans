@@ -34,14 +34,16 @@ export const create = async (
   }
 };
 
+const ListSocietyMembersParams = z.object({
+  society_id: z.string().transform((id) => parseInt(id)),
+});
+
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (!req.society) {
-      throw new BadRequestError('Society ID missing from headers');
-    }
+    const { society_id } = ListSocietyMembersParams.parse(req.params);
 
     const listSocietyMember = await societyMember.list({
-      societyId: req.society.id,
+      societyId: society_id,
     });
 
     res.send(listSocietyMember);

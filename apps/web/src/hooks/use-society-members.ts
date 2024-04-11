@@ -2,9 +2,17 @@ import useSWR from 'swr';
 
 type SocietyMember = {
   id: number;
-  electionId: number;
-  officeName: string;
-  maxVotes: number;
+  userId: number;
+  societyId: number;
+  role: 'member' | 'officer' | 'employee';
+  user: {
+    id: number;
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    admin: boolean;
+  } | null;
 };
 
 export const useSocietyMembers = (society_id: string) => {

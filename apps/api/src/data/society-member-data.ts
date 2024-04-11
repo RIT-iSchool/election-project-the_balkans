@@ -1,6 +1,6 @@
-import { CreateSocietyMember, societyMember } from '../db/schema';
+import { CreateSocietyMember, societyMember, user } from '../db/schema';
 import { db } from '../db';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, getTableColumns } from 'drizzle-orm';
 
 export type Create = {
   societyMemberData: CreateSocietyMember;
@@ -35,9 +35,13 @@ export type List = {
 export const list = async ({ societyId }: List) => {
   try {
     const societyMemberData = await db
-      .select()
+      .select({
+        ...getTableColumns(societyMember),
+        user: getTableColumns(user),
+      })
       .from(societyMember)
-      .where(and(eq(societyMember.societyId, societyId)));
+      .leftJoin(user, eq(user.id, societyMember.userId))
+      .where(eq(societyMember.societyId, societyId));
 
     return societyMemberData;
   } catch (err) {

@@ -1,5 +1,4 @@
 'use client';
-
 import { SearchIcon } from '@/components/icons/search';
 import { PageTitle } from '@/components/shared/page-title';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -16,6 +15,7 @@ import {
   TableCell,
   Button,
 } from 'frosted-ui';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Page() {
@@ -54,8 +54,11 @@ export default function Page() {
             <TableRow key={s.id}>
               <TableColumnHeaderCell>{s.id}</TableColumnHeaderCell>
               <TableCell>{s.name}</TableCell>
-              <TableCell className="flex h-full w-full">
+              <TableCell className="flex h-full w-full gap-x-2">
                 <Button>Investigate Society</Button>
+                <Link href={`/admin/societies/${s.id}`}>
+                  <Button>Manage Society</Button>
+                </Link>
               </TableCell>
             </TableRow>
           ))}

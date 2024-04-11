@@ -37,8 +37,8 @@ export const adminRoutes = [
     href: '/admin/societies',
   },
   {
-    title: 'Users',
-    href: '/admin/users',
+    title: 'System',
+    href: '/admin/system',
   },
 ] as const;
 

@@ -92,6 +92,7 @@ describe('test admin permissions', () => {
     Permissions.create_society_member,
     Permissions.list_society_members,
     Permissions.list_societies,
+    Permissions.retrieve_society,
   ];
 
   test('an admin has all the correct permissions', () => {

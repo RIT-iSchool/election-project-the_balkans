@@ -27,13 +27,21 @@ export const create = async (
   }
 };
 
+const RetrieveSocietyParams = z.object({
+  society_id: z.string().transform((id) => parseInt(id)),
+});
+
 export const retrieve = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    res.send(req.society);
+    const { society_id } = RetrieveSocietyParams.parse(req.params);
+
+    const societyData = await society.retrieve({ societyId: society_id });
+
+    res.json(societyData);
   } catch (err) {
     next(err);
   }
