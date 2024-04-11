@@ -119,14 +119,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Session"
-                    }
-                  ],
+                  "type": "object",
                   "properties": {
+                    "session": {
+                      "$ref": "#/components/schemas/Session"
+                    },
                     "user": {
                       "$ref": "#/components/schemas/User"
+                    },
+                    "role": {
+                      "type": "string"
                     }
                   }
                 }
@@ -936,8 +938,9 @@
     "/v1/society_members/{society_id}": {
       "parameters": [
         {
-          "in": "header",
-          "name": "society-id",
+          "in": "path",
+          "required": true,
+          "name": "society_id",
           "schema": {
             "type": "string",
             "example": "The ID of the society you want to act on"
@@ -958,7 +961,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/SocietyMembers"
+                    "$ref": "#/components/schemas/SocietyMember"
                   }
                 }
               }
@@ -1042,6 +1045,73 @@
         ],
         "operationId": "ListSocieties",
         "description": "List societies",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "owner": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/User"
+                          }
+                        ]
+                      },
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "ownerId": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/v1/societies/{society_id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "name": "society_id",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Societies"
+        ],
+        "operationId": "RetrieveSocieties",
+        "description": "Retrieve societies",
         "responses": {
           "200": {
             "description": "OK",
@@ -1371,7 +1441,9 @@
                       "properties": {
                         "options": {
                           "type": "array",
-                          "items": "#/components/schemas/InitiativeOption"
+                          "items": {
+                            "$ref": "#/components/schemas/InitiativeOption"
+                          }
                         }
                       }
                     }
