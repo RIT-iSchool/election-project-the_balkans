@@ -5,7 +5,11 @@ PG_DATABASE="americandream"
 PSV_FILE="./scripts/societies.psv"
 OWNER_ID=1
 
-
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (1, 'shpend.ismaili1@gmail.com', 'shpend123', 'Shpend', 'Ismaili', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (2, 'chs3578@g.rit.edu', 'connor123', 'Connor', 'Stevens', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (3, 'ctg7866@g.rit.edu', 'cooper123', 'Cooper', 'Gadd', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (4, 'emr8909@g.rit.edu', 'evan123', 'Evan', 'Reighter', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (5, 'connor@admin.com', 'connor123', 'Connor', 'Stevens', true)";
 
 
 # Function to insert data into PostgreSQL
