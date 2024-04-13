@@ -4,16 +4,20 @@ import { z } from 'zod';
 import { AuthenticationError } from '../errors/AuthenticationError';
 
 const BallotSchema = z.object({
-  candidateVoteData: z.object({
-    memberId: z.number(),
-    electionMemberId: z.number(),
-    electionCandidateId: z.number(),
-  }),
-  initiativeVoteData: z.object({
-    memberId: z.number(),
-    electionInitiativeId: z.number(),
-    electionInitiativeOptionId: z.number(),
-  }),
+  candidateVotesData: z.array(
+    z.object({
+      memberId: z.number(),
+      electionMemberId: z.number(),
+      electionCandidateId: z.number(),
+    }),
+  ),
+  initiativeVotesData: z.array(
+    z.object({
+      memberId: z.number(),
+      electionInitiativeId: z.number(),
+      electionInitiativeOptionId: z.number(),
+    }),
+  ),
 });
 
 export const submit = async (
