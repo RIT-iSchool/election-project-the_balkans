@@ -18,7 +18,7 @@ describe('GET /v1/elections', () => {
     authToken = loginResponse.headers['set-cookie']?.[0]; // Extract the authentication token
 
     // Set society ID
-    societyId = 5; // Assuming a valid society ID
+    societyId = 5;
   });
 
   it('gets the election data for a specific society', async () => {

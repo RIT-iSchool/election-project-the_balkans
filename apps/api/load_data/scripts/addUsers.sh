@@ -2,12 +2,8 @@ PG_USER=""
 PG_DATABASE="americandream"
 
 PSV_FILE="./scripts/dirty.psv"
-COUNT=1
+COUNT=6
 # inserting the society owners
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO "user" VALUES (1, 'shpend.ismaili1@gmail.com', 'shpend123', 'Shpend', 'Ismaili', false)";
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO "user" VALUES (2, 'chs3578@g.rit.edu', 'connor123', 'Connor', 'Stevens', false)";
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO "user" VALUES (3, 'ctg7866@g.rit.edu', 'connor123', 'Cooper', 'Gadd', false)";
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO "user" VALUES (4, 'emr8909@g.rit.edu', 'evan123', 'Evan', 'Reighter', false)";
 insert_user() {
     psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" (id, email, password, first_name, last_name, admin) VALUES ($COUNT, '$2@gmail.com', '123456789', '$3', '$4', false)";
 }

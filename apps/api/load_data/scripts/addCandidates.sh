@@ -3,7 +3,8 @@ PG_USER=""
 PG_DATABASE="americandream"
 
 PSV_FILE="./scripts/candidates.psv"
-
+societyID=1
+changeID=false
 
 if [ ! -f "$PSV_FILE" ]; then
     echo "PSV file not found."
@@ -11,13 +12,14 @@ if [ ! -f "$PSV_FILE" ]; then
 fi
 
 insert_offices() {
-    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionOffice\" (id, election_id, office_name, max_votes) VALUES ($1, $2, '$3', $4)";
+    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionOffice\" (id, election_id, office_name, max_votes, society_id) VALUES ($1, $2, '$3', $4, $societyID)";
 }
 insert_candidates() {
+
     if [ -z "$5" ]; then
-        psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionCandidate\" (id, election_office_id, name, description) VALUES ($1, $2, '$3 $4', 'My name is $3 $4 and I am the best candidate for this office')";
+        psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionCandidate\" (id, election_office_id, name, description, society_id) VALUES ($1, $2, '$3 $4', 'My name is $3 $4 and I am the best candidate for this office', $societyID)";
     else 
-        psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionCandidate\" (id, election_office_id, name, description) VALUES ($1, $2, '$3 $4', '$5')";
+        psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionCandidate\" (id, election_office_id, name, description, society_id) VALUES ($1, $2, '$3 $4', '$5', $societyID)";
     fi
 }
 escape_single_quotes() {
@@ -41,6 +43,14 @@ while IFS='|' read -r CandidateID OfficeID ElectionID OfficeName MaxVotes Candid
     if [ "$CandidateID" == "Candidate ID" ]; then
         continue
     fi
+    # increments societyIDfor every 25th election
+    if (($ElectionID % 25 == 0)) && ! $changeID; then
+        changeID=true
+    elif ! (($ElectionID % 25 == 0)) && $changeID; then
+        ((societyID++))
+        changeID=false
+    fi
+
     if [ -z "$CandidateBio" ]; then
         insert_offices "$OfficeID" "$ElectionID" "$OfficeName" "$MaxVotes"
         insert_candidates "$CandidateID" "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$CandidateBio"
