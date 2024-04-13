@@ -1,12 +1,11 @@
 import * as Ballot from '../data/ballot-data';
 
 //TODO: max votes check
-//TODO: no options allowed
-//TODO: candidate vote required
 /**
  * Submits a ballot.
  */
 export const submit = async (ballotSubmitParams: Ballot.Submit) => {
+  if (ballotSubmitParams.candidateVotesData.length === 0) throw Error; // candidate vote required
   await Ballot.submit(ballotSubmitParams);
 };
 
