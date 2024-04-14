@@ -1,16 +1,43 @@
 import request from 'supertest';
 import { server } from '../../src/server';
 
+export async function userLogin() {
+  const loginResponse = await request(server)
+    .post('/auth/login')
+    .send({
+      email: 'grapefruitsnowstorm10@gmail.com',
+      password: '123456789',
+    })
+    .set('Accept', 'application/json')
+    .expect(204);
+
+  return loginResponse.headers['set-cookie']?.[0];
+}
+export async function adminLogin() {
+  const loginResponse = await request(server)
+    .post('/auth/login')
+    .send({
+      email: 'connor@admin.com',
+      password: 'connor123',
+    })
+    .set('Accept', 'application/json')
+    .expect(204);
+
+  return loginResponse.headers['set-cookie']?.[0];
+}
+
 describe('POST /auth/login', () => {
   it('allows a user to login with valid credentials', async () => {
-    await request(server)
+    const loginResponse = await request(server)
       .post('/auth/login')
       .send({
-        email: 'shpend.ismaili1@gmail.com',
-        password: 'shpend123',
+        email: 'connor@admin.com',
+        password: 'connor123',
       })
       .set('Accept', 'application/json')
       .expect(204);
+
+    const authToken = loginResponse.headers['set-cookie']?.[0];
   });
 
   it('denies a user who logs in with invalid credentials', async () => {
