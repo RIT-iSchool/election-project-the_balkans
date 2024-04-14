@@ -11,6 +11,8 @@ import {
 export type Submit = {
   candidateVotesData: CreateCandidateVote[];
   initiativeVotesData: CreateInitiativeVote[];
+  electionId: number;
+  societyId: number;
 };
 
 /**

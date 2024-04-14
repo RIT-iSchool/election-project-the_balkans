@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as ballot from '../controllers/ballot-controller';
-import { z } from 'zod';
+import { number, z } from 'zod';
 import { AuthenticationError } from '../errors/AuthenticationError';
 
 const BallotSchema = z.object({
@@ -18,6 +18,7 @@ const BallotSchema = z.object({
       electionInitiativeOptionId: z.number(),
     }),
   ),
+  electionId: z.number(),
 });
 
 export const submit = async (
@@ -26,7 +27,15 @@ export const submit = async (
   next: NextFunction,
 ) => {
   try {
-    const submitBallot = await ballot.submit(BallotSchema.parse(req.body));
+    if (!req.society) throw new AuthenticationError('Society ID missing');
+    //election id
+    const submitBallotData = BallotSchema.parse(req.body);
+    const submitBallot = await ballot.submit({
+      candidateVotesData: submitBallotData.candidateVotesData,
+      initiativeVotesData: submitBallotData.initiativeVotesData,
+      electionId: submitBallotData.electionId,
+      societyId: req.society.id,
+    });
     res.send(submitBallot);
   } catch (err) {
     next(err);
