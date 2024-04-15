@@ -1,7 +1,7 @@
 import { CreateElectionCandidate } from '../db/schema';
 import { db } from '../db';
 import { electionCandidate, electionOffice, election } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, ilike } from 'drizzle-orm';
 
 export type Create = {
   electionCandidateData: CreateElectionCandidate;
@@ -55,37 +55,16 @@ export const list = async ({ electionId, societyId }: List) => {
 
 export type Retrieve = {
   name: string;
-  electionOfficeId: number;
-  electionId: number;
-  societyId: number;
 };
 
 /**
  * Retrieve a candidate.
  */
-export const retrieve = async ({
-  electionId,
-  societyId,
-  electionOfficeId,
-  name,
-}: Retrieve) => {
+export const retrieve = async ({ name }: Retrieve) => {
   try {
-    const electionCandidateData = await db
-      .select()
-      .from(electionCandidate)
-      .innerJoin(
-        electionOffice,
-        eq(electionCandidate.electionOfficeId, electionOffice.id),
-      )
-      .innerJoin(election, eq(electionOffice.electionId, election.id))
-      .where(
-        and(
-          eq(election.id, electionId),
-          eq(election.societyId, societyId),
-          eq(electionCandidate.electionOfficeId, electionOfficeId),
-          eq(electionCandidate.name, name),
-        ),
-      );
+    const electionCandidateData = await db.query.electionCandidate.findFirst({
+      where: and(ilike(electionCandidate.name, name)),
+    });
     return electionCandidateData;
   } catch (err) {
     throw new Error('Something went wrong retrieving election candidate.');

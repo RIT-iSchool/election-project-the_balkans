@@ -3,6 +3,7 @@ import { and, eq } from 'drizzle-orm';
 import {
   candidateVote,
   CreateCandidateVote,
+  CreateElectionCandidate,
   CreateInitiativeVote,
   election,
   initiativeVote,
@@ -13,6 +14,7 @@ export type Submit = {
   initiativeVotesData: CreateInitiativeVote[];
   electionId: number;
   societyId: number;
+  writeIn?: CreateElectionCandidate;
 };
 
 /**

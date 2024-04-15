@@ -59,36 +59,3 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
-
-const RetrieveElectionCandidateParamsSchema = z.object({
-  election_id: z.string().transform((id) => parseInt(id)),
-  electionOfficeId: z.number(),
-  name: z.string(),
-});
-
-export const retrieve = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    if (!req.society) {
-      throw new BadRequestError('Society ID missing from headers');
-    }
-
-    const electionCandidateData = RetrieveElectionCandidateParamsSchema.parse(
-      req.body,
-    );
-
-    const retrieveElectionCandidate = await electionCandidate.retrieve({
-      name: electionCandidateData.name,
-      electionOfficeId: electionCandidateData.electionOfficeId,
-      electionId: electionCandidateData.election_id,
-      societyId: req.society.id,
-    });
-
-    res.send(retrieveElectionCandidate);
-  } catch (err) {
-    next(err);
-  }
-};

@@ -36,7 +36,6 @@ router.post('/v1/elections/:election_id/election_offices', auth('create_office')
 // Candidates
 router.get('/v1/elections/:election_id/election_candidates', auth('list_candidates'), electionCandidate.list);
 router.post('/v1/elections/:election_id/election_candidates', auth('create_candidate'), electionCandidate.create);
-router.post('/v1/elections/:election_id/election_candidate', auth('retrieve_candidate'), electionCandidate.retrieve);
 
 // Election Initiatives
 router.get('/v1/elections/:election_id/election_initiatives', auth('list_initiatives'), electionInitiative.list);

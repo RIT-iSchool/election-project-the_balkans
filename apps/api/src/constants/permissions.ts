@@ -14,7 +14,6 @@ export enum Permissions {
   // Candidates
   list_candidates = 'list_candidates',
   create_candidate = 'create_candidate',
-  retrieve_candidate = 'retrieve_candidate',
 
   // Election initiatives
   list_initiatives = 'list_election_initiatives',
@@ -50,7 +49,6 @@ export const permissions = {
     Permissions.list_elections,
     Permissions.submit_ballot,
     Permissions.retrieve_ballot,
-    Permissions.retrieve_candidate,
   ] as string[],
   officer: [
     // Elections
@@ -66,7 +64,6 @@ export const permissions = {
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
-    Permissions.retrieve_candidate,
 
     // Initiatives
     Permissions.create_initiative,
@@ -92,7 +89,6 @@ export const permissions = {
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
-    Permissions.retrieve_candidate,
 
     // Initiatives
     Permissions.create_initiative,
@@ -116,7 +112,6 @@ export const permissions = {
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
-    Permissions.retrieve_candidate,
 
     // Initiatives
     Permissions.create_initiative,

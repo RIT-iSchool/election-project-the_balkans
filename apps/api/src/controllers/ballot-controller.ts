@@ -6,8 +6,37 @@ import * as ElectionCandidate from '../data/election-candidate-data';
  * Submits a ballot.
  */
 export const submit = async (ballotSubmitParams: Ballot.Submit) => {
+  //candidate vote is required
   if (ballotSubmitParams.candidateVotesData.length === 0) throw Error;
 
+  //write in logic
+  if (ballotSubmitParams.writeIn) {
+    const memberId = ballotSubmitParams.candidateVotesData.pop()?.memberId;
+
+    const electionCandidateData = await ElectionCandidate.retrieve({
+      name: ballotSubmitParams.writeIn.name,
+    });
+
+    //candidate exists
+    if (electionCandidateData) {
+      ballotSubmitParams.candidateVotesData.push({
+        memberId: memberId!,
+        electionCandidateId: electionCandidateData.id,
+      });
+      //candidate doesn't exist
+    } else {
+      ballotSubmitParams.writeIn.description = '';
+      const newElectionCandidate = await ElectionCandidate.create({
+        electionCandidateData: ballotSubmitParams.writeIn,
+      });
+      ballotSubmitParams.candidateVotesData.push({
+        memberId: memberId!,
+        electionCandidateId: newElectionCandidate.id,
+      });
+    }
+  }
+
+  //max votes check
   const electionId = ballotSubmitParams.electionId;
   const societyId = ballotSubmitParams.societyId;
   const electionOffices = await ElectionOffice.list({ electionId, societyId });
