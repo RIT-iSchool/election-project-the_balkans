@@ -731,6 +731,71 @@
         ]
       }
     },
+    "/v1/elections/{election_id}/election_candidate": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "election_id",
+          "required": true,
+          "description": "The ID of the election this office should belong to",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "header",
+          "name": "society-id",
+          "example": "The ID of the society you want to act on",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "tags": [
+          "Election Candidates"
+        ],
+        "operationId": "Retrieve ElectionCandidate",
+        "description": "Retrieve an election candidate",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ElectionCandidate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidRequestError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/v1/elections/{election_id}/election_initiatives": {
       "parameters": [
         {

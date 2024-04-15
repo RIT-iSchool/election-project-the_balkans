@@ -52,3 +52,42 @@ export const list = async ({ electionId, societyId }: List) => {
     throw new Error('Something went wrong listing election candidates.');
   }
 };
+
+export type Retrieve = {
+  name: string;
+  electionOfficeId: number;
+  electionId: number;
+  societyId: number;
+};
+
+/**
+ * Retrieve a candidate.
+ */
+export const retrieve = async ({
+  electionId,
+  societyId,
+  electionOfficeId,
+  name,
+}: Retrieve) => {
+  try {
+    const electionCandidateData = await db
+      .select()
+      .from(electionCandidate)
+      .innerJoin(
+        electionOffice,
+        eq(electionCandidate.electionOfficeId, electionOffice.id),
+      )
+      .innerJoin(election, eq(electionOffice.electionId, election.id))
+      .where(
+        and(
+          eq(election.id, electionId),
+          eq(election.societyId, societyId),
+          eq(electionCandidate.electionOfficeId, electionOfficeId),
+          eq(electionCandidate.name, name),
+        ),
+      );
+    return electionCandidateData;
+  } catch (err) {
+    throw new Error('Something went wrong retrieving election candidate.');
+  }
+};

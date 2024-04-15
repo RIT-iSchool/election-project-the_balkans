@@ -14,6 +14,7 @@ export enum Permissions {
   // Candidates
   list_candidates = 'list_candidates',
   create_candidate = 'create_candidate',
+  retrieve_candidate = 'retrieve_candidate',
 
   // Election initiatives
   list_initiatives = 'list_election_initiatives',
@@ -45,7 +46,12 @@ export type Permission = keyof typeof Permissions;
 // string arrays to make typescript happy elsewhere in the codebase. If you change this hash,
 // you must adjust the tests to accomodate these changes, otherwise the tests will fail!
 export const permissions = {
-  member: [Permissions.list_elections, Permissions.submit_ballot] as string[],
+  member: [
+    Permissions.list_elections,
+    Permissions.submit_ballot,
+    Permissions.retrieve_ballot,
+    Permissions.retrieve_candidate,
+  ] as string[],
   officer: [
     // Elections
     Permissions.create_election,
@@ -60,6 +66,7 @@ export const permissions = {
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
+    Permissions.retrieve_candidate,
 
     // Initiatives
     Permissions.create_initiative,
@@ -85,6 +92,7 @@ export const permissions = {
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
+    Permissions.retrieve_candidate,
 
     // Initiatives
     Permissions.create_initiative,
@@ -108,6 +116,7 @@ export const permissions = {
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
+    Permissions.retrieve_candidate,
 
     // Initiatives
     Permissions.create_initiative,
