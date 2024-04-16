@@ -7,28 +7,29 @@ import * as ElectionCandidate from '../data/election-candidate-data';
  */
 export const submit = async (ballotSubmitParams: Ballot.Submit) => {
   //candidate vote is required
-  if (ballotSubmitParams.candidateVotesData.length === 0) throw Error;
+  if (!ballotSubmitParams.ballotSubmitData.candidateVotesData) throw Error;
 
   //write in logic
-  if (ballotSubmitParams.writeIn) {
-    const memberId = ballotSubmitParams.candidateVotesData.pop()?.memberId;
+  if (ballotSubmitParams.ballotSubmitData.writeIn) {
+    const memberId =
+      ballotSubmitParams.ballotSubmitData.candidateVotesData.pop()?.memberId;
 
     const electionCandidateData = await ElectionCandidate.retrieve({
-      name: ballotSubmitParams.writeIn.name,
+      name: ballotSubmitParams.ballotSubmitData.writeIn.name,
     });
 
     //candidate exists
     if (electionCandidateData) {
-      ballotSubmitParams.candidateVotesData.push({
+      ballotSubmitParams.ballotSubmitData.candidateVotesData.push({
         memberId: memberId!,
         electionCandidateId: electionCandidateData.id,
       });
       //candidate doesn't exist
     } else {
       const newElectionCandidate = await ElectionCandidate.create({
-        electionCandidateData: ballotSubmitParams.writeIn,
+        electionCandidateData: ballotSubmitParams.ballotSubmitData.writeIn,
       });
-      ballotSubmitParams.candidateVotesData.push({
+      ballotSubmitParams.ballotSubmitData.candidateVotesData.push({
         memberId: memberId!,
         electionCandidateId: newElectionCandidate.id,
       });
@@ -36,8 +37,8 @@ export const submit = async (ballotSubmitParams: Ballot.Submit) => {
   }
 
   //max votes check
-  const electionId = ballotSubmitParams.electionId;
-  const societyId = ballotSubmitParams.societyId;
+  const electionId = ballotSubmitParams.ballotSubmitData.electionId;
+  const societyId = ballotSubmitParams.ballotSubmitData.societyId;
   const electionOffices = await ElectionOffice.list({ electionId, societyId });
   const electionCandidates = await ElectionCandidate.list({
     electionId,
@@ -50,17 +51,19 @@ export const submit = async (ballotSubmitParams: Ballot.Submit) => {
   });
 
   const officeActualVotes = new Map<number, number>();
-  ballotSubmitParams.candidateVotesData.forEach((candidateVote) => {
-    const candidate = electionCandidates.find(
-      (candidate) =>
-        candidate.electionCandidate.id === candidateVote.electionCandidateId,
-    );
-    if (candidate) {
-      const officeId = candidate.electionCandidate.electionOfficeId;
-      const currentVotes = officeActualVotes.get(officeId) || 0;
-      officeActualVotes.set(officeId, currentVotes + 1);
-    }
-  });
+  ballotSubmitParams.ballotSubmitData.candidateVotesData.forEach(
+    (candidateVote) => {
+      const candidate = electionCandidates.find(
+        (candidate) =>
+          candidate.electionCandidate.id === candidateVote.electionCandidateId,
+      );
+      if (candidate) {
+        const officeId = candidate.electionCandidate.electionOfficeId;
+        const currentVotes = officeActualVotes.get(officeId) || 0;
+        officeActualVotes.set(officeId, currentVotes + 1);
+      }
+    },
+  );
 
   officeActualVotes.forEach((officeId, currentVotes) => {
     const maxVotes = officeMaxVotes.get(officeId) || 0;

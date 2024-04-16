@@ -10,24 +10,27 @@ import {
 } from '../db/schema';
 
 export type Submit = {
-  candidateVotesData: CreateCandidateVote[];
-  initiativeVotesData: CreateInitiativeVote[];
-  electionId: number;
-  societyId: number;
-  writeIn?: CreateElectionCandidate;
+  ballotSubmitData: {
+    candidateVotesData: CreateCandidateVote[];
+    initiativeVotesData: CreateInitiativeVote[];
+    electionId: number;
+    societyId: number;
+    writeIn?: CreateElectionCandidate;
+  };
 };
 
 /**
  * Submit a ballot
  */
-export const submit = async ({
-  candidateVotesData,
-  initiativeVotesData,
-}: Submit) => {
+export const submit = async ({ ballotSubmitData }: Submit) => {
   try {
     await db.transaction(async (dbClient) => {
-      await dbClient.insert(candidateVote).values(candidateVotesData);
-      await dbClient.insert(initiativeVote).values(initiativeVotesData);
+      await dbClient
+        .insert(candidateVote)
+        .values(ballotSubmitData.candidateVotesData);
+      await dbClient
+        .insert(initiativeVote)
+        .values(ballotSubmitData.initiativeVotesData);
     });
   } catch (err) {
     throw new Error('Something went wrong submitting a ballot');
