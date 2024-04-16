@@ -19,6 +19,12 @@ const BallotSchema = z.object({
     }),
   ),
   electionId: z.number(),
+  writeIn: z
+    .object({
+      electionOfficeId: z.number(),
+      name: z.string(),
+    })
+    .optional(),
 });
 
 export const submit = async (
@@ -28,14 +34,21 @@ export const submit = async (
 ) => {
   try {
     if (!req.society) throw new AuthenticationError('Society ID missing');
-    //election id
     const submitBallotData = BallotSchema.parse(req.body);
+
     const submitBallot = await ballot.submit({
       candidateVotesData: submitBallotData.candidateVotesData,
       initiativeVotesData: submitBallotData.initiativeVotesData,
       electionId: submitBallotData.electionId,
       societyId: req.society.id,
+      writeIn: {
+        electionOfficeId: submitBallotData.writeIn?.electionOfficeId!,
+        name: submitBallotData.writeIn?.name!,
+        societyId: req.society.id,
+        description: '',
+      },
     });
+
     res.send(submitBallot);
   } catch (err) {
     next(err);

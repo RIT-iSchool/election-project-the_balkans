@@ -25,7 +25,6 @@ export const submit = async (ballotSubmitParams: Ballot.Submit) => {
       });
       //candidate doesn't exist
     } else {
-      ballotSubmitParams.writeIn.description = '';
       const newElectionCandidate = await ElectionCandidate.create({
         electionCandidateData: ballotSubmitParams.writeIn,
       });
