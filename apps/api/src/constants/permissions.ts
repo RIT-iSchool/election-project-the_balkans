@@ -35,6 +35,7 @@ export enum Permissions {
   list_societies = 'list_societies',
   retrieve_society = 'retrieve_society',
   report_society = 'report_society',
+  report_system = 'report_system',
 }
 
 // This type is used to ensure that only valid permission strings
@@ -126,5 +127,6 @@ export const permissions = {
     Permissions.list_societies,
     Permissions.retrieve_society,
     Permissions.report_society,
+    Permissions.report_system,
   ] as string[],
 };

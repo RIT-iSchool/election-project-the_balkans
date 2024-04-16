@@ -1159,7 +1159,7 @@
         "tags": [
           "Societies"
         ],
-        "operationId": "Society Report",
+        "operationId": "SocietyReport",
         "description": "Society Report",
         "responses": {
           "200": {
@@ -1179,6 +1179,43 @@
                       "type": "integer"
                     },
                     "averageVotingMembers": {
+                      "type": "number",
+                      "format": "float"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/system/report": {
+      "get": {
+        "tags": [
+          "System"
+        ],
+        "operationId": "SystemReport",
+        "description": "System Report",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "loggedInUsers": {
+                      "type": "integer"
+                    },
+                    "activeElections": {
+                      "type": "integer"
+                    },
+                    "averageQueryTime": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "averageHttpResponseTime": {
                       "type": "number",
                       "format": "float"
                     }
