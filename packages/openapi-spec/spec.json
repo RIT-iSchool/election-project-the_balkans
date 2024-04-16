@@ -1143,6 +1143,52 @@
           }
         ]
       }
+    },
+    "/v1/societies/{society_id}/report": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "name": "society_id",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Societies"
+        ],
+        "operationId": "Society Report",
+        "description": "Society Report",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "activeBallots": {
+                      "type": "integer"
+                    },
+                    "inActiveBallots": {
+                      "type": "integer"
+                    },
+                    "societyUsers": {
+                      "type": "integer"
+                    },
+                    "averageVotingMembers": {
+                      "type": "number",
+                      "format": "float"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
