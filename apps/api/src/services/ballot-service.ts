@@ -37,18 +37,15 @@ export const submit = async (
     if (!req.society) throw new AuthenticationError('Society ID missing');
     const submitBallotData = BallotSchema.parse(req.body);
 
-    submitBallotData.writeIn = submitBallotData.writeIn
-      ? {
-          electionOfficeId: submitBallotData.writeIn?.electionOfficeId,
-          name: submitBallotData.writeIn?.name,
-          societyId: req.society.id,
-          description: '',
-        }
-      : undefined;
-
     const submitBallot = await ballot.submit({
       ballotSubmitData: {
         ...submitBallotData,
+        ...(submitBallotData.writeIn && {
+          electionOfficeId: submitBallotData.writeIn.electionOfficeId,
+          name: submitBallotData.writeIn.name,
+          societyId: req.society.id,
+          description: '',
+        }),
         societyId: req.society.id,
       },
     });
