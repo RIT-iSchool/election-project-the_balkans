@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as ballot from '../controllers/ballot-controller';
-import { number, z } from 'zod';
+import { z } from 'zod';
 import { AuthenticationError } from '../errors/AuthenticationError';
 
 const BallotSchema = z.object({
@@ -41,12 +41,14 @@ export const submit = async (
       initiativeVotesData: submitBallotData.initiativeVotesData,
       electionId: submitBallotData.electionId,
       societyId: req.society.id,
-      writeIn: {
-        electionOfficeId: submitBallotData.writeIn?.electionOfficeId!,
-        name: submitBallotData.writeIn?.name!,
-        societyId: req.society.id,
-        description: '',
-      },
+      writeIn: submitBallotData.writeIn
+        ? {
+            electionOfficeId: submitBallotData.writeIn?.electionOfficeId,
+            name: submitBallotData.writeIn?.name,
+            societyId: req.society.id,
+            description: '',
+          }
+        : undefined,
     });
 
     res.send(submitBallot);
