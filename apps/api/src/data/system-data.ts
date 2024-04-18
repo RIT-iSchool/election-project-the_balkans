@@ -1,4 +1,4 @@
-import { and, lte, gte } from 'drizzle-orm';
+import { and, lte, gte, count } from 'drizzle-orm';
 import { db } from '../db';
 import { election, session } from '../db/schema';
 
@@ -8,13 +8,12 @@ import { election, session } from '../db/schema';
 export const report = async () => {
   try {
     const loggedInUsers =
-      (await db.select({ count: session.userId }).from(session)).pop()?.count ??
-      0;
+      (await db.select({ count: count() }).from(session)).pop()?.count ?? 0;
 
     const activeElections =
       (
         await db
-          .select({ count: election.id })
+          .select({ count: count() })
           .from(election)
           .where(
             and(

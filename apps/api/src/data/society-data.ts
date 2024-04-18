@@ -89,7 +89,7 @@ export const report = async ({ societyId }: Report) => {
     const activeBallots =
       (
         await db
-          .select({ count: election.id })
+          .select({ count: count() })
           .from(election)
           .where(
             and(
@@ -103,7 +103,7 @@ export const report = async ({ societyId }: Report) => {
     const inActiveBallots =
       (
         await db
-          .select({ count: election.id })
+          .select({ count: count() })
           .from(election)
           .where(
             and(
@@ -117,7 +117,7 @@ export const report = async ({ societyId }: Report) => {
     const societyUsers =
       (
         await db
-          .select({ count: societyMember.userId })
+          .select({ count: count() })
           .from(societyMember)
           .where(eq(societyMember.societyId, societyId))
       ).pop()?.count ?? 0;
@@ -125,7 +125,7 @@ export const report = async ({ societyId }: Report) => {
     const votingMembers =
       (
         await db
-          .select({ count: candidateVote.memberId })
+          .select({ count: count() })
           .from(candidateVote)
           .innerJoin(societyMember, eq(societyMember.societyId, societyId))
       ).pop()?.count ?? 0;
