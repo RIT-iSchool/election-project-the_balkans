@@ -1,6 +1,7 @@
 import { and, lte, gte, count } from 'drizzle-orm';
 import { db } from '../db';
 import { election, session } from '../db/schema';
+import { calculate } from '../helpers/log-helper';
 
 /**
  * Reports the number of currently logged in users, number of active elections, avgerage query response time, avgerage http response time.
@@ -23,18 +24,16 @@ export const report = async () => {
           )
       ).pop()?.count ?? 0;
 
-    //TODO:
-    const averageQueryTime = 1;
+    const averageRequestTime = (await calculate()).averageRequestTime;
 
-    //TODO:
-    const averageHttpResponseTime = 1;
+    const averageResponseTime = (await calculate()).averageResponseTime;
 
     return {
       systemReportData: {
         loggedInUsers,
         activeElections,
-        averageQueryTime,
-        averageHttpResponseTime,
+        averageRequestTime,
+        averageResponseTime,
       },
     };
   } catch (err) {

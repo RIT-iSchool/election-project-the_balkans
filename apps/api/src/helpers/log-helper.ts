@@ -32,11 +32,12 @@ type Log = {
   v: number;
 };
 
-const filePath = 'var/logs/american-dream.log';
-
-export const list = async () => {
+const list = async () => {
   try {
-    const logData = await fs.promises.readFile(filePath, 'utf8');
+    const logData = await fs.promises.readFile(
+      '/Users/coopergadd/Documents/RIT/Spring24/ISTE432/election-project-the_balkans/var/logs/american-dream.log',
+      'utf8',
+    );
     const logEntries: Log[] = logData
       .trim()
       .split('\n')
@@ -44,5 +45,28 @@ export const list = async () => {
     return logEntries;
   } catch (err) {
     throw new Error('Error reading log file');
+  }
+};
+
+export const calculate = async () => {
+  try {
+    const logEntries = await list();
+    let totalRequestTime = 0;
+    let totalResponseTime = 0;
+
+    logEntries.forEach((log) => {
+      totalRequestTime += log.request.timestamp_ms;
+      totalResponseTime += log.response.timestamp_ms;
+    });
+
+    const averageRequestTime = totalRequestTime / logEntries.length;
+    const averageResponseTime = totalResponseTime / logEntries.length;
+
+    return {
+      averageRequestTime,
+      averageResponseTime,
+    };
+  } catch (err) {
+    throw new Error('Error calculating averages');
   }
 };
