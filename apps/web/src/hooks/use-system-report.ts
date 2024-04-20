@@ -7,10 +7,11 @@ type SystemReport = {
   averageHttpResponseTime: number;
 };
 
-export const useSysetmReport = () => {
+export const useSystemReport = () => {
   const { data, error, isLoading } = useSWR<SystemReport>(
     `/api/v1/system/report`,
   );
+
   return {
     data,
     error,

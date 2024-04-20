@@ -53,7 +53,7 @@ router.post('/v1/society_members/:society_id', auth('create_society_member'), so
 // Admin
 router.get('/v1/societies', auth('list_societies'), society.list);
 router.get('/v1/societies/:society_id', auth('retrieve_society'), society.retrieve);
-router.get('v1/societies/:society_id/report', auth('report_society'), society.report);
-router.get('v1/system/report', auth('report_system'), system.report);
+router.get('/v1/societies/:society_id/report', auth('report_society'), society.report);
+router.get('/v1/system/report', auth('report_system'), system.report);
 
 export { router };
