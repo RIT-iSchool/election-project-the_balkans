@@ -7,8 +7,8 @@ export const report = async (
   next: NextFunction,
 ) => {
   try {
-    const report = await system.report();
-    res.json(report);
+    const systemReport = await system.report();
+    res.json(systemReport);
   } catch (err) {
     next(err);
   }
