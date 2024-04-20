@@ -37,7 +37,7 @@ type Log = {
 const list = async () => {
   try {
     const logData = await fs.promises.readFile(
-      '/Users/coopergadd/Documents/RIT/Spring24/ISTE432/election-project-the_balkans/var/logs/american-dream.log',
+      process.env.LOG_FILE_PATH as string,
       'utf8',
     );
     const logEntries: Log[] = logData
