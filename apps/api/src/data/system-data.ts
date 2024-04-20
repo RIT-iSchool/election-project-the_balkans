@@ -1,4 +1,4 @@
-import { and, lte, gte, count } from 'drizzle-orm';
+import { and, lte, gte, count, gt, countDistinct } from 'drizzle-orm';
 import { db } from '../db';
 import { election, session } from '../db/schema';
 import { calculate } from '../helpers/log-helper';
@@ -9,7 +9,12 @@ import { calculate } from '../helpers/log-helper';
 export const report = async () => {
   try {
     const loggedInUsers =
-      (await db.select({ count: count() }).from(session)).pop()?.count ?? 0;
+      (
+        await db
+          .select({ count: countDistinct(session.userId) })
+          .from(session)
+          .where(gt(session.expiresAt, new Date()))
+      ).pop()?.count ?? 0;
 
     const activeElections =
       (
