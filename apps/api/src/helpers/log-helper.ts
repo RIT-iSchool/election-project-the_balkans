@@ -32,7 +32,9 @@ type Log = {
   v: number;
 };
 
-export const list = async (filePath: string) => {
+const filePath = 'var/logs/american-dream.log';
+
+export const list = async () => {
   try {
     const logData = await fs.promises.readFile(filePath, 'utf8');
     const logEntries: Log[] = logData

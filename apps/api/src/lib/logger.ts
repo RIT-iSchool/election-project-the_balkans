@@ -6,7 +6,7 @@ export const logger = bunyan.createLogger({
   streams: [
     {
       type: 'rotating-file',
-      path: path.join(process.cwd(), 'logs', 'american-dream.log'),
+      path: path.join(process.cwd(), '../../var/logs', 'american-dream.log'),
       period: '1d',
     },
   ],
