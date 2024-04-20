@@ -31,7 +31,9 @@ type Log = {
   time: string;
   v: number;
 };
-
+/**
+ * Lists all log entries in the log file.
+ */
 const list = async () => {
   try {
     const logData = await fs.promises.readFile(
@@ -48,6 +50,9 @@ const list = async () => {
   }
 };
 
+/**
+ * Calculates the average request and response times from the log entries in milliseconds.
+ */
 export const calculate = async () => {
   try {
     const logEntries = await list();
@@ -55,8 +60,8 @@ export const calculate = async () => {
     let totalResponseTime = 0;
 
     logEntries.forEach((log) => {
-      totalRequestTime += log.request.timestamp_ms;
-      totalResponseTime += log.response.timestamp_ms;
+      totalRequestTime += log.response.timestamp_ms - log.request.timestamp_ms;
+      totalResponseTime += log.response.elapsed;
     });
 
     const averageRequestTime = totalRequestTime / logEntries.length;
