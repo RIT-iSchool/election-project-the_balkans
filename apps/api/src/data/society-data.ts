@@ -1,5 +1,5 @@
 import { CreateSociety, society, user } from '../db/schema';
-import { db } from '../db';
+import { db, withPagination } from '../db';
 import { eq, getTableColumns, ilike } from 'drizzle-orm';
 
 export type Create = {
@@ -45,12 +45,13 @@ export const retrieve = async ({ societyId }: Retrieve) => {
 
 export type List = {
   search?: string;
+  page?: number;
 };
 
 /**
  * Lists societies based on a search query
  */
-export const list = async ({ search }: List) => {
+export const list = async ({ search, page }: List) => {
   try {
     const societiesQuery = db
       .select({
@@ -58,14 +59,16 @@ export const list = async ({ search }: List) => {
         owner: getTableColumns(user),
       })
       .from(society)
-      .leftJoin(user, eq(user.id, society.ownerId));
+      .leftJoin(user, eq(user.id, society.ownerId))
+      .$dynamic();
 
     if (search) societiesQuery.where(ilike(society.name, `%${search}%`));
 
-    const societies = await societiesQuery;
+    const societies = await withPagination(societiesQuery, page);
 
     return societies;
   } catch (err) {
+    console.log(err);
     throw new Error('Something went wrong listing societies.');
   }
 };

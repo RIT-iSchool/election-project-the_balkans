@@ -49,12 +49,16 @@ export const retrieve = async (
 
 const ListSocietiesSchema = z.object({
   search: z.string().optional(),
+  page: z
+    .string()
+    .transform((page) => parseInt(page))
+    .default('1'),
 });
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { search } = ListSocietiesSchema.parse(req.query);
-    const listSocieties = await society.list({ search });
+    const listSocietiesParams = ListSocietiesSchema.parse(req.query);
+    const listSocieties = await society.list(listSocietiesParams);
 
     res.send(listSocieties);
   } catch (err) {
