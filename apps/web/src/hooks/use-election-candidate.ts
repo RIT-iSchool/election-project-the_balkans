@@ -8,9 +8,9 @@ type ElectionCandidate = {
   description: string;
 };
 
-export const useElectionCandidates = (electionId: string) => {
-  const { data, error, isLoading } = useSWR<ElectionCandidate[]>(
-    `/api/v1/elections/${electionId}/election_candidates`,
+export const useElectionCandidate = (candidate_id: string) => {
+  const { data, error, isLoading } = useSWR<ElectionCandidate>(
+    `api/v1/elections/election_candidates/${candidate_id}`,
   );
 
   return {

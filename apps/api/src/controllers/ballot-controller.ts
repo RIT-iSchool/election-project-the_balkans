@@ -14,7 +14,7 @@ export const submit = async (ballotSubmitParams: Ballot.Submit) => {
     const memberId =
       ballotSubmitParams.ballotSubmitData.candidateVotesData.pop()?.memberId;
 
-    const electionCandidateData = await ElectionCandidate.retrieve({
+    const electionCandidateData = await ElectionCandidate.lookup({
       name: ballotSubmitParams.ballotSubmitData.writeIn.name,
     });
 

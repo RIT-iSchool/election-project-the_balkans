@@ -86,7 +86,8 @@ export const update = async ({
         .set(electionData)
         .where(
           and(eq(election.id, electionId), eq(election.societyId, societyId)),
-        ).returning();
+        )
+        .returning();
 
       if (!updatedElection) throw new Error('Election not found');
 

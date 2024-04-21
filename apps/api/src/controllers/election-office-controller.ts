@@ -25,3 +25,29 @@ export const list = async (
   );
   return listElectionOffice;
 };
+
+/**
+ * Retrieves a society's election's office.
+ */
+export const retrieve = async (
+  electionOfficeRetrieveParams: ElectionOffice.Retrieve,
+) => {
+  // Enforce some business logic
+  const retrieveElectionOffice = await ElectionOffice.retrieve(
+    electionOfficeRetrieveParams,
+  );
+  return retrieveElectionOffice;
+};
+
+/**
+ * Updates a society's election's office.
+ */
+export const update = async (
+  electionOfficeUpdateParams: ElectionOffice.Update,
+) => {
+  // Enforce some business logic
+  const updateElectionOffice = await ElectionOffice.update(
+    electionOfficeUpdateParams,
+  );
+  return updateElectionOffice;
+};
