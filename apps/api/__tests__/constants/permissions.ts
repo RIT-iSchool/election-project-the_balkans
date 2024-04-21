@@ -4,6 +4,7 @@ describe('test member permissions', () => {
   const memberPermissions = [
     Permissions.list_elections,
     Permissions.submit_ballot,
+    Permissions.retrieve_ballot,
   ];
 
   test('a member has all the correct permissions', () => {
@@ -93,6 +94,8 @@ describe('test admin permissions', () => {
     Permissions.list_society_members,
     Permissions.list_societies,
     Permissions.retrieve_society,
+    Permissions.report_society,
+    Permissions.report_system,
   ];
 
   test('an admin has all the correct permissions', () => {

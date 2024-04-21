@@ -134,8 +134,8 @@ export const election = pgTable('election', {
       onUpdate: 'cascade',
     })
     .notNull(),
-  startDate: timestamp('start_date').notNull(),
-  endDate: timestamp('end_date').notNull(),
+  startDate: timestamp('start_date', { mode: 'string' }).notNull(),
+  endDate: timestamp('end_date', { mode: 'string' }).notNull(),
   photoURL: varchar('photo_url', { length: 250 }),
 });
 

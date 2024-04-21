@@ -86,19 +86,16 @@ export type Report = {
  */
 export const report = async ({ societyId }: Report) => {
   try {
-    const activeBallots =
-      (
-        await db
-          .select({ count: count() })
-          .from(election)
-          .where(
-            and(
-              eq(election.societyId, societyId),
-              lte(election.startDate, new Date()),
-              gte(election.endDate, new Date()),
-            ),
-          )
-      ).pop()?.count ?? 0;
+    const [{ activeBallots } = { activeBallots: 0 }] = await db
+      .select({ activeBallots: count() })
+      .from(election)
+      .where(
+        and(
+          eq(election.societyId, societyId),
+          lte(election.startDate, new Date().toString()),
+          gte(election.endDate, new Date().toString()),
+        ),
+      );
 
     const inActiveBallots =
       (
@@ -108,8 +105,8 @@ export const report = async ({ societyId }: Report) => {
           .where(
             and(
               eq(election.societyId, societyId),
-              gte(election.startDate, new Date()),
-              lte(election.endDate, new Date()),
+              gte(election.startDate, new Date().toString()),
+              lte(election.endDate, new Date().toString()),
             ),
           )
       ).pop()?.count ?? 0;

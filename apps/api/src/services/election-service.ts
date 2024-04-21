@@ -5,8 +5,8 @@ import { BadRequestError } from '../errors/BadRequestError';
 
 const ElectionSchema = z.object({
   name: z.string(),
-  startDate: z.date(),
-  endDate: z.date(),
+  startDate: z.string(),
+  endDate: z.string(),
   photoURL: z.string().optional(),
 });
 
