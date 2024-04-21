@@ -68,7 +68,6 @@ export const list = async ({ search, page }: List) => {
 
     return societies;
   } catch (err) {
-    console.log(err);
     throw new Error('Something went wrong listing societies.');
   }
 };

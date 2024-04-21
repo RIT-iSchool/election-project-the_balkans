@@ -37,7 +37,6 @@ export const withPagination = async <T extends PgSelect>(
     sql`SELECT count(*)::integer FROM (${query}) as total_count`,
   );
 
-  console.log('OFFSET', offset);
   const resultsQuery = await query.offset(offset).limit(pageSize);
 
   const [results, countResult] = await Promise.all([resultsQuery, countQuery]);
@@ -48,7 +47,7 @@ export const withPagination = async <T extends PgSelect>(
 
   return {
     totalCount,
-    data: results,
+    data: results as Awaited<T>[],
     currentPage: pageNumber,
     nextPage,
     hasMore,
