@@ -25,3 +25,29 @@ export const list = async (
   );
   return listElectionCandidate;
 };
+
+/**
+ * Retrieves a society's election's candidate.
+ */
+export const retrieve = async (
+  electionCandidateRetrieveParams: ElectionCandidate.Retrieve,
+) => {
+  // Enforce some business logic
+  const retrieveElectionCandidate = await ElectionCandidate.retrieve(
+    electionCandidateRetrieveParams,
+  );
+  return retrieveElectionCandidate;
+};
+
+/**
+ * Updates a society's election's candidate.
+ */
+export const update = async (
+  electionCandidateUpdateParams: ElectionCandidate.Update,
+) => {
+  // Enforce some business logic
+  const updateElectionCandidate = await ElectionCandidate.update(
+    electionCandidateUpdateParams,
+  );
+  return updateElectionCandidate;
+};

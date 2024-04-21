@@ -57,3 +57,62 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
+
+const RetrieveInitiativeOptionParamsSchema = z.object({
+  initiative_option_id: z.string().transform((id) => parseInt(id)),
+});
+
+export const retrieve = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { initiative_option_id: initiativeOptionId } =
+      RetrieveInitiativeOptionParamsSchema.parse(req.params);
+
+    const retrieveInitiativeOption = await initiativeOption.retrieve({
+      initiativeOptionId,
+    });
+
+    res.send(retrieveInitiativeOption);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const UpdateInitiativeOptionParamsSchema = z.object({
+  initiative_option_id: z.string().transform((id) => parseInt(id)),
+});
+
+export const update = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { initiative_option_id: initiativeOptionId } =
+      UpdateInitiativeOptionParamsSchema.parse(req.params);
+
+    const initiativeOptionData = InitiativeOptionSchema.parse(req.body);
+
+    const updatedInitiativeOption = await initiativeOption.update({
+      initiativeOptionId,
+      initiativeOptionData: {
+        ...initiativeOptionData,
+      },
+    });
+
+    res.send(updatedInitiativeOption);
+  } catch (err) {
+    next(err);
+  }
+};

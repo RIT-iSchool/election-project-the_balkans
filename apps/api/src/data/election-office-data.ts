@@ -1,4 +1,4 @@
-import { CreateElectionOffice } from '../db/schema';
+import { CreateElectionOffice, UpdateElectionOffice } from '../db/schema';
 import { db } from '../db';
 import { electionOffice } from '../db/schema';
 import { and, eq } from 'drizzle-orm';
@@ -49,5 +49,57 @@ export const list = async ({ electionId, societyId }: List) => {
     return electionOfficeData;
   } catch (err) {
     throw new Error('Something went wrong listing election offices.');
+  }
+};
+
+export type Retrieve = { electionOfficeId: number };
+
+/**
+ * Retrieves a society's election office.
+ */
+
+export const retrieve = async ({ electionOfficeId }: Retrieve) => {
+  try {
+    const [electionOfficeData] = await db
+      .select()
+      .from(electionOffice)
+      .where(eq(electionOffice.id, electionOfficeId));
+
+    if (!electionOfficeData) throw new Error('Election office not found');
+
+    return electionOfficeData;
+  } catch (err) {
+    throw new Error('Something went wrong retrieving election office.');
+  }
+};
+
+export type Update = {
+  electionOfficeId: number;
+  electionOfficeData: UpdateElectionOffice;
+};
+
+/**
+ * Updates an election office by ID
+ */
+
+export const update = async ({
+  electionOfficeId,
+  electionOfficeData,
+}: Update) => {
+  try {
+    const [updatedElectionOffice] = await db.transaction(
+      async (dbClient) =>
+        await dbClient
+          .update(electionOffice)
+          .set(electionOfficeData)
+          .where(eq(electionOffice.id, electionOfficeId))
+          .returning(),
+    );
+
+    if (!updatedElectionOffice) throw new Error('Election office not found');
+
+    return updatedElectionOffice;
+  } catch (err) {
+    throw new Error('Something went wrong updating election office.');
   }
 };

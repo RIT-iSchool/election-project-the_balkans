@@ -25,3 +25,29 @@ export const list = async (
   );
   return listElectionInitiative;
 };
+
+/**
+ * Retrieves a society's election's initiative.
+ */
+export const retrieve = async (
+  electionInitiativeRetrieveParams: ElectionInitiative.Retrieve,
+) => {
+  // Enforce some business logic
+  const retrieveElectionInitiative = await ElectionInitiative.retrieve(
+    electionInitiativeRetrieveParams,
+  );
+  return retrieveElectionInitiative;
+};
+
+/**
+ * Updates a society's election's initiative.
+ */
+export const update = async (
+  electionInitiativeUpdateParams: ElectionInitiative.Update,
+) => {
+  // Enforce some business logic
+  const updateElectionInitiative = await ElectionInitiative.update(
+    electionInitiativeUpdateParams,
+  );
+  return updateElectionInitiative;
+};

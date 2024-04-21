@@ -57,3 +57,60 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
+
+const RetrieveElectionInitiativeParamsSchema = z.object({
+  election_initiative_id: z.string().transform((id) => parseInt(id)),
+});
+
+export const retrieve = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { election_initiative_id: electionInitiativeId } =
+      RetrieveElectionInitiativeParamsSchema.parse(req.params);
+
+    const retrieveElectionInitiative = await electionInitiative.retrieve({
+      electionInitiativeId,
+    });
+
+    res.send(retrieveElectionInitiative);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const UpdateElectionInitiativeParamsSchema = z.object({
+  election_initiative_id: z.string().transform((id) => parseInt(id)),
+});
+
+export const update = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { election_initiative_id: electionInitiativeId } =
+      UpdateElectionInitiativeParamsSchema.parse(req.params);
+
+    const electionInitiativeData = ElectionInitiativeSchema.parse(req.body);
+
+    const updatedElectionInitiative = await electionInitiative.update({
+      electionInitiativeId,
+      electionInitiativeData: electionInitiativeData,
+    });
+
+    res.send(updatedElectionInitiative);
+  } catch (err) {
+    next(err);
+  }
+};

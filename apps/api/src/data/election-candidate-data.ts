@@ -1,4 +1,4 @@
-import { CreateElectionCandidate } from '../db/schema';
+import { CreateElectionCandidate, UpdateElectionCandidate } from '../db/schema';
 import { db } from '../db';
 import { electionCandidate, electionOffice, election } from '../db/schema';
 import { and, eq, ilike } from 'drizzle-orm';
@@ -53,14 +53,14 @@ export const list = async ({ electionId, societyId }: List) => {
   }
 };
 
-export type Retrieve = {
+export type Lookup = {
   name: string;
 };
 
 /**
- * Retrieve a candidate.
+ * Lookup a candidate.
  */
-export const retrieve = async ({ name }: Retrieve) => {
+export const lookup = async ({ name }: Lookup) => {
   try {
     const electionCandidateData = await db.query.electionCandidate.findFirst({
       where: and(ilike(electionCandidate.name, name)),
@@ -68,5 +68,51 @@ export const retrieve = async ({ name }: Retrieve) => {
     return electionCandidateData;
   } catch (err) {
     throw new Error('Something went wrong retrieving election candidate.');
+  }
+};
+
+export type Retrieve = {
+  electionCandidateId: number;
+};
+
+/**
+ * Retrieves an election candidate by ID
+ */
+export const retrieve = async ({ electionCandidateId }: Retrieve) => {
+  try {
+    const electionCandidateData = await db
+      .select()
+      .from(electionCandidate)
+      .where(eq(electionCandidate.id, electionCandidateId));
+    return electionCandidateData;
+  } catch (err) {
+    throw new Error('Something went wrong retrieving election candidate.');
+  }
+};
+
+export type Update = {
+  electionCandidateId: number;
+  electionCandidateData: UpdateElectionCandidate;
+};
+
+/**
+ * Updates an election candidate by ID
+ */
+export const update = async ({
+  electionCandidateId,
+  electionCandidateData,
+}: Update) => {
+  try {
+    const [updatedElectionCandidate] = await db.transaction(
+      async (dbClient) =>
+        await dbClient
+          .update(electionCandidate)
+          .set(electionCandidateData)
+          .where(eq(electionCandidate.id, electionCandidateId))
+          .returning(),
+    );
+    return updatedElectionCandidate!;
+  } catch (err) {
+    throw new Error('Something went wrong updating election candidate.');
   }
 };

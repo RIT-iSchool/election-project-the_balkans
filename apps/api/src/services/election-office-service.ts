@@ -59,3 +59,60 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
+
+const RetrieveElectionOfficeParamsSchema = z.object({
+  election_office_id: z.string().transform((id) => parseInt(id)),
+});
+
+export const retrieve = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { election_office_id: electionOfficeId } =
+      RetrieveElectionOfficeParamsSchema.parse(req.params);
+
+    const retrieveElectionOffice = await electionOffice.retrieve({
+      electionOfficeId,
+    });
+
+    res.send(retrieveElectionOffice);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const UpdateElectionOfficeParamsSchema = z.object({
+  election_office_id: z.string().transform((id) => parseInt(id)),
+});
+
+export const update = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { election_office_id: electionOfficeId } =
+      UpdateElectionOfficeParamsSchema.parse(req.params);
+
+    const electionOfficeData = ElectionOfficeSchema.parse(req.body);
+
+    const updatedElectionOffice = await electionOffice.update({
+      electionOfficeId,
+      electionOfficeData,
+    });
+
+    res.send(updatedElectionOffice);
+  } catch (err) {
+    next(err);
+  }
+};

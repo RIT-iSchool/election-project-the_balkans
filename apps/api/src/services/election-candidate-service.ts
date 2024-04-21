@@ -59,3 +59,63 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
+
+const RetrieveElectionCandidateParamsSchema = z.object({
+  electionCandidateId: z.string().transform((id) => parseInt(id)),
+});
+
+export const retrieve = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { electionCandidateId: electionCandidateId } =
+      RetrieveElectionCandidateParamsSchema.parse(req.params);
+
+    const retrieveElectionCandidate = await electionCandidate.retrieve({
+      electionCandidateId,
+    });
+
+    res.send(retrieveElectionCandidate);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const UpdateElectionCandidateParamsSchema = z.object({
+  electionCandidateId: z.string().transform((id) => parseInt(id)),
+});
+
+export const update = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { electionCandidateId: electionCandidateId } =
+      UpdateElectionCandidateParamsSchema.parse(req.params);
+
+    const electionCandidateData = ElectionCandidateSchema.parse(req.body);
+
+    const updatedElectionCandidate = await electionCandidate.update({
+      electionCandidateId,
+      electionCandidateData: {
+        ...electionCandidateData,
+        societyId: req.society.id,
+      },
+    });
+
+    res.send(updatedElectionCandidate);
+  } catch (err) {
+    next(err);
+  }
+};

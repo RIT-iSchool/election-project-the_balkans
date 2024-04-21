@@ -10,18 +10,26 @@ export enum Permissions {
   // Offices
   list_offices = 'list_offices',
   create_office = 'create_office',
+  retrieve_office = 'retrieve_office',
+  update_office = 'update_office',
 
   // Candidates
   list_candidates = 'list_candidates',
   create_candidate = 'create_candidate',
+  retrieve_candidate = 'retrieve_candidate',
+  update_candidate = 'update_candidate',
 
   // Election initiatives
   list_initiatives = 'list_election_initiatives',
   create_initiative = 'create_election_initiative',
+  retrieve_initiative = 'retrieve_election_initiative',
+  update_initiative = 'update_election_initiative',
 
   // Initiative options
   list_initiative_options = 'list_initiative_options',
   create_initiative_option = 'create_initiative_option',
+  retrieve_initiative_option = 'retrieve_initiative_option',
+  update_initiative_option = 'update_initiative_option',
 
   // Society members
   list_society_members = 'list_society_members',
