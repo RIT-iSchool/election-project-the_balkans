@@ -573,9 +573,9 @@ paths:
       security:
         - bearer: []
 
-  /v1/society_members/{society_id}:
+  /v1/society_members:
     parameters:
-      - in: 'path'
+      - in: 'header'
         required: true
         name: 'society_id'
         schema:
@@ -701,16 +701,16 @@ paths:
       security:
         - bearer: []
         
-  /v1/societies/{society_id}/report:
+  /v1/report/society:
     parameters:
-      - in: 'path'
+      - in: 'header'
         required: true
         name: 'society_id'
         schema:
           type: 'string'
     get:
       tags:
-        - Societies
+        - Report
       operationId: 'SocietyReport'
       description: 'Society Report'
       responses:
@@ -731,10 +731,10 @@ paths:
                     type: 'number'
                     format: 'float'
   
-  /v1/system/report:
+  /v1/report/system:
     get:
         tags: 
-          - System
+          - Report
         operationId: 'SystemReport'
         description: 'System Report'
         responses:
@@ -755,6 +755,92 @@ paths:
                         averageHttpResponseTime:
                             type: 'number'
                             format: 'float'
+
+  /v1/users:
+    get:
+      tags:
+        - User
+      operationId: ListUsers
+      description: List users
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Usr'
+      security:
+        - bearer: []
+  /v1/user:
+    post:
+      tags:
+        - User
+      operationId: CreateUser
+      description: Create User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - bearer: []
+  /v1/user/{userId}:
+    put:
+      tags:
+        - User
+      operationId: UpdateUser
+      description: Update User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - User
+      operationId: RetrieveUser
+      description: Retrieve User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - bearer: []
 
 components:
   securitySchemes:

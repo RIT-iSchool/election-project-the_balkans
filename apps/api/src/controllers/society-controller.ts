@@ -25,11 +25,3 @@ export const list = async (societyListParams: Society.List) => {
   const societies = await Society.list(societyListParams);
   return societies;
 };
-
-/**
- * Report for society
- */
-export const report = async (societyReportParams: Society.Report) => {
-  const report = await Society.report(societyReportParams);
-  return report;
-};

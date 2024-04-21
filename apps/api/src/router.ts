@@ -9,7 +9,7 @@ import * as societyMember from './services/society-member-service';
 import * as userService from './services/user-service';
 import * as ballot from './services/ballot-service';
 import * as society from './services/society-service';
-import * as system from './services/system-service';
+import * as report from './services/report-service';
 import { auth } from './middleware/auth';
 import { user } from './middleware/user';
 
@@ -47,13 +47,21 @@ router.get('/v1/elections/:election_id/initiative_options', auth('list_initiativ
 router.post('/v1/elections/:election_id/initiative_options', auth('create_initiative_option'), initiativeOption.create);
 
 // Society Members
-router.get('/v1/society_members/:society_id', auth('list_society_members'), societyMember.list);
-router.post('/v1/society_members/:society_id', auth('create_society_member'), societyMember.create);
+router.get('/v1/society_members', auth('list_society_members'), societyMember.list);
+router.post('/v1/society_members', auth('create_society_member'), societyMember.create);
 
-// Admin
+// Society
 router.get('/v1/societies', auth('list_societies'), society.list);
 router.get('/v1/societies/:society_id', auth('retrieve_society'), society.retrieve);
-router.get('v1/societies/:society_id/report', auth('report_society'), society.report);
-router.get('v1/system/report', auth('report_system'), system.report);
+
+// Report
+router.get('/v1/report/society', auth('report_society'), report.society);
+router.get('/v1/report/system', auth('report_system'), report.system);
+
+// User
+router.get('/v1/users', auth('list_users'), userService.list);
+router.post('/v1/user', auth('create_user'), userService.create);
+router.put('/v1/user/:user_id', auth('update_user'), userService.update);
+router.get('/v1/user/:user_id', auth('retrieve_user'), userService.retrieve);
 
 export { router };

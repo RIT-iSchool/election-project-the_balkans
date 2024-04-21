@@ -1,5 +1,5 @@
 'use client';
-import { useUser } from '@/hooks/use-user';
+import { useSession } from '@/hooks/use-session';
 import { PropsWithChildren, useEffect } from 'react';
 import { SWRConfig } from 'swr';
 
@@ -18,7 +18,7 @@ const fetcher = async (...args: any) => {
 };
 
 const ClientProviders = ({ children }: PropsWithChildren) => {
-  const { data: user, isLoading } = useUser();
+  const { data: user, isLoading } = useSession();
 
   // Set the society ID on first page load
   useEffect(() => {

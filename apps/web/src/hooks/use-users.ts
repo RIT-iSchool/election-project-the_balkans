@@ -9,8 +9,8 @@ type User = {
   admin: boolean;
 };
 
-export const useUser = (userId: string) => {
-  const { data, error, isLoading } = useSWR<User>(`/api/v1/user/${userId}`);
+export const useUsers = () => {
+  const { data, error, isLoading } = useSWR<User[]>(`/api/v1/users`);
 
   return {
     data,

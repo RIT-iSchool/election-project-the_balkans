@@ -70,6 +70,7 @@ export type Update = {
   societyId: number;
   electionData: UpdateElection;
 };
+
 /**
  * Updates an election by ID
  */
@@ -80,12 +81,12 @@ export const update = async ({
 }: Update) => {
   try {
     const updatedElection = await db.transaction(async (dbClient) => {
-      const [electionRow] = await db
+      const [electionRow] = await dbClient
         .update(election)
         .set(electionData)
         .where(
           and(eq(election.id, electionId), eq(election.societyId, societyId)),
-        );
+        ).returning();
 
       if (!updatedElection) throw new Error('Election not found');
 

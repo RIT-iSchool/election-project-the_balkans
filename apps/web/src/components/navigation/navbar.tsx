@@ -1,5 +1,5 @@
 'use client';
-import { useUser } from '@/hooks/use-user';
+import { useSession } from '@/hooks/use-session';
 import { NavLink } from './nav-link';
 import { Text } from 'frosted-ui';
 
@@ -43,7 +43,7 @@ export const adminRoutes = [
 ] as const;
 
 const Navbar = () => {
-  const { data: user } = useUser();
+  const { data: user } = useSession();
 
   return (
     <div className="flex-1 overflow-auto py-2">

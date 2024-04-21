@@ -61,23 +61,3 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
     next(err);
   }
 };
-
-const ReportSocietyParams = z.object({
-  society_id: z.string().transform((id) => parseInt(id)),
-});
-
-export const report = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { society_id } = ReportSocietyParams.parse(req.params);
-
-    const societyReport = await society.report({ societyId: society_id });
-
-    res.json(societyReport);
-  } catch (err) {
-    next(err);
-  }
-};

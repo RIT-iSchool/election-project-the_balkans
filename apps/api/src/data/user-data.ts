@@ -1,4 +1,4 @@
-import { CreateUser } from '../db/schema';
+import { CreateUser, society } from '../db/schema';
 import { db } from '../db';
 import { user } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
@@ -23,6 +23,33 @@ export const create = async ({ userData }: Create) => {
   }
 };
 
+export type Update = {
+  userId: number;
+  userData: CreateUser;
+};
+
+/**
+ * Updates a user.
+ */
+export const update = async ({ userId, userData }: Update) => {
+  try {
+    const [updatedUser] = await db.transaction(
+      async (dbClient) =>
+        await dbClient
+          .update(user)
+          .set(userData)
+          .where(eq(user.id, userId))
+          .returning(),
+    );
+
+    if (!updatedUser) throw new Error('User not found');
+
+    return updatedUser!;
+  } catch (err) {
+    throw new Error('Something went wrong updating a user');
+  }
+};
+
 export type Retrieve = {
   userId: number;
 };
@@ -39,6 +66,19 @@ export const retrieve = async ({ userId }: Retrieve) => {
     return userData;
   } catch (err) {
     throw new Error('Something went wrong retrieving a user');
+  }
+};
+
+/**
+ * Lists users.
+ */
+export const list = async () => {
+  try {
+    const userData = await db.select().from(user);
+
+    return userData;
+  } catch (err) {
+    throw new Error('Something went wrong listing users');
   }
 };
 

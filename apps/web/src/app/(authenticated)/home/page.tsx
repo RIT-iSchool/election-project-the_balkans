@@ -1,8 +1,8 @@
 'use client';
-import { useUser } from '@/hooks/use-user';
+import { useSession } from '@/hooks/use-session';
 
 export default function Page() {
-  const { data: user } = useUser();
+  const { data: user } = useSession();
 
   if (!user) return null;
 

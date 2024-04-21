@@ -1,13 +1,6 @@
-import {
-  candidateVote,
-  CreateSociety,
-  election,
-  society,
-  societyMember,
-  user,
-} from '../db/schema';
+import { CreateSociety, society, user } from '../db/schema';
 import { db } from '../db';
-import { eq, getTableColumns, ilike, lte, gte, and, count } from 'drizzle-orm';
+import { eq, getTableColumns, ilike } from 'drizzle-orm';
 
 export type Create = {
   societyData: CreateSociety;
@@ -74,72 +67,5 @@ export const list = async ({ search }: List) => {
     return societies;
   } catch (err) {
     throw new Error('Something went wrong listing societies.');
-  }
-};
-
-export type Report = {
-  societyId: number;
-};
-
-/**
- * Reports the number of active and inactive ballots, number of users per society, avgerage number of members voting in each election.
- */
-export const report = async ({ societyId }: Report) => {
-  try {
-    const [{ activeBallots } = { activeBallots: 0 }] = await db
-      .select({ activeBallots: count() })
-      .from(election)
-      .where(
-        and(
-          eq(election.societyId, societyId),
-          lte(election.startDate, new Date().toString()),
-          gte(election.endDate, new Date().toString()),
-        ),
-      );
-
-    const inActiveBallots =
-      (
-        await db
-          .select({ count: count() })
-          .from(election)
-          .where(
-            and(
-              eq(election.societyId, societyId),
-              gte(election.startDate, new Date().toString()),
-              lte(election.endDate, new Date().toString()),
-            ),
-          )
-      ).pop()?.count ?? 0;
-
-    const societyUsers =
-      (
-        await db
-          .select({ count: count() })
-          .from(societyMember)
-          .where(eq(societyMember.societyId, societyId))
-      ).pop()?.count ?? 0;
-
-    const votingMembers =
-      (
-        await db
-          .select({ count: count() })
-          .from(candidateVote)
-          .innerJoin(societyMember, eq(societyMember.societyId, societyId))
-      ).pop()?.count ?? 0;
-
-    const elections = activeBallots + inActiveBallots;
-
-    const averageVotingMembers = votingMembers / elections;
-
-    return {
-      reportData: {
-        activeBallots,
-        inActiveBallots,
-        societyUsers,
-        averageVotingMembers,
-      },
-    };
-  } catch (err) {
-    throw new Error('Something went wrong with the report.');
   }
 };

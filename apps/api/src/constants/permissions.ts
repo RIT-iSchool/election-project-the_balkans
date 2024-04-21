@@ -31,11 +31,19 @@ export enum Permissions {
   submit_ballot = 'submit_ballot',
   retrieve_ballot = 'retrieve_ballot',
 
-  // Admin
+  // Society
   list_societies = 'list_societies',
   retrieve_society = 'retrieve_society',
+
+  // Report
   report_society = 'report_society',
   report_system = 'report_system',
+
+  // User
+  create_user = 'create_user',
+  list_users = 'list_users',
+  retrieve_user = 'retrieve_user',
+  update_user = 'update_user',
 }
 
 // This type is used to ensure that only valid permission strings
@@ -123,10 +131,18 @@ export const permissions = {
     Permissions.create_society_member,
     Permissions.list_society_members,
 
-    // Admin
+    // Society
     Permissions.list_societies,
     Permissions.retrieve_society,
+
+    // Report
     Permissions.report_society,
     Permissions.report_system,
+
+    // Users
+    Permissions.create_user,
+    Permissions.list_users,
+    Permissions.retrieve_user,
+    Permissions.update_user,
   ] as string[],
 };
