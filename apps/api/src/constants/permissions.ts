@@ -34,9 +34,9 @@ export enum Permissions {
   // Society
   list_societies = 'list_societies',
   retrieve_society = 'retrieve_society',
-  report_society = 'report_society',
 
-  // System
+  // Report
+  report_society = 'report_society',
   report_system = 'report_system',
 
   // User
@@ -134,9 +134,9 @@ export const permissions = {
     // Society
     Permissions.list_societies,
     Permissions.retrieve_society,
-    Permissions.report_society,
 
-    // System
+    // Report
+    Permissions.report_society,
     Permissions.report_system,
 
     // Users

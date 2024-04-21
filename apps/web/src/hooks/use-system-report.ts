@@ -9,7 +9,7 @@ type SystemReport = {
 
 export const useSystemReport = () => {
   const { data, error, isLoading } = useSWR<SystemReport>(
-    `/api/v1/system/report`,
+    `/api/v1/report/system`,
   );
 
   return {

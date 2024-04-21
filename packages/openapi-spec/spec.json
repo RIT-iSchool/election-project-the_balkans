@@ -1144,7 +1144,7 @@
         ]
       }
     },
-    "/v1/societiey/report": {
+    "/v1/report/society": {
       "parameters": [
         {
           "in": "header",
@@ -1157,7 +1157,7 @@
       ],
       "get": {
         "tags": [
-          "Societies"
+          "Report"
         ],
         "operationId": "SocietyReport",
         "description": "Society Report",
@@ -1190,10 +1190,10 @@
         }
       }
     },
-    "/v1/system/report": {
+    "/v1/report/system": {
       "get": {
         "tags": [
-          "System"
+          "Report"
         ],
         "operationId": "SystemReport",
         "description": "System Report",

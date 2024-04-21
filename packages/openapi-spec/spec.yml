@@ -701,7 +701,7 @@ paths:
       security:
         - bearer: []
         
-  /v1/societiey/report:
+  /v1/report/society:
     parameters:
       - in: 'header'
         required: true
@@ -710,7 +710,7 @@ paths:
           type: 'string'
     get:
       tags:
-        - Societies
+        - Report
       operationId: 'SocietyReport'
       description: 'Society Report'
       responses:
@@ -731,10 +731,10 @@ paths:
                     type: 'number'
                     format: 'float'
   
-  /v1/system/report:
+  /v1/report/system:
     get:
         tags: 
-          - System
+          - Report
         operationId: 'SystemReport'
         description: 'System Report'
         responses:

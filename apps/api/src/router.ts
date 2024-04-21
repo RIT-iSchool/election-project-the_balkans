@@ -9,7 +9,7 @@ import * as societyMember from './services/society-member-service';
 import * as userService from './services/user-service';
 import * as ballot from './services/ballot-service';
 import * as society from './services/society-service';
-import * as system from './services/system-service';
+import * as report from './services/report-service';
 import { auth } from './middleware/auth';
 import { user } from './middleware/user';
 
@@ -53,10 +53,10 @@ router.post('/v1/society_members', auth('create_society_member'), societyMember.
 // Society
 router.get('/v1/societies', auth('list_societies'), society.list);
 router.get('/v1/societies/:society_id', auth('retrieve_society'), society.retrieve);
-router.get('/v1/society/report', auth('report_society'), society.report);
 
-// System
-router.get('/v1/system/report', auth('report_system'), system.report);
+// Report
+router.get('/v1/report/society', auth('report_society'), report.society);
+router.get('/v1/report/system', auth('report_system'), report.system);
 
 // User
 router.get('/v1/users', auth('list_users'), userService.list);
