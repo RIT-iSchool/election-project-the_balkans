@@ -8,35 +8,27 @@ import { calculate } from '../helpers/log-helper';
  */
 export const report = async () => {
   try {
-    const loggedInUsers =
-      (
-        await db
-          .select({ count: countDistinct(session.userId) })
-          .from(session)
-          .where(gt(session.expiresAt, new Date()))
-      ).pop()?.count ?? 0;
+    const [loggedInUsers] = await db
+      .select({ count: countDistinct(session.userId) })
+      .from(session)
+      .where(gt(session.expiresAt, new Date()));
 
-    const activeElections =
-      (
-        await db
-          .select({ count: count() })
-          .from(election)
-          .where(
-            and(
-              lte(election.startDate, new Date()),
-              gte(election.endDate, new Date()),
-            ),
-          )
-      ).pop()?.count ?? 0;
+    const [activeElections] = await db
+      .select({ count: count() })
+      .from(election)
+      .where(
+        and(
+          lte(election.startDate, new Date()),
+          gte(election.endDate, new Date()),
+        ),
+      );
 
-    const averageRequestTime = (await calculate()).averageRequestTime;
-
-    const averageResponseTime = (await calculate()).averageResponseTime;
+    const { averageRequestTime, averageResponseTime } = await calculate();
 
     return {
       systemReportData: {
-        loggedInUsers,
-        activeElections,
+        loggedInUsers: loggedInUsers?.count || 0,
+        activeElections: activeElections?.count || 0,
         averageRequestTime,
         averageResponseTime,
       },

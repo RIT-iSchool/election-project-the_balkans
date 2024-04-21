@@ -22,6 +22,7 @@ import {
   TableRow,
 } from '@/components/shared/table';
 import { useMemo } from 'react';
+import { useSocietyReport } from '@/hooks/use-society-report';
 
 type PageProps = {
   params: {
@@ -47,6 +48,7 @@ const RoleBadge = ({ role }: { role: 'member' | 'officer' | 'employee' }) => {
 export default function Page({ params }: PageProps) {
   const { data: society } = useSociety(params);
   const { data: societyMembers } = useSocietyMembers(params.societyId);
+  const { data: societyReport } = useSocietyReport(params.societyId);
 
   if (!society) return null;
 
@@ -55,6 +57,7 @@ export default function Page({ params }: PageProps) {
       <PageTitle title={society.name} description="Placeholder." />
 
       <pre>{JSON.stringify(society, null, 2)}</pre>
+      <pre>{JSON.stringify(societyReport, null, 2)}</pre>
 
       <div className="flex flex-col gap-2">
         <Text size="5" weight="medium">

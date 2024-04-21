@@ -47,13 +47,13 @@ router.get('/v1/elections/:election_id/initiative_options', auth('list_initiativ
 router.post('/v1/elections/:election_id/initiative_options', auth('create_initiative_option'), initiativeOption.create);
 
 // Society Members
-router.get('/v1/society_members/:society_id', auth('list_society_members'), societyMember.list);
-router.post('/v1/society_members/:society_id', auth('create_society_member'), societyMember.create);
+router.get('/v1/society_members', auth('list_society_members'), societyMember.list);
+router.post('/v1/society_members', auth('create_society_member'), societyMember.create);
 
 // Admin
 router.get('/v1/societies', auth('list_societies'), society.list);
 router.get('/v1/societies/:society_id', auth('retrieve_society'), society.retrieve);
-router.get('/v1/societies/:society_id/report', auth('report_society'), society.report);
+router.get('/v1/society/report', auth('report_society'), society.report);
 router.get('/v1/system/report', auth('report_system'), system.report);
 
 export { router };

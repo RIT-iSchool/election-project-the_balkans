@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { z } from 'zod';
 import * as society from '../controllers/society-controller';
+import { BadRequestError } from '../errors/BadRequestError';
 
 const SocietySchema = z.object({
   name: z.string(),
@@ -62,19 +63,17 @@ export const list = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const ReportSocietyParams = z.object({
-  society_id: z.string().transform((id) => parseInt(id)),
-});
-
 export const report = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const { society_id } = ReportSocietyParams.parse(req.params);
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
 
-    const societyReport = await society.report({ societyId: society_id });
+    const societyReport = await society.report({ societyId: req.society.id });
 
     res.json(societyReport);
   } catch (err) {

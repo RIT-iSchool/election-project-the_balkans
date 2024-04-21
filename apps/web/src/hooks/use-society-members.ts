@@ -15,9 +15,9 @@ type SocietyMember = {
   } | null;
 };
 
-export const useSocietyMembers = (society_id: string) => {
+export const useSocietyMembers = () => {
   const { data, error, isLoading } = useSWR<SocietyMember[]>(
-    `/api/v1/society_members/${society_id}`,
+    `/api/v1/society_members`,
   );
 
   return {

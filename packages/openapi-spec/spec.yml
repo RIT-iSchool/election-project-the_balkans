@@ -573,9 +573,9 @@ paths:
       security:
         - bearer: []
 
-  /v1/society_members/{society_id}:
+  /v1/society_members:
     parameters:
-      - in: 'path'
+      - in: 'header'
         required: true
         name: 'society_id'
         schema:
@@ -701,9 +701,9 @@ paths:
       security:
         - bearer: []
         
-  /v1/societies/{society_id}/report:
+  /v1/societiey/report:
     parameters:
-      - in: 'path'
+      - in: 'header'
         required: true
         name: 'society_id'
         schema:
