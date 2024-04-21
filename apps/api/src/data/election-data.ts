@@ -70,6 +70,7 @@ export type Update = {
   societyId: number;
   electionData: UpdateElection;
 };
+
 /**
  * Updates an election by ID
  */
