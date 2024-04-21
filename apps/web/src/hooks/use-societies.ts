@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+import { Paginated } from './types';
 
 type Society = {
   id: number;
@@ -16,15 +17,16 @@ type Society = {
 
 type UseSocietiesOptions = {
   search?: string;
+  page?: string;
 };
 
-export const useSocieties = ({ search }: UseSocietiesOptions) => {
-  const { data, error, isLoading } = useSWR<Society[]>(
-    `/api/v1/societies?search=${search}`,
+export const useSocieties = ({ search, page }: UseSocietiesOptions) => {
+  const { data, error, isLoading } = useSWR<Paginated<Society>>(
+    `/api/v1/societies?search=${search}${page ? `&page=${page}` : ''}`,
   );
 
   return {
-    data,
+    ...data,
     error,
     isLoading,
   };

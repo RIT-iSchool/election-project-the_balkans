@@ -20,14 +20,26 @@ import {
   TableCell,
   TableRow,
 } from '@/components/shared/table';
+import { Pagination } from '@/components/shared/pagination';
+import { Empty } from '@/components/shared/empty';
+import { Sad32 } from '@frosted-ui/icons';
+import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
   const [query, setQuery] = useState('');
+  const searchParams = useSearchParams();
   const debouncedQuery = useDebounce(query, 200);
-  const { data: societies } = useSocieties({ search: debouncedQuery });
+  const {
+    data: societies,
+    totalCount,
+    isLoading,
+  } = useSocieties({
+    search: debouncedQuery,
+    page: searchParams.get('page') || '1',
+  });
 
   return (
-    <div className="flex min-h-screen flex-col gap-5 py-6">
+    <div className="flex min-h-screen flex-col gap-5 pt-6">
       <div className="space-y-5 px-6">
         <PageTitle
           title="Societies"
@@ -47,31 +59,49 @@ export default function Page() {
       </div>
 
       <div className="w-screen overflow-auto md:w-full">
-        <Table>
-          <TableHeader>
-            <TableHead className="w-20">ID</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead />
-          </TableHeader>
-          <TableBody>
-            {societies?.map((s) => (
-              <TableRow key={s.id}>
-                <TableCell>
-                  <Text weight="bold">{s.id}</Text>
-                </TableCell>
-                <TableCell>
-                  <Text color="gray">{s.name}</Text>
-                </TableCell>
-                <TableCell className="flex h-full w-full gap-x-2">
-                  <Button>Investigate Society</Button>
-                  <Link href={`/admin/societies/${s.id}`}>
-                    <Button>Manage Society</Button>
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        {!isLoading && !societies?.length && (
+          <Empty
+            title="No societies"
+            subtitle={
+              debouncedQuery.length
+                ? 'Looks like no societies were found that match your query. Try adjusting your search.'
+                : "Looks like there aren't any societies."
+            }
+            icon={Sad32}
+          />
+        )}
+
+        {Boolean(societies?.length) && (
+          <>
+            <Table>
+              <TableHeader>
+                <TableHead className="w-20">ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead />
+              </TableHeader>
+              <TableBody>
+                {societies?.map((s) => (
+                  <TableRow key={s.id}>
+                    <TableCell>
+                      <Text weight="bold">{s.id}</Text>
+                    </TableCell>
+                    <TableCell>
+                      <Text color="gray">{s.name}</Text>
+                    </TableCell>
+                    <TableCell className="flex h-full w-full gap-x-2">
+                      <Button>Investigate Society</Button>
+                      <Link href={`/admin/societies/${s.id}`}>
+                        <Button>Manage Society</Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+            <Pagination totalCount={totalCount} resource="society" />
+          </>
+        )}
       </div>
     </div>
   );
