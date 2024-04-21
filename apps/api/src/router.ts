@@ -50,10 +50,18 @@ router.post('/v1/elections/:election_id/initiative_options', auth('create_initia
 router.get('/v1/society_members', auth('list_society_members'), societyMember.list);
 router.post('/v1/society_members', auth('create_society_member'), societyMember.create);
 
-// Admin
+// Society
 router.get('/v1/societies', auth('list_societies'), society.list);
 router.get('/v1/societies/:society_id', auth('retrieve_society'), society.retrieve);
 router.get('/v1/society/report', auth('report_society'), society.report);
+
+// System
 router.get('/v1/system/report', auth('report_system'), system.report);
+
+// User
+router.get('/v1/users', auth('list_users'), userService.list);
+router.post('/v1/user', auth('create_user'), userService.create);
+router.put('/v1/user/:user_id', auth('update_user'), userService.update);
+router.get('/v1/user/:user_id', auth('retrieve_user'), userService.retrieve);
 
 export { router };

@@ -756,6 +756,92 @@ paths:
                             type: 'number'
                             format: 'float'
 
+  /v1/users:
+    get:
+      tags:
+        - User
+      operationId: ListUsers
+      description: List users
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Usr'
+      security:
+        - bearer: []
+  /v1/user:
+    post:
+      tags:
+        - User
+      operationId: CreateUser
+      description: Create User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - bearer: []
+  /v1/user/{userId}:
+    put:
+      tags:
+        - User
+      operationId: UpdateUser
+      description: Update User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - bearer: []
+    get:
+      tags:
+        - User
+      operationId: RetrieveUser
+      description: Retrieve User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - bearer: []
+
 components:
   securitySchemes:
     bearer:

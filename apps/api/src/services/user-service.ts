@@ -30,26 +30,46 @@ export const create = async (
   }
 };
 
+const UpdateUserParamsSchema = z.object({
+  userId: z.string().transform((id) => parseInt(id)),
+});
+
+export const update = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = UpdateUserParamsSchema.parse(req.params);
+    const userData = UserSchema.parse(req.body);
+
+    const updatedUser = await user.update({
+      userId: userId,
+      userData: {
+        ...userData,
+      },
+    });
+
+    res.send(updatedUser);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const RetrieveUserParamsSchema = z.object({
+  userId: z.string().transform((id) => parseInt(id)),
+});
+
 export const retrieve = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const userIdString = req.params.userId;
-
-    if (userIdString === undefined) {
-      return res.send(400).send('userId are required');
-    }
-
-    const userIdNumber = parseInt(userIdString);
-
-    if (isNaN(userIdNumber)) {
-      return res.send(400).send('invalid userId');
-    }
+    const { userId } = RetrieveUserParamsSchema.parse(req.params);
 
     const retrieveUser = await user.retrieve({
-      userId: userIdNumber,
+      userId: userId,
     });
 
     res.send(retrieveUser);
@@ -58,22 +78,36 @@ export const retrieve = async (
   }
 };
 
+export const list = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const listUsers = await user.list();
+
+    res.send(listUsers);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const LoginParamsSchema = z.object({
+  email: z.string(),
+  password: z.string(),
+});
+
 export const login = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const userEmail = req.body.email;
-    const userPassword = req.body.password;
-
-    if (userEmail === undefined || userPassword === undefined) {
-      return res.status(400).send('Invalid request body');
-    }
+    const { email, password } = LoginParamsSchema.parse(req.body);
 
     const loginUser = await user.login({
-      email: userEmail,
-      password: userPassword,
+      email: email,
+      password: password,
     });
 
     res.cookie('session', loginUser.token, {
