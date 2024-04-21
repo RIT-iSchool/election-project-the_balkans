@@ -28,8 +28,8 @@ export const society = async ({ societyId }: Society) => {
       .where(
         and(
           eq(election.societyId, societyId),
-          lte(election.startDate, new Date()),
-          gte(election.endDate, new Date()),
+          lte(election.startDate, new Date().toString()),
+          gte(election.endDate, new Date().toString()),
         ),
       );
 
@@ -40,8 +40,8 @@ export const society = async ({ societyId }: Society) => {
         and(
           eq(election.societyId, societyId),
           or(
-            gt(election.startDate, new Date()),
-            lt(election.endDate, new Date()),
+            gt(election.startDate, new Date().toString()),
+            lt(election.endDate, new Date().toString()),
           ),
         ),
       );
@@ -91,8 +91,8 @@ export const system = async () => {
       .from(election)
       .where(
         and(
-          lte(election.startDate, new Date()),
-          gte(election.endDate, new Date()),
+          lte(election.startDate, new Date().toString()),
+          gte(election.endDate, new Date().toString()),
         ),
       );
 
