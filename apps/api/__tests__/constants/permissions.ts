@@ -96,6 +96,10 @@ describe('test admin permissions', () => {
     Permissions.retrieve_society,
     Permissions.report_society,
     Permissions.report_system,
+    Permissions.create_user,
+    Permissions.list_users,
+    Permissions.retrieve_user,
+    Permissions.update_user,
   ];
 
   test('an admin has all the correct permissions', () => {

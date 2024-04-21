@@ -4,6 +4,7 @@ import * as electionOffice from '../controllers/election-office-controller';
 import { BadRequestError } from '../errors/BadRequestError';
 
 const ElectionOfficeSchema = z.object({
+  // id: z.number().optional(),
   electionId: z.number(),
   officeName: z.string(),
   maxVotes: z.number(),

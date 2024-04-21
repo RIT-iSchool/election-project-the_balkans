@@ -19,14 +19,20 @@ describe('GET /v1/societies', () => {
       .expect(200);
 
     expect(response.body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          owner: expect.any(Object), // Ensure owner is an object (either with details or null)
-          id: expect.any(Number), // Ensure id is a number
-          name: expect.any(String), // Ensure name is a string
-          ownerId: expect.any(Number),
-        }),
-      ]),
+      expect.objectContaining({
+        currentPage: expect.any(Number),
+        data: expect.arrayContaining([
+          expect.objectContaining({
+            owner: expect.any(Object),
+            id: expect.any(Number),
+            name: expect.any(String),
+            ownerId: expect.any(Number),
+          }),
+        ]),
+        hasMore: expect.any(Boolean),
+        nextPage: expect.any(Number),
+        totalCount: expect.any(Number),
+      }),
     );
   });
 });

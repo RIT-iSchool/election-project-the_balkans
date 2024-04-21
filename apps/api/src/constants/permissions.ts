@@ -144,5 +144,6 @@ export const permissions = {
     Permissions.list_users,
     Permissions.retrieve_user,
     Permissions.update_user,
+    //test
   ] as string[],
 };
