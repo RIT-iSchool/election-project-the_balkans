@@ -70,22 +70,23 @@ export const permissions = {
   ] as string[],
   officer: [
     // Elections
-    Permissions.create_election,
     Permissions.list_elections,
     Permissions.retrieve_election,
-    Permissions.update_election,
 
     // Offices
-    Permissions.create_office,
     Permissions.list_offices,
-
+    Permissions.retrieve_office,
     // Candidates
-    Permissions.create_candidate,
     Permissions.list_candidates,
+    Permissions.retrieve_candidate,
 
     // Initiatives
-    Permissions.create_initiative,
     Permissions.list_initiatives,
+    Permissions.retrieve_initiative,
+
+    //InitiativeOptions
+    Permissions.list_initiative_options,
+    Permissions.retrieve_initiative_option,
 
     // Ballots
     Permissions.submit_ballot,
@@ -103,18 +104,34 @@ export const permissions = {
     // Offices
     Permissions.create_office,
     Permissions.list_offices,
+    Permissions.retrieve_office,
+    Permissions.update_election,
 
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
+    Permissions.retrieve_candidate,
+    Permissions.update_candidate,
 
     // Initiatives
     Permissions.create_initiative,
     Permissions.list_initiatives,
+    Permissions.retrieve_initiative,
+    Permissions.update_initiative,
+
+    // Initiative Options
+    Permissions.list_initiative_options,
+    Permissions.create_initiative_option,
+    Permissions.retrieve_initiative_option,
+    Permissions.update_initiative_option,
 
     // Society Members
     Permissions.create_society_member,
     Permissions.list_society_members,
+
+    // Society
+    Permissions.list_societies,
+    Permissions.retrieve_society,
   ] as string[],
   admin: [
     // Elections
@@ -126,14 +143,26 @@ export const permissions = {
     // Offices
     Permissions.create_office,
     Permissions.list_offices,
+    Permissions.retrieve_office,
+    Permissions.update_election,
 
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
+    Permissions.retrieve_candidate,
+    Permissions.update_candidate,
 
     // Initiatives
     Permissions.create_initiative,
     Permissions.list_initiatives,
+    Permissions.retrieve_initiative,
+    Permissions.update_initiative,
+
+    // Initiative Options
+    Permissions.list_initiative_options,
+    Permissions.create_initiative_option,
+    Permissions.retrieve_initiative_option,
+    Permissions.update_initiative_option,
 
     // Society Members
     Permissions.create_society_member,
