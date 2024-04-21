@@ -7,7 +7,7 @@ type SocietyReport = {
   averageVotingMembers: number;
 };
 
-export const useReportSociety = () => {
+export const useSocietyReport = () => {
   const { data, error, isLoading } = useSWR<SocietyReport>(
     `/api/v1/report/society`,
   );

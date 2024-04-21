@@ -47,8 +47,8 @@ const RoleBadge = ({ role }: { role: 'member' | 'officer' | 'employee' }) => {
 
 export default function Page({ params }: PageProps) {
   const { data: society } = useSociety(params);
-  const { data: societyMembers } = useSocietyMembers(params.societyId);
-  const { data: societyReport } = useSocietyReport(params.societyId);
+  const { data: societyMembers } = useSocietyMembers();
+  const { data: societyReport } = useSocietyReport();
 
   if (!society) return null;
 
