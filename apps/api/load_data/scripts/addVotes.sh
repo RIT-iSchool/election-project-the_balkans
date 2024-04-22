@@ -3,7 +3,7 @@ PG_DATABASE="americandream"
 
 
 export PGPASSWORD="$PG_PASSWORD"
-PSV_FILE="./load_data/scripts/votes.psv"
+PSV_FILE="./scripts/votes.psv"
 
 insert_votes() {
     psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"candidateVote\" (member_id, election_candidate_id) VALUES ($1, $2)";

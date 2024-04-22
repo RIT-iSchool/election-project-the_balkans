@@ -3,7 +3,7 @@ PG_DATABASE="americandream"
 
 export PGPASSWORD="$PG_PASSWORD"
 
-PSV_FILE="./load_data/scripts/candidates.psv"
+PSV_FILE="./scripts/candidates.psv"
 
 societyID=1
 changeID=false
