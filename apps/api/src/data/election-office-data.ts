@@ -57,7 +57,6 @@ export type Retrieve = { electionOfficeId: number };
 /**
  * Retrieves a society's election office.
  */
-
 export const retrieve = async ({ electionOfficeId }: Retrieve) => {
   try {
     const [electionOfficeData] = await db
@@ -81,7 +80,6 @@ export type Update = {
 /**
  * Updates an election office by ID
  */
-
 export const update = async ({
   electionOfficeId,
   electionOfficeData,

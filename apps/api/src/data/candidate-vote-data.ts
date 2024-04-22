@@ -6,7 +6,7 @@ import {
   electionOffice,
   election,
 } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 
 export type Create = {
   candidateVoteData: CreateCandidateVote;
@@ -40,8 +40,10 @@ export type List = {
  */
 export const list = async ({ electionId, societyId }: List) => {
   try {
-    const [candidateVoteData] = await db
-      .select()
+    const candidateVoteData = await db
+      .select({
+        ...getTableColumns(candidateVote),
+      })
       .from(candidateVote)
       .innerJoin(
         electionCandidate,
