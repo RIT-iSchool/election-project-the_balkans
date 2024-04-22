@@ -1,5 +1,10 @@
-PG_USER=""
+# PG_USER=""
+# PG_DATABASE="americandream"
+PG_USER="postgres"
+PG_PASSWORD="1234"
 PG_DATABASE="americandream"
+
+export PGPASSWORD="$PG_PASSWORD"
 
 PSV_FILE="./scripts/candidates.psv"
 societyID=1
@@ -57,19 +62,19 @@ while IFS='|' read -r CandidateID OfficeID ElectionID OfficeName MaxVotes Candid
 
 
     if [ -z "$CandidateBio" ]; then
-        if [$prevOfficeID != $OfficeID]; then
+        if [ $prevOfficeID != $OfficeID ]; then
             insert_offices "$ElectionID" "$OfficeName" "$MaxVotes"
             insert_candidates "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$CandidateBio"
         else 
             insert_candidates "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$CandidateBio"
         fi
     else
-        if [$prevOfficeID != $OfficeID]; then
+        if [ $prevOfficeID != $OfficeID ]; then
             insert_offices "$ElectionID" "$OfficeName" "$MaxVotes"
             insert_candidates "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$(escape_single_quotes "$CandidateBio")"
         else 
             insert_candidates "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$(escape_single_quotes "$CandidateBio")"
         fi
     fi
-    $prevOfficeID=$OfficeID
+    prevOfficeID=$OfficeID
 done < "$PSV_FILE"

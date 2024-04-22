@@ -1,6 +1,10 @@
-PG_USER=""
+# PG_USER=""
+# PG_DATABASE="americandream"
+PG_USER="postgres"
+PG_PASSWORD="1234"
 PG_DATABASE="americandream"
 
+export PGPASSWORD="$PG_PASSWORD"
 # PSV file
 PSV_FILE="./scripts/societies.psv"
 OWNER_ID=100000
@@ -19,12 +23,12 @@ psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUE
 
 # Function to insert data into PostgreSQL
 insert_data() {
-    if [ $OWNER_ID -eq 10004 ]; then
-        OWNER_ID=10000
+    if [ $OWNER_ID -eq 100004 ]; then
+        OWNER_ID=100000
     else
         ((OWNER_ID++))
     fi
-    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO society (id, name, owner_id) VALUES ($1, '$2', $OWNER_ID)";
+    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO society (name, owner_id) VALUES ('$1', $OWNER_ID)";
 }
 
 # Check if PSV file exists
@@ -39,7 +43,7 @@ while IFS='|' read -r id name abbreviation discipline; do
     if [ "$id" == "Society ID" ]; then
         continue
     fi
-    insert_data "$id" "$name"
+    insert_data "$name"
 done < "$PSV_FILE"
 
 echo "Data insertion completed."

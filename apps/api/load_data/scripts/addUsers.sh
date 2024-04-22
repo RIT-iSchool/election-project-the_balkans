@@ -1,12 +1,16 @@
-PG_USER=""
+# PG_USER=""
+# PG_DATABASE="americandream"
+PG_USER="postgres"
+PG_PASSWORD="1234"
 PG_DATABASE="americandream"
 
+export PGPASSWORD="$PG_PASSWORD"
 MEMBERS="./scripts/members.psv"
 OFFICERS="./scripts/officers.psv"
 # inserting the society owners
 COUNT=0
 insert_user() {
-    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" (email, password, first_name, last_name, admin) VALUES ('$2@gmail.com', '123456789', '$3', '$4', false)";
+    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" (email, password, first_name, last_name, admin) VALUES ('$1@gmail.com', '123456789', '$2', '$3', false)";
 }
 
 insert_society_member() {
