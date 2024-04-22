@@ -1,6 +1,12 @@
-import { CreateSession, session, user } from '../db/schema';
+import {
+  CreateSession,
+  session,
+  society,
+  societyMember,
+  user,
+} from '../db/schema';
 import { db } from '../db';
-import { eq } from 'drizzle-orm';
+import { eq, getTableColumns } from 'drizzle-orm';
 
 export type Create = CreateSession;
 
@@ -21,22 +27,29 @@ export const create = async ({ ...sessionData }: CreateSession) => {
 
 export type Retrieve = {
   sessionToken: string;
+  userId: number;
 };
 
 /**
  * Retrieves a session by ID.
  */
-export const retrieve = async ({ sessionToken }: Retrieve) => {
+export const retrieve = async ({ sessionToken, userId }: Retrieve) => {
   try {
     const [sessionData] = await db
-      .select()
+      .select({ ...getTableColumns(user) })
       .from(session)
       .innerJoin(user, eq(session.userId, user.id))
       .where(eq(session.token, sessionToken));
 
     if (!sessionData) throw new Error('Session not found');
 
-    return sessionData;
+    const societies = await db
+      .select({ society: getTableColumns(society) })
+      .from(societyMember)
+      .leftJoin(society, eq(society.id, societyMember.societyId))
+      .where(eq(societyMember.userId, userId));
+
+    return { ...sessionData, societies };
   } catch (err) {
     throw new Error('Something went wrong retrieving a session.');
   }
