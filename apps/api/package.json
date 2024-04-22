@@ -10,7 +10,8 @@
     "test": "cross-env TEST=1 PORT=3005 jest ---detectOpenHandles --forceExit",
     "dev:docs": "nodemon --config nodemon-docs.json",
     "db:migrate": "node ./src/db/migrate.js",
-    "db:data": "./load_data/loadAllData.sh"
+    "db:data": "./load_data/loadAllData.sh",
+    "db:init": "node ./src/db/migrate.js && ./load_data/loadAllData.sh"
   },
   "keywords": [],
   "author": "",
