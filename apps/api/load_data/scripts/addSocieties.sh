@@ -3,13 +3,18 @@ PG_DATABASE="americandream"
 
 # PSV file
 PSV_FILE="./scripts/societies.psv"
-OWNER_ID=10000
+OWNER_ID=100000
 
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (10000, 'shpend.ismaili1@gmail.com', 'shpend123', 'Shpend', 'Ismaili', false)";
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (10001, 'chs3578@g.rit.edu', 'connor123', 'Connor', 'Stevens', false)";
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (10002, 'ctg7866@g.rit.edu', 'cooper123', 'Cooper', 'Gadd', false)";
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (10003, 'emr8909@g.rit.edu', 'evan123', 'Evan', 'Reighter', false)";
-psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (10004, 'connor@admin.com', 'connor123', 'Connor', 'Stevens', true)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100000, 'shpend.ismaili1@gmail.com', 'shpend123', 'Shpend', 'Ismaili', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100001, 'chs3578@g.rit.edu', 'connor123', 'Connor', 'Stevens', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100002, 'ctg7866@g.rit.edu', 'cooper123', 'Cooper', 'Gadd', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100003, 'emr8909@g.rit.edu', 'evan123', 'Evan', 'Reighter', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100004, 'connor@admin.com', 'connor123', 'Connor', 'Stevens', true)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100005, 'dean@employee.com', 'dean123', 'Dean', 'Ganskop', false)";
+psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100006, 'dave@employee.com', 'dave123', 'David', 'Patric', false)";
+
+
+
 
 
 # Function to insert data into PostgreSQL

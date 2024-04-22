@@ -25,6 +25,18 @@ export async function adminLogin() {
 
   return loginResponse.headers['set-cookie']?.[0];
 }
+export async function officerLogin() {
+  const loginResponse = await request(server)
+    .post('/auth/login')
+    .send({
+      email: 'dean@officer.com',
+      password: 'dean123',
+    })
+    .set('Accept', 'application/json')
+    .expect(204);
+
+  return loginResponse.headers['set-cookie']?.[0];
+}
 
 describe('POST /auth/login', () => {
   it('allows a user to login with valid credentials', async () => {

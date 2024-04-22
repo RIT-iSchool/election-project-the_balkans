@@ -41,92 +41,92 @@ describe('GET /v1/elections', () => {
   });
 });
 
-// describe('POST /v1/elections', () => {
-//   let societyId = 6;
-//   it('creates a new election', async () => {
-//     const authToken = await adminLogin(); // Obtain authentication token
+describe('POST /v1/elections', () => {
+  let societyId = 6;
+  it('creates a new election', async () => {
+    const authToken = await adminLogin(); // Obtain authentication token
 
-//     const response = await request(server)
-//       .post('/v1/elections')
-//       .send({
-//         name: 'Test Election',
-//         startDate: '2000-04-20 00:00:00',
-//         endDate: '2000-04-30 00:00:00',
-//         photoUrl: 'testimage.com',
-//       })
-//       .set('Cookie', authToken || '')
-//       .set('x-society-id', societyId.toString())
-//       .set('Accept', 'application/json')
-//       .expect(200);
+    const response = await request(server)
+      .post('/v1/elections')
+      .send({
+        name: 'Test Election',
+        startDate: '2000-04-20 00:00:00',
+        endDate: '2000-04-30 00:00:00',
+        photoUrl: 'testimage.com',
+      })
+      .set('Cookie', authToken || '')
+      .set('x-society-id', societyId.toString())
+      .set('Accept', 'application/json')
+      .expect(200);
 
-//     expect(response.body).toEqual({
-//       id: expect.any(Number),
-//       name: 'Test Election',
-//       societyId: expect.any(Number),
-//       startDate: expect.any(String),
-//       endDate: expect.any(String),
-//       photoURL: expect.any(String),
-//     });
-//   });
+    expect(response.body).toEqual({
+      id: expect.any(Number),
+      name: 'Test Election',
+      societyId: expect.any(Number),
+      startDate: expect.any(String),
+      endDate: expect.any(String),
+      photoURL: expect.any(String),
+    });
+  });
 
-//   it('handles errors correctly', async () => {
-//     const authToken = await adminLogin(); // Obtain authentication token
+  it('handles errors correctly', async () => {
+    const authToken = await adminLogin(); // Obtain authentication token
 
-//     await request(server)
-//       .post('/v1/elections')
-//       .send({
-//         name: 'Test Election',
-//         startDate: '2024-04-13T00:00:00.000Z',
-//         endDate: '2024-04-14T00:00:00.000Z',
-//         photoUrl: 'testimage.com',
-//       })
-//       .set('Cookie', authToken || '') // Set authentication cookie
-//       .set('Accept', 'application/json')
-//       .expect('Content-Type', /json/)
-//       .expect(400);
-//   });
-// });
+    await request(server)
+      .post('/v1/elections')
+      .send({
+        name: 'Test Election',
+        startDate: '2024-04-13T00:00:00.000Z',
+        endDate: '2024-04-14T00:00:00.000Z',
+        photoUrl: 'testimage.com',
+      })
+      .set('Cookie', authToken || '') // Set authentication cookie
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+});
 
-// describe('PUT /v1/elections/:election_id', () => {
-//   let authToken: string | undefined;
-//   let societyID = 5;
+describe('PUT /v1/elections/:election_id', () => {
+  let authToken: string | undefined;
+  let societyID = 5;
 
-//   beforeAll(async () => {
-//     authToken = await adminLogin(); // Use the login function to obtain the authentication token
-//   });
+  beforeAll(async () => {
+    authToken = await adminLogin(); // Use the login function to obtain the authentication token
+  });
 
-//   const updateData = {
-//     name: 'Updated Election Name',
-//     startDate: '2000-04-20 00:00:00',
-//     endDate: '2000-04-29 00:00:00', // Assuming 1 day duration
-//     societyId: societyID,
-//     photoUrl: 'testimage.com', // Example URL
-//   };
-//   it('Admin updates election', async () => {
-//     const response = await request(server)
-//       .put('/v1/elections/:123')
-//       .set('Cookie', authToken || '')
-//       .set('x-society-id', societyID.toString())
-//       .set('Accept', 'application/json')
-//       .send(updateData)
-//       .expect(200);
+  const updateData = {
+    name: 'Updated Election Name',
+    startDate: '2000-04-20 00:00:00',
+    endDate: '2000-04-29 00:00:00', // Assuming 1 day duration
+    societyId: societyID,
+    photoUrl: 'testimage.com', // Example URL
+  };
+  it('Admin updates election', async () => {
+    const response = await request(server)
+      .put('/v1/elections/:123')
+      .set('Cookie', authToken || '')
+      .set('x-society-id', societyID.toString())
+      .set('Accept', 'application/json')
+      .send(updateData)
+      .expect(200);
 
-//     if (response.body === undefined) {
-//       expect(response.body).toBeUndefined();
-//     } else {
-//       expect(response.body).toEqual(
-//         expect.objectContaining({
-//           id: 123,
-//           name: expect.any(String),
-//           startDate: expect.any(String),
-//           endDate: expect.any(String),
-//           societyId: expect.any(Number),
-//           photoURL: expect.any(String),
-//         }),
-//       );
-//     }
-//   });
-// });
+    if (response.body === undefined) {
+      expect(response.body).toBeUndefined();
+    } else {
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          id: 123,
+          name: expect.any(String),
+          startDate: expect.any(String),
+          endDate: expect.any(String),
+          societyId: expect.any(Number),
+          photoURL: expect.any(String),
+        }),
+      );
+    }
+  });
+});
 
 describe('GET /v1/elections/:election_id', () => {
   let authToken: string | undefined;
