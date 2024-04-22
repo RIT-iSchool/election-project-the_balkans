@@ -9,8 +9,7 @@
     "db:generate": "drizzle-kit generate:pg --config=./src/db/drizzle.config.ts",
     "test": "cross-env TEST=1 PORT=3005 jest ---detectOpenHandles --forceExit",
     "dev:docs": "nodemon --config nodemon-docs.json",
-    "db:migrate": "node ./src/db/migrate.js",
-    "db:data": "./load_data/loadAllData.sh"
+    "db:migrate": "node ./src/db/migrate.js"
   },
   "keywords": [],
   "author": "",
