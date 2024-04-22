@@ -4,6 +4,7 @@ PG_DATABASE="americandream"
 PSV_FILE="./scripts/candidates.psv"
 societyID=1
 changeID=false
+prevOfficeID=0
 
 if [ ! -f "$PSV_FILE" ]; then
     echo "PSV file not found."
@@ -11,14 +12,14 @@ if [ ! -f "$PSV_FILE" ]; then
 fi
 
 insert_offices() {
-    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionOffice\" (id, election_id, office_name, max_votes, society_id) VALUES ($1, $2, '$3', $4, $societyID)";
+    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionOffice\" (election_id, office_name, max_votes, society_id) VALUES ($1, '$2', $3, $societyID)";
 }
 insert_candidates() {
 
     if [ -z "$5" ]; then
-        psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionCandidate\" (id, election_office_id, name, description, society_id) VALUES ($1, $2, '$3 $4', 'My name is $3 $4 and I am the best candidate for this office', $societyID)";
+        psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionCandidate\" (election_office_id, name, description, society_id) VALUES ($1, '$2 $3', 'My name is $2 $3 and I am the best candidate for this office', $societyID)";
     else 
-        psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionCandidate\" (id, election_office_id, name, description, society_id) VALUES ($1, $2, '$3 $4', '$5', $societyID)";
+        psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"electionCandidate\" (election_office_id, name, description, society_id) VALUES ($1, '$2 $3', '$4', $societyID)";
     fi
 }
 escape_single_quotes() {
@@ -42,6 +43,9 @@ while IFS='|' read -r CandidateID OfficeID ElectionID OfficeName MaxVotes Candid
     if [ "$CandidateID" == "Candidate ID" ]; then
         continue
     fi
+
+    #only add society
+
     # increments societyIDfor every 25th election
     if (($ElectionID % 25 == 0)) && ! $changeID; then
         changeID=true
@@ -50,11 +54,22 @@ while IFS='|' read -r CandidateID OfficeID ElectionID OfficeName MaxVotes Candid
         changeID=false
     fi
 
+
+
     if [ -z "$CandidateBio" ]; then
-        insert_offices "$OfficeID" "$ElectionID" "$OfficeName" "$MaxVotes"
-        insert_candidates "$CandidateID" "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$CandidateBio"
+        if [$prevOfficeID != $OfficeID]; then
+            insert_offices "$ElectionID" "$OfficeName" "$MaxVotes"
+            insert_candidates "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$CandidateBio"
+        else 
+            insert_candidates "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$CandidateBio"
+        fi
     else
-        insert_offices "$OfficeID" "$ElectionID" "$OfficeName" "$MaxVotes"
-        insert_candidates "$CandidateID" "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$(escape_single_quotes "$CandidateBio")"
+        if [$prevOfficeID != $OfficeID]; then
+            insert_offices "$ElectionID" "$OfficeName" "$MaxVotes"
+            insert_candidates "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$(escape_single_quotes "$CandidateBio")"
+        else 
+            insert_candidates "$OfficeID" "$CandidateFirstName" "$CandidateLastName" "$(escape_single_quotes "$CandidateBio")"
+        fi
     fi
+    $prevOfficeID=$OfficeID
 done < "$PSV_FILE"

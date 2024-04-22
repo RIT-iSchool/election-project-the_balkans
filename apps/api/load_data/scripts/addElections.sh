@@ -7,7 +7,7 @@ PSV_FILE="./scripts/elections.psv"
 
 
 insert_data() {
-    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO election (id, name, society_id, start_date, end_date) VALUES ($1, '$2', $3, '$4', '$5')";
+    psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO election (name, society_id, start_date, end_date) VALUES ('$1', $2, '$3', '$4')";
 }
 
 # Check if PSV file exists
@@ -23,5 +23,5 @@ while IFS='|' read -r id name society start_date end_date; do
     if [ "$id" == "Election ID" ]; then
         continue
     fi
-    insert_data "$id" "$name" "$society" "$start_date" "$end_date"
+    insert_data "$name" "$society" "$start_date" "$end_date"
 done < "$PSV_FILE"
