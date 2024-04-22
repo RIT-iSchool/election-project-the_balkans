@@ -65,6 +65,8 @@ router.get('/v1/societies/:society_id', auth('retrieve_society'), society.retrie
 // Report
 router.get('/v1/report/society', auth('report_society'), report.society);
 router.get('/v1/report/system', auth('report_system'), report.system);
+router.get('/v1/report/status/:election_id', auth('report_status'), report.status);
+router.get('/v1/report/results/:election_id', auth('report_results'), report.results);
 
 // User
 router.get('/v1/users', auth('list_users'), userService.list);

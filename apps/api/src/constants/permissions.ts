@@ -46,6 +46,8 @@ export enum Permissions {
   // Report
   report_society = 'report_society',
   report_system = 'report_system',
+  report_status = 'report_status',
+  report_results = 'report_results',
 
   // User
   create_user = 'create_user',
@@ -93,6 +95,10 @@ export const permissions = {
 
     // Society Members
     Permissions.list_society_members,
+
+    //Report
+    Permissions.report_status,
+    Permissions.report_results,
   ] as string[],
   employee: [
     // Elections
@@ -132,6 +138,10 @@ export const permissions = {
     // Society
     Permissions.list_societies,
     Permissions.retrieve_society,
+
+    //Report
+    Permissions.report_status,
+    Permissions.report_results,
   ] as string[],
   admin: [
     // Elections
@@ -175,6 +185,8 @@ export const permissions = {
     // Report
     Permissions.report_society,
     Permissions.report_system,
+    Permissions.report_status,
+    Permissions.report_results,
 
     // Users
     Permissions.create_user,
