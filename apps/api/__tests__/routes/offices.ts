@@ -46,7 +46,6 @@ describe('POST /v1/elections/:election_id/election_offices', () => {
     const response = await request(server)
       .post('/v1/elections/125/election_offices')
       .send({
-        // id: 5003, // need to provide id, default isnt working currently.
         electionId: 125,
         officeName: 'Scrum Master',
         maxVotes: 1,
@@ -63,7 +62,7 @@ describe('POST /v1/elections/:election_id/election_offices', () => {
         electionId: expect.any(Number),
         officeName: expect.any(String),
         maxVotes: expect.any(Number),
-        societyId: expect.any(String),
+        societyId: expect.any(Number),
       }),
     );
   });

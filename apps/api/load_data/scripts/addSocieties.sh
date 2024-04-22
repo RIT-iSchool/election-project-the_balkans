@@ -1,7 +1,4 @@
-# PG_USER=""
-# PG_DATABASE="americandream"
-PG_USER="postgres"
-PG_PASSWORD="1234"
+PG_USER=""
 PG_DATABASE="americandream"
 
 export PGPASSWORD="$PG_PASSWORD"
@@ -16,10 +13,6 @@ psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUE
 psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100004, 'connor@admin.com', 'connor123', 'Connor', 'Stevens', true)";
 psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100005, 'dean@employee.com', 'dean123', 'Dean', 'Ganskop', false)";
 psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100006, 'dave@employee.com', 'dave123', 'David', 'Patric', false)";
-
-
-
-
 
 # Function to insert data into PostgreSQL
 insert_data() {

@@ -1,7 +1,4 @@
-# PG_USER=""
-# PG_DATABASE="americandream"
-PG_USER="postgres"
-PG_PASSWORD="1234"
+PG_USER=""
 PG_DATABASE="americandream"
 
 export PGPASSWORD="$PG_PASSWORD"
@@ -48,8 +45,6 @@ while IFS='|' read -r CandidateID OfficeID ElectionID OfficeName MaxVotes Candid
     if [ "$CandidateID" == "Candidate ID" ]; then
         continue
     fi
-
-    #only add society
 
     # increments societyIDfor every 25th election
     if (($ElectionID % 25 == 0)) && ! $changeID; then

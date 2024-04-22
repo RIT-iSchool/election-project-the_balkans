@@ -1,7 +1,4 @@
-# PG_USER=""
-# PG_DATABASE="americandream"
-PG_USER="postgres"
-PG_PASSWORD="1234"
+PG_USER=""
 PG_DATABASE="americandream"
 
 export PGPASSWORD="$PG_PASSWORD"

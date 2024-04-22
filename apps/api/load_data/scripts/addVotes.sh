@@ -1,15 +1,12 @@
-# PG_USER=""
-# PG_DATABASE="americandream"
-PG_USER="postgres"
-PG_PASSWORD="1234"
+PG_USER=""
 PG_DATABASE="americandream"
+
 
 export PGPASSWORD="$PG_PASSWORD"
 PSV_FILE="./scripts/votes.psv"
 
 insert_votes() {
     psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"candidateVote\" (member_id, election_candidate_id) VALUES ($1, $2)";
-
 }
 
 while IFS='|' read -r MemberID ElectionID OfficeID CandidateID; do
