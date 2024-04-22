@@ -3,7 +3,7 @@ PG_DATABASE="americandream"
 
 export PGPASSWORD="$PG_PASSWORD"
 # PSV file
-PSV_FILE="./scripts/societies.psv"
+PSV_FILE="./load_data/scripts/societies.psv"
 OWNER_ID=100000
 
 psql -h localhost -U "$PG_USER" -d "$PG_DATABASE" -c "INSERT INTO \"user\" VALUES (100000, 'shpend.ismaili1@gmail.com', 'shpend123', 'Shpend', 'Ismaili', false)";
