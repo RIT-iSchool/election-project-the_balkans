@@ -272,8 +272,8 @@ export const resultsReport = async ({ electionId }: Results) => {
       .where(eq(election.id, electionId));
 
     const [officeResults, initiativeResults] = await Promise.all([
-      intiativeQuery,
       officeQuery,
+      intiativeQuery,
     ]);
 
     return {
