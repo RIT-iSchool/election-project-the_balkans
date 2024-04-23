@@ -1,7 +1,7 @@
 import { CreateElectionOffice, UpdateElectionOffice } from '../db/schema';
 import { db } from '../db';
 import { electionOffice } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 
 export type Create = {
   electionOfficeData: CreateElectionOffice;
@@ -37,7 +37,9 @@ export type List = {
 export const list = async ({ electionId, societyId }: List) => {
   try {
     const electionOfficeData = await db
-      .select()
+      .select({
+        ...getTableColumns(electionOffice),
+      })
       .from(electionOffice)
       .where(
         and(
@@ -60,7 +62,9 @@ export type Retrieve = { electionOfficeId: number };
 export const retrieve = async ({ electionOfficeId }: Retrieve) => {
   try {
     const [electionOfficeData] = await db
-      .select()
+      .select({
+        ...getTableColumns(electionOffice),
+      })
       .from(electionOffice)
       .where(eq(electionOffice.id, electionOfficeId));
 

@@ -4,7 +4,7 @@ import {
 } from '../db/schema';
 import { db } from '../db';
 import { electionInitiative } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 
 export type Create = {
   electionInitiativeData: CreateElectionInitiative;
@@ -39,7 +39,9 @@ export type List = {
 export const list = async ({ electionId, societyId }: List) => {
   try {
     const electionInitiativeData = await db
-      .select()
+      .select({
+        ...getTableColumns(electionInitiative),
+      })
       .from(electionInitiative)
       .where(
         and(
@@ -64,7 +66,9 @@ export type Retrieve = {
 export const retrieve = async ({ electionInitiativeId }: Retrieve) => {
   try {
     const [electionInitiativeData] = await db
-      .select()
+      .select({
+        ...getTableColumns(electionInitiative),
+      })
       .from(electionInitiative)
       .where(eq(electionInitiative.id, electionInitiativeId));
 

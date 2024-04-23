@@ -1,7 +1,7 @@
 import { CreateUser, society } from '../db/schema';
 import { db, withPagination } from '../db';
 import { user } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, getTableColumns } from 'drizzle-orm';
 import { AuthenticationError } from '../errors/AuthenticationError';
 
 export type Create = {
@@ -59,7 +59,10 @@ export type Retrieve = {
  */
 export const retrieve = async ({ userId }: Retrieve) => {
   try {
-    const [userData] = await db.select().from(user).where(eq(user.id, userId));
+    const [userData] = await db
+      .select({ ...getTableColumns(user) })
+      .from(user)
+      .where(eq(user.id, userId));
 
     if (!userData) throw new Error('User not found');
 
@@ -105,7 +108,9 @@ export type Login = {
 export const login = async ({ email, password }: Login) => {
   try {
     const [loginUser] = await db
-      .select()
+      .select({
+        ...getTableColumns(user),
+      })
       .from(user)
       .where(and(eq(user.email, email), eq(user.password, password)));
 

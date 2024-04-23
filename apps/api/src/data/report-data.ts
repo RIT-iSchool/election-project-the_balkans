@@ -8,6 +8,7 @@ import {
   eq,
   lt,
   or,
+  getTableColumns,
 } from 'drizzle-orm';
 import { db } from '../db';
 import {
@@ -241,7 +242,12 @@ export const resultsReport = async ({ electionId }: Results) => {
     const statusData = await statusReport({ electionId });
 
     const officeQuery = db
-      .select()
+      .select({
+        election: getTableColumns(election),
+        electionOffice: getTableColumns(electionOffice),
+        electionCandidate: getTableColumns(electionCandidate),
+        candidateVote: getTableColumns(candidateVote),
+      })
       .from(election)
       .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
       .innerJoin(
@@ -255,7 +261,12 @@ export const resultsReport = async ({ electionId }: Results) => {
       .where(eq(election.id, electionId));
 
     const intiativeQuery = db
-      .select()
+      .select({
+        election: getTableColumns(election),
+        electionInitiative: getTableColumns(electionInitiative),
+        initiativeOption: getTableColumns(initiativeOption),
+        initiativeVote: getTableColumns(initiativeVote),
+      })
       .from(election)
       .innerJoin(
         electionInitiative,

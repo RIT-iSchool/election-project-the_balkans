@@ -31,7 +31,7 @@ export type Retrieve = {
 export const retrieve = async ({ societyId }: Retrieve) => {
   try {
     const [societyData] = await db
-      .select()
+      .select({ ...getTableColumns(society) })
       .from(society)
       .where(eq(society.id, societyId));
 

@@ -83,7 +83,9 @@ export type Retrieve = {
 export const retrieve = async ({ electionCandidateId }: Retrieve) => {
   try {
     const [electionCandidateData] = await db
-      .select()
+      .select({
+        ...getTableColumns(electionCandidate),
+      })
       .from(electionCandidate)
       .where(eq(electionCandidate.id, electionCandidateId));
     return electionCandidateData;

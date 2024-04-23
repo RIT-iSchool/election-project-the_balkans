@@ -1,7 +1,7 @@
 import { CreateElection, Role, UpdateElection } from '../db/schema';
 import { db } from '../db';
 import { election } from '../db/schema';
-import { and, asc, eq, gt, lt, or } from 'drizzle-orm';
+import { and, asc, eq, getTableColumns, gt, lt, or } from 'drizzle-orm';
 
 export type Create = {
   electionData: CreateElection;
@@ -30,7 +30,9 @@ export type List = { societyId: number; admin: boolean };
 export const list = async ({ societyId, admin }: List) => {
   try {
     const electionsQuery = db
-      .select()
+      .select({
+        ...getTableColumns(election),
+      })
       .from(election)
       .where(and(eq(election.societyId, societyId)))
       .orderBy(asc(election.startDate))
@@ -62,7 +64,9 @@ export type Retrieve = {
 export const retrieve = async ({ electionId, societyId }: Retrieve) => {
   try {
     const [electionData] = await db
-      .select()
+      .select({
+        ...getTableColumns(election),
+      })
       .from(election)
       .where(
         and(eq(election.id, electionId), eq(election.societyId, societyId)),

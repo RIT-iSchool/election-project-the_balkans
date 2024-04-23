@@ -67,7 +67,9 @@ export type Retrieve = {
 export const retrieve = async ({ initiativeOptionId }: Retrieve) => {
   try {
     const [initiativeOptionData] = await db
-      .select()
+      .select({
+        ...getTableColumns(initiativeOption),
+      })
       .from(initiativeOption)
       .where(eq(initiativeOption.id, initiativeOptionId));
 
