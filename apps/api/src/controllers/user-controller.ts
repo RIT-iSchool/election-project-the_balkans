@@ -31,8 +31,8 @@ export const retrieve = async (userRetrieveParams: User.Retrieve) => {
 /**
  * Lists users.
  */
-export const list = async () => {
-  const users = await User.list();
+export const list = async (userListParams: User.List) => {
+  const users = await User.list(userListParams);
   return users;
 };
 

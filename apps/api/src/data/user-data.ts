@@ -1,5 +1,5 @@
 import { CreateUser, society } from '../db/schema';
-import { db } from '../db';
+import { db, withPagination } from '../db';
 import { user } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
 import { AuthenticationError } from '../errors/AuthenticationError';
@@ -69,14 +69,26 @@ export const retrieve = async ({ userId }: Retrieve) => {
   }
 };
 
+export type List = {
+  page: number;
+};
+
 /**
  * Lists users.
  */
-export const list = async () => {
+export const list = async ({ page }: List) => {
   try {
-    const userData = await db.select().from(user);
+    const usersQuery = db
+      .select({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      })
+      .from(user)
+      .$dynamic();
+    const usersData = await withPagination(usersQuery, page);
 
-    return userData;
+    return usersData;
   } catch (err) {
     throw new Error('Something went wrong listing users');
   }

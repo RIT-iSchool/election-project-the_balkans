@@ -5,7 +5,7 @@ import { useCallback, useMemo } from 'react';
 import { Button, Text } from 'frosted-ui';
 import pluralize from 'pluralize';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 15;
 
 type PaginationProps = {
   totalCount?: number;

@@ -3,8 +3,8 @@ import useSWR from 'swr';
 type SystemReport = {
   loggedInUsers: number;
   activeElections: number;
-  averageQueryTime: number;
-  averageHttpResponseTime: number;
+  averageRequestTime: number;
+  averageResponseTime: number;
 };
 
 export const useSystemReport = () => {

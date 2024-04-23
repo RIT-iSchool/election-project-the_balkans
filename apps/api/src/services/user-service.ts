@@ -78,13 +78,14 @@ export const retrieve = async (
   }
 };
 
-export const list = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const ListUsersSchema = z.object({
+  page: z.coerce.number().default(1),
+});
+
+export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const listUsers = await user.list();
+    const listUsersParams = ListUsersSchema.parse(req.query);
+    const listUsers = await user.list(listUsersParams);
 
     res.send(listUsers);
   } catch (err) {

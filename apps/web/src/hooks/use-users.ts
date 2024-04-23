@@ -1,19 +1,23 @@
 import useSWR from 'swr';
+import { Paginated } from './types';
 
 type User = {
-  id: number;
   email: string;
-  password: string;
   firstName: string;
   lastName: string;
-  admin: boolean;
 };
 
-export const useUsers = () => {
-  const { data, error, isLoading } = useSWR<User[]>(`/api/v1/users`);
+type UseUsersOptions = {
+  page?: string;
+};
+
+export const useUsers = ({ page }: UseUsersOptions) => {
+  const { data, error, isLoading } = useSWR<Paginated<User>>(
+    `/api/v1/users${page ? `?page=${page}` : ''}`,
+  );
 
   return {
-    data,
+    ...data,
     error,
     isLoading,
   };
