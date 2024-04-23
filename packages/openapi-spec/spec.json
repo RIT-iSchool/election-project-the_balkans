@@ -1599,6 +1599,184 @@
         }
       }
     },
+    "/v1/report/status/{election_id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "name": "election_id",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "operationId": "ElectionStatusReport",
+        "description": "Election Status Report",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "type": "object",
+                      "properties": {
+                        "startDate": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "endData": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "totalVotes": {
+                      "type": "integer"
+                    },
+                    "votingMembers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "nonVotingMembers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "votingMemberPercentage": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/report/results/{election_id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "required": true,
+          "name": "election_id",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "operationId": "ResultsReport",
+        "description": "Results Report",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "type": "object",
+                      "properties": {
+                        "startDate": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "endData": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "totalVotes": {
+                      "type": "integer"
+                    },
+                    "votingMembers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "nonVotingMembers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "votingMemberPercentage": {
+                      "type": "number"
+                    },
+                    "officeResults": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/OfficeResult"
+                      }
+                    },
+                    "initiativeResults": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/InitiativeResult"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/users": {
       "get": {
         "tags": [
@@ -2053,6 +2231,40 @@
             }
           }
         ]
+      },
+      "OfficeResult": {
+        "type": "object",
+        "properties": {
+          "election": {
+            "$ref": "#/components/schemas/Election"
+          },
+          "electionOffice": {
+            "$ref": "#/components/schemas/ElectionOffice"
+          },
+          "electionCandidate": {
+            "$ref": "#/components/schemas/ElectionCandidate"
+          },
+          "candidateVote": {
+            "$ref": "#/components/schemas/CandidateVote"
+          }
+        }
+      },
+      "InitiativeResult": {
+        "type": "object",
+        "properties": {
+          "election": {
+            "$ref": "#/components/schemas/Election"
+          },
+          "electionInitiative": {
+            "$ref": "#/components/schemas/ElectionInitiative"
+          },
+          "initiativeOption": {
+            "$ref": "#/components/schemas/InitiativeOption"
+          },
+          "initiativeVote": {
+            "$ref": "#/components/schemas/InitiativeVote"
+          }
+        }
       },
       "CreateLoginBody": {
         "properties": {
