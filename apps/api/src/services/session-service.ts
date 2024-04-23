@@ -16,7 +16,7 @@ export const retrieve = async (
     });
 
     res.json({
-      session: sessionData,
+      ...sessionData,
       role: req.role,
     });
   } catch (err) {
