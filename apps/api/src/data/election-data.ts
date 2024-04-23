@@ -100,13 +100,14 @@ export const update = async ({
         )
         .returning();
 
-      if (!updatedElection) throw new Error('Election not found');
+      if (!electionRow) throw new Error('Election not found');
 
       return electionRow;
     });
 
     return updatedElection;
   } catch (err) {
+    console.log(err);
     throw new Error('Something went wrong updating an election');
   }
 };
