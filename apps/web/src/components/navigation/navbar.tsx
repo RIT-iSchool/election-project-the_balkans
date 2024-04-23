@@ -40,6 +40,10 @@ export const adminRoutes = [
     title: 'System',
     href: '/admin/system',
   },
+  {
+    title: 'Users',
+    href: '/admin/users',
+  },
 ] as const;
 
 const Navbar = () => {
