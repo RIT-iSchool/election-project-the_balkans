@@ -136,72 +136,76 @@ export type Status = {
  */
 export const statusReport = async ({ electionId }: Status) => {
   try {
-    const [startDate] = await db
-      .select({
-        startDate: election.startDate,
-      })
-      .from(election)
-      .where(eq(election.id, electionId));
-
-    const [endDate] = await db
-      .select({
-        endData: election.endDate,
-      })
-      .from(election)
-      .where(eq(election.id, electionId));
-
-    const [totalVotes] = await db
-      .select({ count: count() })
-      .from(candidateVote)
-      .innerJoin(
-        electionCandidate,
-        eq(electionCandidate.id, candidateVote.electionCandidateId),
-      )
-      .innerJoin(
-        electionOffice,
-        eq(electionOffice.id, electionCandidate.electionOfficeId),
-      )
-      .where(eq(electionOffice.electionId, electionId));
-
-    const votingMembers = await db
-      .selectDistinctOn([user.id], {
-        firstName: user.firstName,
-        lastName: user.lastName,
-      })
-      .from(user)
-      .innerJoin(societyMember, eq(societyMember.userId, user.id))
-      .innerJoin(society, eq(society.id, societyMember.societyId))
-      .innerJoin(election, eq(election.societyId, society.id))
-      .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
-      .innerJoin(
-        electionCandidate,
-        eq(electionCandidate.electionOfficeId, electionOffice.id),
-      )
-      .innerJoin(
-        candidateVote,
-        eq(candidateVote.electionCandidateId, electionCandidate.id),
-      )
-      .where(eq(election.id, electionId));
-
-    const nonVotingMembers = await db
-      .selectDistinctOn([user.id], {
-        firstName: user.firstName,
-        lastName: user.lastName,
-      })
-      .from(user)
-      .innerJoin(societyMember, eq(societyMember.userId, user.id))
-      .innerJoin(society, eq(society.id, societyMember.societyId))
-      .innerJoin(election, eq(election.societyId, society.id))
-      .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
-      .leftJoin(
-        electionCandidate,
-        eq(electionCandidate.electionOfficeId, electionOffice.id),
-      )
-      .leftJoin(
-        candidateVote,
-        eq(candidateVote.electionCandidateId, electionCandidate.id),
-      )
-      .where(eq(election.id, electionId));
+    const [
+      [startDate],
+      [endDate],
+      [totalVotes],
+      votingMembers,
+      nonVotingMembers,
+    ] = await Promise.all([
+      db
+        .select({
+          startDate: election.startDate,
+        })
+        .from(election)
+        .where(eq(election.id, electionId)),
+      db
+        .select({
+          endData: election.endDate,
+        })
+        .from(election)
+        .where(eq(election.id, electionId)),
+      db
+        .select({ count: count() })
+        .from(candidateVote)
+        .innerJoin(
+          electionCandidate,
+          eq(electionCandidate.id, candidateVote.electionCandidateId),
+        )
+        .innerJoin(
+          electionOffice,
+          eq(electionOffice.id, electionCandidate.electionOfficeId),
+        )
+        .where(eq(electionOffice.electionId, electionId)),
+      db
+        .selectDistinctOn([user.id], {
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+        .from(user)
+        .innerJoin(societyMember, eq(societyMember.userId, user.id))
+        .innerJoin(society, eq(society.id, societyMember.societyId))
+        .innerJoin(election, eq(election.societyId, society.id))
+        .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
+        .innerJoin(
+          electionCandidate,
+          eq(electionCandidate.electionOfficeId, electionOffice.id),
+        )
+        .innerJoin(
+          candidateVote,
+          eq(candidateVote.electionCandidateId, electionCandidate.id),
+        )
+        .where(eq(election.id, electionId)),
+      db
+        .selectDistinctOn([user.id], {
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+        .from(user)
+        .innerJoin(societyMember, eq(societyMember.userId, user.id))
+        .innerJoin(society, eq(society.id, societyMember.societyId))
+        .innerJoin(election, eq(election.societyId, society.id))
+        .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
+        .leftJoin(
+          electionCandidate,
+          eq(electionCandidate.electionOfficeId, electionOffice.id),
+        )
+        .leftJoin(
+          candidateVote,
+          eq(candidateVote.electionCandidateId, electionCandidate.id),
+        )
+        .where(eq(election.id, electionId)),
+    ]);
 
     const totalMembers =
       (votingMembers?.length ?? 0) + (nonVotingMembers?.length ?? 0);
