@@ -1,7 +1,7 @@
-import { CreateElection, UpdateElection } from '../db/schema';
+import { CreateElection, Role, UpdateElection } from '../db/schema';
 import { db } from '../db';
 import { election } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, asc, eq, gt, lt, or } from 'drizzle-orm';
 
 export type Create = {
   electionData: CreateElection;
@@ -22,19 +22,30 @@ export const create = async ({ electionData }: Create) => {
   }
 };
 
-export type List = { societyId: number };
+export type List = { societyId: number; admin: boolean };
 
 /**
  * Lists a society's elections.
  */
-export const list = async ({ societyId }: List) => {
+export const list = async ({ societyId, admin }: List) => {
   try {
-    const electionData = await db
+    const electionsQuery = db
       .select()
       .from(election)
-      .where(eq(election.societyId, societyId));
+      .where(and(eq(election.societyId, societyId)))
+      .orderBy(asc(election.startDate))
+      .$dynamic();
 
-    return electionData;
+    if (!admin) {
+      electionsQuery.where(
+        or(
+          gt(election.startDate, new Date().toString()),
+          lt(election.endDate, new Date().toString()),
+        ),
+      );
+    }
+
+    return await electionsQuery;
   } catch (err) {
     throw new Error('Something went wrong listing elections');
   }
