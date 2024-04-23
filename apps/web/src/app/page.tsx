@@ -48,7 +48,12 @@ export default function Home() {
       <div className="w-[300px]">
         <Card size="2">
           <div className="flex flex-col gap-2">
-            <Text className="m-0 text-xl font-semibold">Login</Text>
+            <div className="flex flex-col">
+              <Text size="5" className="m-0 font-semibold">
+                Welcome back
+              </Text>
+              <Text color="gray">Log in with email and password</Text>
+            </div>
             <div className="flex flex-col gap-2">
               <div className="flex flex-col">
                 <label className="text-sm font-medium">Email</label>
@@ -70,6 +75,7 @@ export default function Home() {
                   <TextFieldInput
                     placeholder="hunter2"
                     className="w-full"
+                    type="password"
                     {...getFieldProps('password')}
                   />
                 </TextFieldRoot>
@@ -80,7 +86,7 @@ export default function Home() {
             </div>
 
             <Button variant="surface" onClick={submitForm}>
-              Login
+              Log in
             </Button>
           </div>
         </Card>

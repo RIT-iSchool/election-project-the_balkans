@@ -12,6 +12,7 @@
     "@frosted-ui/icons": "^0.0.1-canary.11",
     "@repo/typescript-config": "^0.0.0",
     "clsx": "^2.1.0",
+    "dayjs": "^1.11.10",
     "formik": "^2.4.5",
     "frosted-ui": "^0.0.1-canary.27",
     "next": "14.1.3",

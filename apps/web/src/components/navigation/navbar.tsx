@@ -10,24 +10,13 @@ type Route = {
 
 export const routes: Route[] = [
   {
-    title: 'Testing',
-    href: '/testing',
+    title: 'Home',
+    href: '/home',
   },
+  // TODO: only show for admins
   {
-    title: 'Testing',
-    href: '/testing',
-  },
-  {
-    title: 'Testing',
-    href: '/testing',
-  },
-  {
-    title: 'Testing',
-    href: '/testing',
-  },
-  {
-    title: 'Testing',
-    href: '/testing',
+    title: 'Members',
+    href: '/members',
   },
 ] as const;
 
@@ -53,7 +42,7 @@ const Navbar = () => {
             <NavLink key={r.href} href={r.href} title={r.title} />
           ))}
           {user?.admin && (
-            <div>
+            <div className="mt-2">
               <Text size="2" weight="medium" className="text-gray-11 my-1">
                 Admin
               </Text>
