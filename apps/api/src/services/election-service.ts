@@ -110,6 +110,7 @@ export const update = async (
 
     res.send(updateElection);
   } catch (err) {
+    // console.log(err);
     next(err);
   }
 };
