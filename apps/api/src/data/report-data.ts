@@ -34,39 +34,43 @@ export type Society = {
  */
 export const societyReport = async ({ societyId }: Society) => {
   try {
-    const [activeBallots] = await db
-      .select({ count: count() })
-      .from(election)
-      .where(
-        and(
-          eq(election.societyId, societyId),
-          lte(election.startDate, new Date().toString()),
-          gte(election.endDate, new Date().toString()),
-        ),
-      );
-
-    const [inActiveBallots] = await db
-      .select({ count: count() })
-      .from(election)
-      .where(
-        and(
-          eq(election.societyId, societyId),
-          or(
-            gt(election.startDate, new Date().toString()),
-            lt(election.endDate, new Date().toString()),
+    const [
+      [activeBallots],
+      [inActiveBallots],
+      [societyUsers],
+      [votingMembers],
+    ] = await Promise.all([
+      db
+        .select({ count: count() })
+        .from(election)
+        .where(
+          and(
+            eq(election.societyId, societyId),
+            lte(election.startDate, new Date().toString()),
+            gte(election.endDate, new Date().toString()),
           ),
         ),
-      );
-
-    const [societyUsers] = await db
-      .select({ count: count() })
-      .from(societyMember)
-      .where(eq(societyMember.societyId, societyId));
-
-    const [votingMembers] = await db
-      .select({ count: countDistinct(candidateVote.memberId) })
-      .from(candidateVote)
-      .innerJoin(societyMember, eq(societyMember.societyId, societyId));
+      db
+        .select({ count: count() })
+        .from(election)
+        .where(
+          and(
+            eq(election.societyId, societyId),
+            or(
+              gt(election.startDate, new Date().toString()),
+              lt(election.endDate, new Date().toString()),
+            ),
+          ),
+        ),
+      db
+        .select({ count: count() })
+        .from(societyMember)
+        .where(eq(societyMember.societyId, societyId)),
+      db
+        .select({ count: countDistinct(candidateVote.memberId) })
+        .from(candidateVote)
+        .innerJoin(societyMember, eq(societyMember.societyId, societyId)),
+    ]);
 
     const elections =
       (activeBallots?.count ?? 0) + (inActiveBallots?.count ?? 0);
@@ -91,22 +95,26 @@ export const societyReport = async ({ societyId }: Society) => {
  */
 export const systemReport = async () => {
   try {
-    const [loggedInUsers] = await db
-      .select({ count: countDistinct(session.userId) })
-      .from(session)
-      .where(gt(session.expiresAt, new Date()));
-
-    const [activeElections] = await db
-      .select({ count: count() })
-      .from(election)
-      .where(
-        and(
-          lte(election.startDate, new Date().toString()),
-          gte(election.endDate, new Date().toString()),
+    const [
+      [loggedInUsers],
+      [activeElections],
+      { averageRequestTime, averageResponseTime },
+    ] = await Promise.all([
+      db
+        .select({ count: countDistinct(session.userId) })
+        .from(session)
+        .where(gt(session.expiresAt, new Date())),
+      db
+        .select({ count: count() })
+        .from(election)
+        .where(
+          and(
+            lte(election.startDate, new Date().toString()),
+            gte(election.endDate, new Date().toString()),
+          ),
         ),
-      );
-
-    const { averageRequestTime, averageResponseTime } = await calculate();
+      calculate(),
+    ]);
 
     return {
       loggedInUsers: loggedInUsers?.count || 0,
@@ -226,9 +234,9 @@ export type Results = {
  */
 export const resultsReport = async ({ electionId }: Results) => {
   try {
-    const { ...statusData } = await statusReport({ electionId });
+    const statusData = await statusReport({ electionId });
 
-    const officeResults = await db
+    const officeQuery = db
       .select()
       .from(election)
       .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
@@ -242,7 +250,7 @@ export const resultsReport = async ({ electionId }: Results) => {
       )
       .where(eq(election.id, electionId));
 
-    const initiativeResults = await db
+    const intiativeQuery = db
       .select()
       .from(election)
       .innerJoin(
@@ -258,6 +266,11 @@ export const resultsReport = async ({ electionId }: Results) => {
         eq(initiativeVote.electionInitiativeId, initiativeOption.id),
       )
       .where(eq(election.id, electionId));
+
+    const [officeResults, initiativeResults] = await Promise.all([
+      intiativeQuery,
+      officeQuery,
+    ]);
 
     return {
       ...statusData,
