@@ -2,8 +2,8 @@ PG_USER=""
 PG_DATABASE="americandream"
 
 export PGPASSWORD="$PG_PASSWORD"
-MEMBERS="./load_data/scripts/members.psv"
-OFFICERS="./load_data/scripts/officers.psv"
+MEMBERS="./scripts/members.psv"
+OFFICERS="./scripts/officers.psv"
 # inserting the society owners
 COUNT=0
 insert_user() {

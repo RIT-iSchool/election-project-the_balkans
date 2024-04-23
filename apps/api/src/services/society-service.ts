@@ -49,10 +49,7 @@ export const retrieve = async (
 
 const ListSocietiesSchema = z.object({
   search: z.string().optional(),
-  page: z
-    .string()
-    .transform((page) => parseInt(page))
-    .default('1'),
+  page: z.coerce.number().default(1),
 });
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {

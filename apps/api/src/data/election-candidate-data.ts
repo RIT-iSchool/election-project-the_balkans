@@ -1,7 +1,7 @@
 import { CreateElectionCandidate, UpdateElectionCandidate } from '../db/schema';
 import { db } from '../db';
 import { electionCandidate, electionOffice, election } from '../db/schema';
-import { and, eq, ilike } from 'drizzle-orm';
+import { and, eq, getTableColumns, ilike } from 'drizzle-orm';
 
 export type Create = {
   electionCandidateData: CreateElectionCandidate;
@@ -36,7 +36,9 @@ export type List = {
 export const list = async ({ electionId, societyId }: List) => {
   try {
     const electionCandidateData = await db
-      .select()
+      .select({
+        ...getTableColumns(electionCandidate),
+      })
       .from(electionCandidate)
       .innerJoin(
         electionOffice,
@@ -80,7 +82,7 @@ export type Retrieve = {
  */
 export const retrieve = async ({ electionCandidateId }: Retrieve) => {
   try {
-    const electionCandidateData = await db
+    const [electionCandidateData] = await db
       .select()
       .from(electionCandidate)
       .where(eq(electionCandidate.id, electionCandidateId));

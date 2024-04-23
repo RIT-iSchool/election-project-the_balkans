@@ -1,7 +1,7 @@
 import { CreateInitiativeOption, UpdateInitiativeOption } from '../db/schema';
 import { db } from '../db';
 import { initiativeOption, electionInitiative } from '../db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 
 export type Create = {
   initiativeOptionData: CreateInitiativeOption;
@@ -36,7 +36,9 @@ export type List = {
 export const list = async ({ electionId, societyId }: List) => {
   try {
     const initiativeOptionData = await db
-      .select()
+      .select({
+        ...getTableColumns(initiativeOption),
+      })
       .from(initiativeOption)
       .innerJoin(
         electionInitiative,

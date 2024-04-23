@@ -10,7 +10,19 @@ import {
   or,
 } from 'drizzle-orm';
 import { db } from '../db';
-import { session, election, candidateVote, societyMember } from '../db/schema';
+import {
+  session,
+  election,
+  candidateVote,
+  societyMember,
+  electionOffice,
+  electionCandidate,
+  society,
+  user,
+  electionInitiative,
+  initiativeOption,
+  initiativeVote,
+} from '../db/schema';
 import { calculate } from '../helpers/log-helper';
 
 export type Society = {
@@ -20,41 +32,45 @@ export type Society = {
 /**
  * Reports the number of active and inactive ballots, number of users per society, avgerage number of members voting in each election.
  */
-export const society = async ({ societyId }: Society) => {
+export const societyReport = async ({ societyId }: Society) => {
   try {
-    const [activeBallots] = await db
-      .select({ count: count() })
-      .from(election)
-      .where(
-        and(
-          eq(election.societyId, societyId),
-          lte(election.startDate, new Date().toString()),
-          gte(election.endDate, new Date().toString()),
-        ),
-      );
-
-    const [inActiveBallots] = await db
-      .select({ count: count() })
-      .from(election)
-      .where(
-        and(
-          eq(election.societyId, societyId),
-          or(
-            gt(election.startDate, new Date().toString()),
-            lt(election.endDate, new Date().toString()),
+    const [
+      [activeBallots],
+      [inActiveBallots],
+      [societyUsers],
+      [votingMembers],
+    ] = await Promise.all([
+      db
+        .select({ count: count() })
+        .from(election)
+        .where(
+          and(
+            eq(election.societyId, societyId),
+            lte(election.startDate, new Date().toString()),
+            gte(election.endDate, new Date().toString()),
           ),
         ),
-      );
-
-    const [societyUsers] = await db
-      .select({ count: count() })
-      .from(societyMember)
-      .where(eq(societyMember.societyId, societyId));
-
-    const [votingMembers] = await db
-      .select({ count: countDistinct(candidateVote.memberId) })
-      .from(candidateVote)
-      .innerJoin(societyMember, eq(societyMember.societyId, societyId));
+      db
+        .select({ count: count() })
+        .from(election)
+        .where(
+          and(
+            eq(election.societyId, societyId),
+            or(
+              gt(election.startDate, new Date().toString()),
+              lt(election.endDate, new Date().toString()),
+            ),
+          ),
+        ),
+      db
+        .select({ count: count() })
+        .from(societyMember)
+        .where(eq(societyMember.societyId, societyId)),
+      db
+        .select({ count: countDistinct(candidateVote.memberId) })
+        .from(candidateVote)
+        .innerJoin(societyMember, eq(societyMember.societyId, societyId)),
+    ]);
 
     const elections =
       (activeBallots?.count ?? 0) + (inActiveBallots?.count ?? 0);
@@ -64,12 +80,10 @@ export const society = async ({ societyId }: Society) => {
     );
 
     return {
-      reportData: {
-        activeBallots: activeBallots?.count || 0,
-        inActiveBallots: inActiveBallots?.count || 0,
-        societyUsers: societyUsers?.count || 0,
-        averageVotingMembers,
-      },
+      activeBallots: activeBallots?.count || 0,
+      inActiveBallots: inActiveBallots?.count || 0,
+      societyUsers: societyUsers?.count || 0,
+      averageVotingMembers,
     };
   } catch (err) {
     throw new Error('Something went wrong with the report.');
@@ -79,32 +93,193 @@ export const society = async ({ societyId }: Society) => {
 /**
  * Reports the number of currently logged in users, number of active elections, avgerage query response time, avgerage http response time.
  */
-export const system = async () => {
+export const systemReport = async () => {
   try {
-    const [loggedInUsers] = await db
-      .select({ count: countDistinct(session.userId) })
-      .from(session)
-      .where(gt(session.expiresAt, new Date()));
-
-    const [activeElections] = await db
-      .select({ count: count() })
-      .from(election)
-      .where(
-        and(
-          lte(election.startDate, new Date().toString()),
-          gte(election.endDate, new Date().toString()),
+    const [
+      [loggedInUsers],
+      [activeElections],
+      { averageRequestTime, averageResponseTime },
+    ] = await Promise.all([
+      db
+        .select({ count: countDistinct(session.userId) })
+        .from(session)
+        .where(gt(session.expiresAt, new Date())),
+      db
+        .select({ count: count() })
+        .from(election)
+        .where(
+          and(
+            lte(election.startDate, new Date().toString()),
+            gte(election.endDate, new Date().toString()),
+          ),
         ),
-      );
-
-    const { averageRequestTime, averageResponseTime } = await calculate();
+      calculate(),
+    ]);
 
     return {
-      systemReportData: {
-        loggedInUsers: loggedInUsers?.count || 0,
-        activeElections: activeElections?.count || 0,
-        averageRequestTime,
-        averageResponseTime,
-      },
+      loggedInUsers: loggedInUsers?.count || 0,
+      activeElections: activeElections?.count || 0,
+      averageRequestTime,
+      averageResponseTime,
+    };
+  } catch (err) {
+    throw new Error('Something went wrong with the report.');
+  }
+};
+
+export type Status = {
+  electionId: number;
+};
+
+/**
+ * View Current Election Status
+ */
+export const statusReport = async ({ electionId }: Status) => {
+  try {
+    const [
+      [startDate],
+      [endDate],
+      [totalVotes],
+      votingMembers,
+      nonVotingMembers,
+    ] = await Promise.all([
+      db
+        .select({
+          startDate: election.startDate,
+        })
+        .from(election)
+        .where(eq(election.id, electionId)),
+      db
+        .select({
+          endData: election.endDate,
+        })
+        .from(election)
+        .where(eq(election.id, electionId)),
+      db
+        .select({ count: count() })
+        .from(candidateVote)
+        .innerJoin(
+          electionCandidate,
+          eq(electionCandidate.id, candidateVote.electionCandidateId),
+        )
+        .innerJoin(
+          electionOffice,
+          eq(electionOffice.id, electionCandidate.electionOfficeId),
+        )
+        .where(eq(electionOffice.electionId, electionId)),
+      db
+        .selectDistinctOn([user.id], {
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+        .from(user)
+        .innerJoin(societyMember, eq(societyMember.userId, user.id))
+        .innerJoin(society, eq(society.id, societyMember.societyId))
+        .innerJoin(election, eq(election.societyId, society.id))
+        .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
+        .innerJoin(
+          electionCandidate,
+          eq(electionCandidate.electionOfficeId, electionOffice.id),
+        )
+        .innerJoin(
+          candidateVote,
+          eq(candidateVote.electionCandidateId, electionCandidate.id),
+        )
+        .where(eq(election.id, electionId)),
+      db
+        .selectDistinctOn([user.id], {
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+        .from(user)
+        .innerJoin(societyMember, eq(societyMember.userId, user.id))
+        .innerJoin(society, eq(society.id, societyMember.societyId))
+        .innerJoin(election, eq(election.societyId, society.id))
+        .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
+        .leftJoin(
+          electionCandidate,
+          eq(electionCandidate.electionOfficeId, electionOffice.id),
+        )
+        .leftJoin(
+          candidateVote,
+          eq(candidateVote.electionCandidateId, electionCandidate.id),
+        )
+        .where(eq(election.id, electionId)),
+    ]);
+
+    const totalMembers =
+      (votingMembers?.length ?? 0) + (nonVotingMembers?.length ?? 0);
+
+    const votingMemberPercentage =
+      Math.ceil(
+        ((nonVotingMembers?.length ?? 0) - (votingMembers?.length ?? 0)) /
+          totalMembers,
+      ) * 100;
+
+    return {
+      startDate: startDate!,
+      endDate: endDate!,
+      totalVotes: totalVotes?.count || 0,
+      votingMembers,
+      nonVotingMembers,
+      votingMemberPercentage,
+    };
+  } catch (err) {
+    throw new Error('Something went wrong with the report.');
+  }
+};
+
+export type Results = {
+  electionId: number;
+};
+
+/**
+ * View Finished Election Results
+ */
+export const resultsReport = async ({ electionId }: Results) => {
+  try {
+    const statusData = await statusReport({ electionId });
+
+    const officeQuery = db
+      .select()
+      .from(election)
+      .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
+      .innerJoin(
+        electionCandidate,
+        eq(electionCandidate.electionOfficeId, electionOffice.id),
+      )
+      .innerJoin(
+        candidateVote,
+        eq(candidateVote.electionCandidateId, electionCandidate.id),
+      )
+      .where(eq(election.id, electionId));
+
+    const intiativeQuery = db
+      .select()
+      .from(election)
+      .innerJoin(
+        electionInitiative,
+        eq(electionInitiative.electionId, election.id),
+      )
+      .innerJoin(
+        initiativeOption,
+        eq(initiativeOption.electionInitiativeId, electionInitiative.id),
+      )
+      .innerJoin(
+        initiativeVote,
+        eq(initiativeVote.electionInitiativeId, initiativeOption.id),
+      )
+      .where(eq(election.id, electionId));
+
+    const [officeResults, initiativeResults] = await Promise.all([
+      officeQuery,
+      intiativeQuery,
+    ]);
+
+    return {
+      ...statusData,
+      officeResults,
+      initiativeResults,
     };
   } catch (err) {
     throw new Error('Something went wrong with the report.');
