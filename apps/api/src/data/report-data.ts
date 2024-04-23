@@ -76,12 +76,10 @@ export const societyReport = async ({ societyId }: Society) => {
     );
 
     return {
-      reportData: {
-        activeBallots: activeBallots?.count || 0,
-        inActiveBallots: inActiveBallots?.count || 0,
-        societyUsers: societyUsers?.count || 0,
-        averageVotingMembers,
-      },
+      activeBallots: activeBallots?.count || 0,
+      inActiveBallots: inActiveBallots?.count || 0,
+      societyUsers: societyUsers?.count || 0,
+      averageVotingMembers,
     };
   } catch (err) {
     throw new Error('Something went wrong with the report.');
@@ -111,12 +109,10 @@ export const systemReport = async () => {
     const { averageRequestTime, averageResponseTime } = await calculate();
 
     return {
-      systemReportData: {
-        loggedInUsers: loggedInUsers?.count || 0,
-        activeElections: activeElections?.count || 0,
-        averageRequestTime,
-        averageResponseTime,
-      },
+      loggedInUsers: loggedInUsers?.count || 0,
+      activeElections: activeElections?.count || 0,
+      averageRequestTime,
+      averageResponseTime,
     };
   } catch (err) {
     throw new Error('Something went wrong with the report.');
@@ -209,14 +205,12 @@ export const statusReport = async ({ electionId }: Status) => {
       ) * 100;
 
     return {
-      statusData: {
-        startDate: startDate!,
-        endDate: endDate!,
-        totalVotes: totalVotes?.count || 0,
-        votingMembers,
-        nonVotingMembers,
-        votingMemberPercentage,
-      },
+      startDate: startDate!,
+      endDate: endDate!,
+      totalVotes: totalVotes?.count || 0,
+      votingMembers,
+      nonVotingMembers,
+      votingMemberPercentage,
     };
   } catch (err) {
     throw new Error('Something went wrong with the report.');
@@ -232,7 +226,7 @@ export type Results = {
  */
 export const resultsReport = async ({ electionId }: Results) => {
   try {
-    const { statusData } = await statusReport({ electionId });
+    const { ...statusData } = await statusReport({ electionId });
 
     const officeResults = await db
       .select()
@@ -266,11 +260,9 @@ export const resultsReport = async ({ electionId }: Results) => {
       .where(eq(election.id, electionId));
 
     return {
-      resultsData: {
-        ...statusData,
-        officeResults,
-        initiativeResults,
-      },
+      ...statusData,
+      officeResults,
+      initiativeResults,
     };
   } catch (err) {
     throw new Error('Something went wrong with the report.');
