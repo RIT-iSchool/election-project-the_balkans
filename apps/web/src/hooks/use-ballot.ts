@@ -42,7 +42,11 @@ type InitiativeOption = {
   title: string;
 };
 
-export const useBallot = (electionId: string) => {
+type UseBallotOptions = {
+  electionId: string;
+};
+
+export const useBallot = ({ electionId }: UseBallotOptions) => {
   const { data, error, isLoading } = useSWR<Ballot>(
     `/api/v1/elections/${electionId}/ballot`,
   );

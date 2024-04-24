@@ -19,9 +19,13 @@ type StatusReport = {
   votingMemberPercentage: number;
 };
 
-export const useStatusReport = (election_id: string) => {
+type UseStatusReportOptions = {
+  electionId: string;
+};
+
+export const useStatusReport = ({ electionId }: UseStatusReportOptions) => {
   const { data, error, isLoading } = useSWR<StatusReport>(
-    `/api/v1/report/status/${election_id}`,
+    `/api/v1/report/status/${electionId}`,
   );
 
   return {

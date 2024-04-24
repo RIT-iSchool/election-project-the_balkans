@@ -59,7 +59,10 @@ export const session = pgTable(
 );
 
 export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(user),
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
 }));
 
 export type CreateSession = InferInsertModel<typeof session>;
@@ -81,7 +84,10 @@ export const society = pgTable('society', {
 });
 
 export const societyRelations = relations(society, ({ one }) => ({
-  owner: one(user),
+  owner: one(user, {
+    fields: [society.ownerId],
+    references: [user.id],
+  }),
 }));
 
 export type CreateSociety = InferInsertModel<typeof society>;
@@ -113,8 +119,14 @@ export const societyMember = pgTable('societyMember', {
 });
 
 export const societyMemberRelations = relations(societyMember, ({ one }) => ({
-  user: one(user),
-  society: one(society),
+  user: one(user, {
+    fields: [societyMember.userId],
+    references: [user.id],
+  }),
+  society: one(society, {
+    fields: [societyMember.societyId],
+    references: [society.id],
+  }),
 }));
 
 export type CreateSocietyMember = InferInsertModel<typeof societyMember>;
@@ -140,7 +152,10 @@ export const election = pgTable('election', {
 });
 
 export const electionRelations = relations(election, ({ one, many }) => ({
-  society: one(society),
+  society: one(society, {
+    fields: [election.societyId],
+    references: [society.id],
+  }),
   offices: many(electionOffice),
   initiatives: many(electionInitiative),
 }));
@@ -174,9 +189,15 @@ export const electionOffice = pgTable('electionOffice', {
 export const electionOfficeRelations = relations(
   electionOffice,
   ({ one, many }) => ({
-    election: one(election),
+    election: one(election, {
+      fields: [electionOffice.electionId],
+      references: [election.id],
+    }),
     candidates: many(electionCandidate),
-    society: one(society),
+    society: one(society, {
+      fields: [electionOffice.societyId],
+      references: [society.id],
+    }),
   }),
 );
 
@@ -210,8 +231,14 @@ export const electionCandidate = pgTable('electionCandidate', {
 export const electionCandidateRelations = relations(
   electionCandidate,
   ({ one }) => ({
-    office: one(electionOffice),
-    society: one(society),
+    office: one(electionOffice, {
+      fields: [electionCandidate.electionOfficeId],
+      references: [electionOffice.id],
+    }),
+    society: one(society, {
+      fields: [electionCandidate.societyId],
+      references: [society.id],
+    }),
   }),
 );
 
@@ -242,8 +269,14 @@ export const candidateVote = pgTable('candidateVote', {
 });
 
 export const candidateVoteRelations = relations(candidateVote, ({ one }) => ({
-  member: one(societyMember),
-  candidate: one(electionCandidate),
+  member: one(societyMember, {
+    fields: [candidateVote.memberId],
+    references: [societyMember.id],
+  }),
+  candidate: one(electionCandidate, {
+    fields: [candidateVote.electionCandidateId],
+    references: [electionCandidate.id],
+  }),
 }));
 
 export type CreateCandidateVote = InferInsertModel<typeof candidateVote>;
@@ -275,10 +308,16 @@ export const electionInitiative = pgTable('electionInitiative', {
 export const electionInitiativeRelations = relations(
   electionInitiative,
   ({ one, many }) => ({
-    election: one(election),
+    election: one(election, {
+      fields: [electionInitiative.electionId],
+      references: [election.id],
+    }),
     options: many(initiativeOption),
     votes: many(initiativeVote),
-    society: one(society),
+    society: one(society, {
+      fields: [electionInitiative.societyId],
+      references: [society.id],
+    }),
   }),
 );
 
@@ -312,8 +351,14 @@ export const initiativeOption = pgTable('initiativeOption', {
 export const initiativeOptionRelations = relations(
   initiativeOption,
   ({ one }) => ({
-    initiative: one(electionInitiative),
-    society: one(society),
+    initiative: one(electionInitiative, {
+      fields: [initiativeOption.electionInitiativeId],
+      references: [electionInitiative.id],
+    }),
+    society: one(society, {
+      fields: [initiativeOption.societyId],
+      references: [society.id],
+    }),
   }),
 );
 
@@ -348,9 +393,18 @@ export const initiativeVote = pgTable('initiativeVote', {
 });
 
 export const initiativeVoteRelations = relations(initiativeVote, ({ one }) => ({
-  member: one(societyMember),
-  initiative: one(electionInitiative),
-  option: one(initiativeOption),
+  member: one(societyMember, {
+    fields: [initiativeVote.memberId],
+    references: [societyMember.id],
+  }),
+  initiative: one(electionInitiative, {
+    fields: [initiativeVote.electionInitiativeId],
+    references: [electionInitiative.id],
+  }),
+  option: one(initiativeOption, {
+    fields: [initiativeVote.electionInitiativeOptionId],
+    references: [initiativeOption.id],
+  }),
 }));
 
 export type CreateInitiativeVote = InferInsertModel<typeof initiativeVote>;

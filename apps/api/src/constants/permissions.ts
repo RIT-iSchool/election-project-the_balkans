@@ -92,6 +92,7 @@ export const permissions = {
 
     // Ballots
     Permissions.submit_ballot,
+    Permissions.retrieve_ballot,
 
     // Society Members
     Permissions.list_society_members,
@@ -135,6 +136,9 @@ export const permissions = {
     Permissions.create_society_member,
     Permissions.list_society_members,
 
+    //Ballot
+    Permissions.retrieve_ballot,
+
     // Society
     Permissions.list_societies,
     Permissions.retrieve_society,
@@ -177,6 +181,9 @@ export const permissions = {
     // Society Members
     Permissions.create_society_member,
     Permissions.list_society_members,
+
+    //Ballot
+    Permissions.retrieve_ballot,
 
     // Society
     Permissions.list_societies,
