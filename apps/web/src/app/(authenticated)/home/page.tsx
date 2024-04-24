@@ -4,7 +4,7 @@ import { PageTitle } from '@/components/shared/page-title';
 import { useElections } from '@/hooks/use-elections';
 import { useSession } from '@/hooks/use-session';
 import { Sad32 } from '@frosted-ui/icons';
-import { Card, Flex, Text } from 'frosted-ui';
+import { Card, Flex, Inset, Text } from 'frosted-ui';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 import { NewElection } from './new-election';
@@ -24,8 +24,9 @@ export default function Page() {
               : 'View elections'
           }
         />
-        {/* TODO: Render only if allowed */}
-        <NewElection />
+        {(user?.role === 'admin' || user?.role === 'employee') && (
+          <NewElection />
+        )}
       </div>
 
       <div className="w-screen overflow-auto md:w-full">
@@ -44,7 +45,15 @@ export default function Page() {
             {elections?.map((e) => (
               <Link href={`/elections/${e.id}`} key={e.id} className="group">
                 <Card className="transition-all group-hover:shadow-md">
-                  <img src={e.photoURL} />
+                  <Inset className="border-gray-a6 mb-3 max-h-[200px] rounded-none rounded-t-md border-b object-cover object-center">
+                    <img
+                      src={
+                        e.photoUrl
+                          ? `/ajax/uploads/election/${e.photoUrl}`
+                          : '/placeholder.png'
+                      }
+                    />
+                  </Inset>
 
                   <Flex direction="column">
                     <Text weight="bold">{e.name}</Text>

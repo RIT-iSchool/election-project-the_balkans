@@ -136,7 +136,7 @@ export const election = pgTable('election', {
     .notNull(),
   startDate: timestamp('start_date', { mode: 'string' }).notNull(),
   endDate: timestamp('end_date', { mode: 'string' }).notNull(),
-  photoURL: varchar('photo_url', { length: 250 }),
+  photoUrl: varchar('photo_url', { length: 250 }),
 });
 
 export const electionRelations = relations(election, ({ one, many }) => ({

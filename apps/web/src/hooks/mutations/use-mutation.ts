@@ -5,9 +5,14 @@ type FunctionArguments<T extends (...args: any) => Promise<any>> =
 
 interface UseMutationOptions<T extends (...args: any) => Promise<any>> {
   mutationFn: T;
-  onSuccess: (result: ReturnType<T>) => void;
-  onError: (error: Error) => void;
+  onSuccess?: (result: Awaited<ReturnType<T>>) => void;
+  onError?: (error: Error) => void;
 }
+
+export type ProxiedUseMutationOptions = Omit<
+  UseMutationOptions<() => Promise<unknown>>,
+  'mutationFn'
+>;
 
 export const useMutation = <T extends (...args: any) => Promise<any>>({
   mutationFn,
@@ -21,11 +26,11 @@ export const useMutation = <T extends (...args: any) => Promise<any>>({
       setIsLoading(true);
 
       try {
-        const result = await mutationFn(...args);
-        onSuccess(result);
+        const result = (await mutationFn(...args)) as (typeof args)[0];
+        onSuccess?.(result);
         return result;
       } catch (err) {
-        onError(err as Error);
+        onError?.(err as Error);
       } finally {
         setIsLoading(false);
       }

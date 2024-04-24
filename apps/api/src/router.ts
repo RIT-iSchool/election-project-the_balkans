@@ -10,8 +10,10 @@ import * as userService from './services/user-service';
 import * as ballot from './services/ballot-service';
 import * as society from './services/society-service';
 import * as report from './services/report-service';
+import * as file from './services/file-service';
 import { auth } from './middleware/auth';
 import { user } from './middleware/user';
+import { upload } from './middleware/upload';
 
 const router = Router();
 
@@ -19,6 +21,10 @@ const router = Router();
 router.post('/auth/login', userService.login);
 router.post('/auth/logout', user(), session.remove);
 router.get('/auth/session', user(), session.retrieve);
+
+// Uploads
+router.post('/uploads/:type(election|candidate)', upload.single('photo'), file.create);
+router.get('/uploads/:type(election|candidate)/:file_path', file.retrieve);
 
 // Elections
 router.get('/v1/elections', auth('list_elections'), election.list);

@@ -6,7 +6,7 @@ type Election = {
   societyId: number;
   startDate: Date;
   endDate: Date;
-  photoURL?: string;
+  photoUrl?: string;
 };
 
 export const useElections = () => {
