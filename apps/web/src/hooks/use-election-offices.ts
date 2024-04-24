@@ -7,7 +7,13 @@ type ElectionOffice = {
   maxVotes: number;
 };
 
-export const useElectionOffices = (electionId: string) => {
+type UseElectionOfficeOptions = {
+  electionId: string;
+};
+
+export const useElectionOffices = ({
+  electionId,
+}: UseElectionOfficeOptions) => {
   const { data, error, isLoading } = useSWR<ElectionOffice[]>(
     `/api/v1/elections/${electionId}/election_offices`,
   );

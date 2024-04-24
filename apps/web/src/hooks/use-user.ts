@@ -9,7 +9,11 @@ type User = {
   admin: boolean;
 };
 
-export const useUser = (userId: string) => {
+type UseUserOptions = {
+  userId: string;
+};
+
+export const useUser = ({ userId }: UseUserOptions) => {
   const { data, error, isLoading } = useSWR<User>(`/api/v1/user/${userId}`);
 
   return {

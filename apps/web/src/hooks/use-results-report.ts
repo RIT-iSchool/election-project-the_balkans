@@ -78,9 +78,13 @@ type ResultsReport = {
   }[];
 };
 
-export const useResultsReport = (election_id: string) => {
+type UseResultsReportOptions = {
+  electionId: string;
+};
+
+export const useResultsReport = ({ electionId }: UseResultsReportOptions) => {
   const { data, error, isLoading } = useSWR<ResultsReport>(
-    `/api/v1/report/results/${election_id}`,
+    `/api/v1/report/results/${electionId}`,
   );
 
   return {

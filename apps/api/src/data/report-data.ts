@@ -142,7 +142,7 @@ export const statusReport = async ({ electionId }: Status) => {
       [endDate],
       [totalVotes],
       votingMembers,
-      nonVotingMembers,
+      nonVotingMembers, //TODO: fix this
     ] = await Promise.all([
       db
         .select({

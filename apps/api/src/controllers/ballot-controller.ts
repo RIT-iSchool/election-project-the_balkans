@@ -54,11 +54,10 @@ export const submit = async (ballotSubmitParams: Ballot.Submit) => {
   ballotSubmitParams.ballotSubmitData.candidateVotesData.forEach(
     (candidateVote) => {
       const candidate = electionCandidates.find(
-        (candidate) =>
-          candidate.electionCandidate.id === candidateVote.electionCandidateId,
+        (candidate) => candidate.id === candidateVote.electionCandidateId,
       );
       if (candidate) {
-        const officeId = candidate.electionCandidate.electionOfficeId;
+        const officeId = candidate.electionOfficeId;
         const currentVotes = officeActualVotes.get(officeId) || 0;
         officeActualVotes.set(officeId, currentVotes + 1);
       }
