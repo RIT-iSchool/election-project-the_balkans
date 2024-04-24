@@ -105,3 +105,21 @@ export const update = async ({
     throw new Error('Something went wrong updating election office.');
   }
 };
+
+export type Remove = { electionOfficeId: number };
+
+/**
+ * Removes an election office by ID
+ */
+export const remove = async ({ electionOfficeId }: Remove) => {
+  try {
+    await db.transaction(
+      async (dbClient) =>
+        await dbClient
+          .delete(electionOffice)
+          .where(eq(electionOffice.id, electionOfficeId)),
+    );
+  } catch (err) {
+    throw new Error('Something went wrong removing election office.');
+  }
+};

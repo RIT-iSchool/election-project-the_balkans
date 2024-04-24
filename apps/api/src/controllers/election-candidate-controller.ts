@@ -51,3 +51,13 @@ export const update = async (
   );
   return updateElectionCandidate;
 };
+
+/**
+ * Removes a society's election's candidate.
+ */
+export const remove = async (
+  electionCandidateRemoveParams: ElectionCandidate.Remove,
+) => {
+  // Enforce some business logic
+  await ElectionCandidate.remove(electionCandidateRemoveParams);
+};

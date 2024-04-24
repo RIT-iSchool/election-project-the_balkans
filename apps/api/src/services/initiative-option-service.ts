@@ -104,3 +104,24 @@ export const update: Handler = async (req, res, next) => {
     next(err);
   }
 };
+
+const RemoveInitiativeOptionParamsSchema = z.object({
+  initiative_option_id: z.string().transform((id) => parseInt(id)),
+});
+
+export const remove: Handler = async (req, res, next) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { initiative_option_id: initiativeOptionId } =
+      RemoveInitiativeOptionParamsSchema.parse(req.params);
+
+    await initiativeOption.remove({ initiativeOptionId });
+
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+};

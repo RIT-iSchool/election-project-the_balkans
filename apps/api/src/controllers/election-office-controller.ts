@@ -51,3 +51,13 @@ export const update = async (
   );
   return updateElectionOffice;
 };
+
+/**
+ * Removes a society's election's office.
+ */
+export const remove = async (
+  electionOfficeRemoveParams: ElectionOffice.Remove,
+) => {
+  // Enforce some business logic
+  await ElectionOffice.remove(electionOfficeRemoveParams);
+};

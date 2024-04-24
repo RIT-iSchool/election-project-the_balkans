@@ -105,3 +105,23 @@ export const update = async ({
     throw new Error('Something went wrong updating an initiative option.');
   }
 };
+
+export type Remove = {
+  initiativeOptionId: number;
+};
+
+/**
+ * Removes an initiative option by ID
+ */
+export const remove = async ({ initiativeOptionId }: Remove) => {
+  try {
+    await db.transaction(
+      async (dbClient) =>
+        await dbClient
+          .delete(initiativeOption)
+          .where(eq(initiativeOption.id, initiativeOptionId)),
+    );
+  } catch (err) {
+    throw new Error('Something went wrong deleting an initiative option.');
+  }
+};

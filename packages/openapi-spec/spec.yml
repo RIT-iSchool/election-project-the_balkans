@@ -16,6 +16,16 @@ tags:
     description: 'Routes related to election candidates'
   - name: 'Election Initiatives'
     description: 'Routes related to election initiatves'
+  - name: 'Initiative Options'
+    description: 'Routes related to initiative options'
+  - name: 'Society Members'
+    description: 'Routes related to society members'
+  - name: 'Societies'
+    description: 'Routes related to societies'
+  - name: 'Report'
+    description: 'Routes related to reports'
+  - name: 'User'
+    description: 'Routes related to users'
 
 paths:
   /auth/login:
@@ -443,6 +453,25 @@ paths:
       security:
         - bearer: []
 
+    delete:
+      tags:
+        - Election Offices
+      operationId: 'DeleteElectionOffice'
+      description: 'Delete an election office'
+      responses:
+        204:
+          description: 'No Content'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        404:
+          description: 'Not Found'
+      security:
+        - bearer: []
+
   /v1/elections/{election_id}/election_candidates:
     parameters:
       - in: 'path'
@@ -554,6 +583,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ElectionCandidate'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        404:
+          description: 'Not Found'
+      security:
+        - bearer: []
+
+    delete:
+      tags:
+        - Election Candidates
+      operationId: 'DeleteElectionCandidate'
+      description: 'Delete an election candidate'
+      responses:
+        204:
+          description: 'No Content'
         401:
           description: 'Unauthorized'
           content:
@@ -685,6 +733,25 @@ paths:
       security:
         - bearer: []
 
+    delete:
+      tags:
+        - Election Initiatives
+      operationId: 'DeleteElectionInitiative'
+      description: 'Delete an election initiative'
+      responses:
+        204:
+          description: 'No Content'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        404:
+          description: 'Not Found'
+      security:
+        - bearer: []
+
   /v1/elections/{election_id}/initiative_options:
     parameters:
       - in: 'path'
@@ -794,6 +861,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InitiativeOption'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthorizedError'
+        404:
+          description: 'Not Found'
+      security:
+        - bearer: []
+
+    delete:
+      tags:
+        - Initiative Options
+      operationId: 'DeleteInitiativeOptions'
+      description: 'Delete an initiative options'
+      responses:
+        204:
+          description: 'No Content'
         401:
           description: 'Unauthorized'
           content:
@@ -1040,6 +1126,7 @@ paths:
                           type: 'string'
                   votingMemberPercentage:
                     type: 'number'
+
   /v1/report/results/{election_id}:
     parameters:
       - in: 'path'
@@ -1100,6 +1187,7 @@ paths:
                     type: 'array'
                     items:
                       $ref: '#/components/schemas/InitiativeResult'
+
   /v1/users:
     get:
       tags:

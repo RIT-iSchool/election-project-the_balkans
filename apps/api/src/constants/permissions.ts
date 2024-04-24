@@ -12,24 +12,28 @@ export enum Permissions {
   create_office = 'create_office',
   retrieve_office = 'retrieve_office',
   update_office = 'update_office',
+  remove_office = 'remove_office',
 
   // Candidates
   list_candidates = 'list_candidates',
   create_candidate = 'create_candidate',
   retrieve_candidate = 'retrieve_candidate',
   update_candidate = 'update_candidate',
+  remove_candidate = 'remove_candidate',
 
   // Election initiatives
   list_initiatives = 'list_election_initiatives',
   create_initiative = 'create_election_initiative',
   retrieve_initiative = 'retrieve_election_initiative',
   update_initiative = 'update_election_initiative',
+  remove_initiative = 'remove_election_initiative',
 
   // Initiative options
   list_initiative_options = 'list_initiative_options',
   create_initiative_option = 'create_initiative_option',
   retrieve_initiative_option = 'retrieve_initiative_option',
   update_initiative_option = 'update_initiative_option',
+  remove_initiative_option = 'remove_initiative_option',
 
   // Society members
   list_society_members = 'list_society_members',
@@ -113,24 +117,28 @@ export const permissions = {
     Permissions.list_offices,
     Permissions.retrieve_office,
     Permissions.update_election,
+    Permissions.remove_office,
 
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
     Permissions.retrieve_candidate,
     Permissions.update_candidate,
+    Permissions.remove_candidate,
 
     // Initiatives
     Permissions.create_initiative,
     Permissions.list_initiatives,
     Permissions.retrieve_initiative,
     Permissions.update_initiative,
+    Permissions.remove_initiative,
 
     // Initiative Options
     Permissions.list_initiative_options,
     Permissions.create_initiative_option,
     Permissions.retrieve_initiative_option,
     Permissions.update_initiative_option,
+    Permissions.remove_initiative_option,
 
     // Society Members
     Permissions.create_society_member,

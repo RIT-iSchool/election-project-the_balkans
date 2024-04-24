@@ -41,24 +41,28 @@ router.get('/v1/elections/:election_id/election_offices', auth('list_offices'), 
 router.post('/v1/elections/:election_id/election_offices', auth('create_office'), electionOffice.create);
 router.put('/v1/elections/election_offices/:office_id', auth('update_office'), electionOffice.update);
 router.get('/v1/elections/election_offices/:office_id', auth('retrieve_office'), electionOffice.retrieve);
+router.delete('/v1/elections/election_offices/:office_id', auth('remove_office'), electionOffice.remove);
 
 // Candidates
 router.get('/v1/elections/:election_id/election_candidates', auth('list_candidates'), electionCandidate.list);
 router.post('/v1/elections/:election_id/election_candidates', auth('create_candidate'), electionCandidate.create);
 router.put('/v1/elections/election_candidates/:candidate_id', auth('update_candidate'), electionCandidate.update);
 router.get('/v1/elections/election_candidates/:candidate_id', auth('retrieve_candidate'), electionCandidate.retrieve);
+router.delete('/v1/elections/election_candidates/:candidate_id', auth('remove_candidate'), electionCandidate.remove);
 
 // Election Initiatives
 router.get('/v1/elections/:election_id/election_initiatives', auth('list_initiatives'), electionInitiative.list);
 router.post('/v1/elections/:election_id/election_initiatives', auth('create_initiative'), electionInitiative.create);
 router.put('/v1/elections/election_initiatives/:initiative_id', auth('update_initiative'), electionInitiative.update);
 router.get('/v1/elections/election_initiatives/:initiative_id', auth('retrieve_initiative'), electionInitiative.retrieve);
+router.delete('/v1/elections/election_initiatives/:initiative_id', auth('remove_initiative'), electionInitiative.remove);
 
 // Initiative Options
 router.get('/v1/elections/:election_id/initiative_options', auth('list_initiative_options'), initiativeOption.list);
 router.post('/v1/elections/:election_id/initiative_options', auth('create_initiative_option'), initiativeOption.create);
 router.put('/v1/elections/initiative_options/:option_id', auth('update_initiative_option'), initiativeOption.update);
 router.get('/v1/elections/initiative_options/:option_id', auth('retrieve_initiative_option'), initiativeOption.retrieve);
+router.delete('/v1/elections/initiative_options/:option_id', auth('remove_initiative_option'), initiativeOption.remove);
 
 // Society Members
 router.get('/v1/society_members', auth('list_society_members'), societyMember.list);

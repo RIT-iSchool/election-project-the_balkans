@@ -103,3 +103,26 @@ export const update: Handler = async (req, res, next) => {
     next(err);
   }
 };
+
+const RemoveElectionOfficeParamsSchema = z.object({
+  election_office_id: z.string().transform((id) => parseInt(id)),
+});
+
+export const remove: Handler = async (req, res, next) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+
+    const { election_office_id: electionOfficeId } =
+      RemoveElectionOfficeParamsSchema.parse(req.params);
+
+    await electionOffice.remove({
+      electionOfficeId,
+    });
+
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+};

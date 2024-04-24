@@ -51,3 +51,13 @@ export const update = async (
   );
   return updateInitiativeOption;
 };
+
+/**
+ * Removes a society's election's initiative option.
+ */
+export const remove = async (
+  initiativeOptionRemoveParams: InitiativeOption.Remove,
+) => {
+  // Enforce some business logic
+  await InitiativeOption.remove(initiativeOptionRemoveParams);
+};
