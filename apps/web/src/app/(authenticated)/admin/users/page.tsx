@@ -1,6 +1,6 @@
 'use client';
 import { PageTitle } from '@/components/shared/page-title';
-import { Button, Text } from 'frosted-ui';
+import { Text } from 'frosted-ui';
 import {
   Table,
   TableHeader,
@@ -10,7 +10,6 @@ import {
   TableRow,
 } from '@/components/shared/table';
 import { useUsers } from '@/hooks/use-users';
-import { Plus16 } from '@frosted-ui/icons';
 import { Pagination } from '@/components/shared/pagination';
 import { useSearchParams } from 'next/navigation';
 import { NewUser } from './new-user';

@@ -21,10 +21,12 @@
     "@types/express-requests-logger": "^3.0.4",
     "@types/jest": "^29.5.12",
     "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.11",
     "@types/supertest": "^6.0.2",
     "@types/uuid": "^9.0.8",
     "cross-env": "^7.0.3",
     "jsdoc": "^4.0.2",
+    "multer": "^1.4.5-lts.1",
     "nodemon": "^3.0.3"
   },
   "dependencies": {

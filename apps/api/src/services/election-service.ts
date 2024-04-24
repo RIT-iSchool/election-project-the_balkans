@@ -7,7 +7,7 @@ const ElectionSchema = z.object({
   name: z.string(),
   startDate: z.string(),
   endDate: z.string(),
-  photoURL: z.string().optional(),
+  photoUrl: z.string().optional(),
 });
 
 export const create = async (

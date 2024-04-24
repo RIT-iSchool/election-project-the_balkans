@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { db } from '../db';
-import { session, user as userTable } from '../db/schema';
-import { eq, getTableColumns } from 'drizzle-orm';
+import { session, societyMember, user as userTable } from '../db/schema';
+import { and, eq, getTableColumns } from 'drizzle-orm';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 import { BadRequestError } from '../errors/BadRequestError';
 
@@ -33,8 +33,25 @@ export const user = () => {
         .where(eq(userTable.id, sessionData.userId));
       if (!userData) throw new BadRequestError('Invalid user');
 
+      const societyId = req.headers['x-society-id'];
+
+      // Make sure the current user has access to this society in our database
+      const [societyMemberData] = await db
+        .select()
+        .from(societyMember)
+        .where(
+          and(
+            eq(societyMember.userId, userData.id),
+            eq(societyMember.societyId, parseInt(societyId as string)),
+          ),
+        );
+
       // Assign the user and society to the request object
       req.user = userData;
+
+      if (societyMemberData) {
+        req.role = societyMemberData.role;
+      }
 
       next();
     } catch (err) {

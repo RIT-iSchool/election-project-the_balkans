@@ -1,3 +1,5 @@
+import FileUploader from '@/components/shared/file-uploader';
+import { useCreateElection } from '@/hooks/mutations/use-create-election';
 import { Document32, Plus16 } from '@frosted-ui/icons';
 import { useFormik } from 'formik';
 import {
@@ -13,6 +15,8 @@ import {
   DateField,
   DialogClose,
 } from 'frosted-ui';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import * as yup from 'yup';
 
 const initialValues = {
@@ -22,15 +26,25 @@ const initialValues = {
 };
 
 export const NewElection = () => {
+  const router = useRouter();
+  const [fileName, setFileName] = useState('');
+
+  const { mutateAsync: createElection, isLoading } = useCreateElection({
+    onSuccess: (data) => {
+      const electionId = (data as { id: string }).id;
+
+      router.push(`/elections/${electionId}`);
+    },
+  });
+
   const { getFieldProps, submitForm, errors, isValid } = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values, actions) => {
-      const response = await fetch('/ajax/auth/login', {
-        method: 'POST',
-        body: JSON.stringify(values),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    onSubmit: async (values) => {
+      createElection({
+        ...values,
+        startDate: values.startDate.toString(),
+        endDate: values.endDate.toString(),
+        photoUrl: fileName,
       });
     },
     validationSchema: yup.object().shape({
@@ -40,6 +54,7 @@ export const NewElection = () => {
     }),
     validateOnChange: false,
     validateOnBlur: false,
+    isInitialValid: false,
   });
 
   return (
@@ -76,8 +91,18 @@ export const NewElection = () => {
               )}
             </div>
 
-            <div className="bg-gray-a3 text-gray-8 border-gray-a5 flex size-20 items-center justify-center rounded border">
-              <Document32 />
+            <div className="bg-gray-a3 text-gray-8 border-gray-a5 hover:bg-gray-a4 flex size-20 items-center justify-center rounded border">
+              {!fileName && (
+                <FileUploader type="election" onUploadComplete={setFileName}>
+                  <Document32 />
+                </FileUploader>
+              )}
+              {fileName && (
+                <img
+                  src={`/ajax/uploads/election/${fileName}`}
+                  className="size-full object-cover"
+                />
+              )}
             </div>
           </div>
 
@@ -96,7 +121,13 @@ export const NewElection = () => {
             <DialogClose>
               <Button>Cancel</Button>
             </DialogClose>
-            <Button color="iris" variant="classic" disabled={!isValid}>
+            <Button
+              color="iris"
+              variant="classic"
+              disabled={!isValid}
+              onClick={submitForm}
+              loading={isLoading}
+            >
               Submit
             </Button>
           </div>
