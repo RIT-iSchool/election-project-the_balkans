@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Handler } from 'express';
 import * as ballot from '../controllers/ballot-controller';
 import { z } from 'zod';
 import { AuthenticationError } from '../errors/AuthenticationError';
@@ -28,11 +28,7 @@ const BallotSchema = z.object({
     .optional(),
 });
 
-export const submit = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const submit: Handler = async (req, res, next) => {
   try {
     if (!req.society) throw new AuthenticationError('Society ID missing');
     const submitBallotData = BallotSchema.parse(req.body);
@@ -60,11 +56,7 @@ const RetrieveBallotParamsSchema = z.object({
   election_id: z.string().transform((id) => parseInt(id)),
 });
 
-export const retrieve = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const retrieve: Handler = async (req, res, next) => {
   try {
     if (!req.society) throw new AuthenticationError('Society ID missing');
 

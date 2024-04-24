@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Handler } from 'express';
 import { z } from 'zod';
 import * as societyMember from '../controllers/society-member-controller';
 import { BadRequestError } from '../errors/BadRequestError';
@@ -9,11 +9,7 @@ const SocietyMemberSchema = z.object({
   role: z.enum(['member', 'officer', 'employee']),
 });
 
-export const create = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const create: Handler = async (req, res, next) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');
@@ -34,7 +30,7 @@ export const create = async (
   }
 };
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
+export const list: Handler = async (req, res, next) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');

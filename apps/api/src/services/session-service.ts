@@ -1,12 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
+import { Handler } from 'express';
 import * as session from '../controllers/session-controller';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
 
-export const retrieve = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const retrieve: Handler = async (req, res, next) => {
   try {
     if (!req.user) throw new UnauthorizedError('Unauthorized');
 
@@ -24,11 +20,7 @@ export const retrieve = async (
   }
 };
 
-export const remove = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const remove: Handler = async (req, res, next) => {
   try {
     await session.remove({
       sessionToken: req.cookies.session,

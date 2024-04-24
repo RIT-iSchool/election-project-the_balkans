@@ -1,13 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { Handler } from 'express';
 import * as report from '../controllers/report-controller';
 import { BadRequestError } from '../errors/BadRequestError';
 import z from 'zod';
 
-export const society = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const society: Handler = async (req, res, next) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');
@@ -23,11 +19,7 @@ export const society = async (
   }
 };
 
-export const system = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const system: Handler = async (req, res, next) => {
   try {
     const systemReport = await report.systemReport();
     res.json(systemReport);
@@ -40,11 +32,7 @@ const StatusParamsSchema = z.object({
   election_id: z.string().transform((id) => parseInt(id)),
 });
 
-export const status = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const status: Handler = async (req, res, next) => {
   try {
     const { election_id: electionId } = StatusParamsSchema.parse(req.params);
     const statusReport = await report.statusReport({ electionId });
@@ -58,11 +46,7 @@ const ResultParamsSchema = z.object({
   election_id: z.string().transform((id) => parseInt(id)),
 });
 
-export const results = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const results: Handler = async (req, res, next) => {
   try {
     const { election_id: electionId } = ResultParamsSchema.parse(req.params);
     const resultsReport = await report.resultsReport({ electionId });

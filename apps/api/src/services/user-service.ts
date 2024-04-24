@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Handler } from 'express';
 import { z } from 'zod';
 import * as user from '../controllers/user-controller';
 
@@ -10,11 +10,7 @@ const UserSchema = z.object({
   admin: z.boolean().default(false),
 });
 
-export const create = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const create: Handler = async (req, res, next) => {
   try {
     const userData = UserSchema.parse(req.body);
 
@@ -34,11 +30,7 @@ const UpdateUserParamsSchema = z.object({
   userId: z.string().transform((id) => parseInt(id)),
 });
 
-export const update = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const update: Handler = async (req, res, next) => {
   try {
     const { userId } = UpdateUserParamsSchema.parse(req.params);
     const userData = UserSchema.parse(req.body);
@@ -60,11 +52,7 @@ const RetrieveUserParamsSchema = z.object({
   userId: z.string().transform((id) => parseInt(id)),
 });
 
-export const retrieve = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const retrieve: Handler = async (req, res, next) => {
   try {
     const { userId } = RetrieveUserParamsSchema.parse(req.params);
 
@@ -82,7 +70,7 @@ const ListUsersSchema = z.object({
   page: z.coerce.number().default(1),
 });
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
+export const list: Handler = async (req, res, next) => {
   try {
     const listUsersParams = ListUsersSchema.parse(req.query);
     const listUsers = await user.list(listUsersParams);
@@ -98,11 +86,7 @@ const LoginParamsSchema = z.object({
   password: z.string(),
 });
 
-export const login = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const login: Handler = async (req, res, next) => {
   try {
     const { email, password } = LoginParamsSchema.parse(req.body);
 

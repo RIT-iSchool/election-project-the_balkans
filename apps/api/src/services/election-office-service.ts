@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Handler } from 'express';
 import { z } from 'zod';
 import * as electionOffice from '../controllers/election-office-controller';
 import { BadRequestError } from '../errors/BadRequestError';
@@ -9,11 +9,7 @@ const ElectionOfficeSchema = z.object({
   maxVotes: z.number(),
 });
 
-export const create = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const create: Handler = async (req, res, next) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');
@@ -38,7 +34,7 @@ const ListElectionOfficesParamsSchema = z.object({
   election_id: z.string().transform((id) => parseInt(id)),
 });
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
+export const list: Handler = async (req, res, next) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');
@@ -63,11 +59,7 @@ const RetrieveElectionOfficeParamsSchema = z.object({
   election_office_id: z.string().transform((id) => parseInt(id)),
 });
 
-export const retrieve = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const retrieve: Handler = async (req, res, next) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');
@@ -90,11 +82,7 @@ const UpdateElectionOfficeParamsSchema = z.object({
   election_office_id: z.string().transform((id) => parseInt(id)),
 });
 
-export const update = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const update: Handler = async (req, res, next) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');

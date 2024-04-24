@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Handler } from 'express';
 import { z } from 'zod';
 import * as society from '../controllers/society-controller';
 
@@ -7,11 +7,7 @@ const SocietySchema = z.object({
   ownerId: z.number(),
 });
 
-export const create = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const create: Handler = async (req, res, next) => {
   try {
     const societyData = SocietySchema.parse(req.body);
 
@@ -31,11 +27,7 @@ const RetrieveSocietyParams = z.object({
   society_id: z.string().transform((id) => parseInt(id)),
 });
 
-export const retrieve = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const retrieve: Handler = async (req, res, next) => {
   try {
     const { society_id } = RetrieveSocietyParams.parse(req.params);
 
@@ -52,7 +44,7 @@ const ListSocietiesSchema = z.object({
   page: z.coerce.number().default(1),
 });
 
-export const list = async (req: Request, res: Response, next: NextFunction) => {
+export const list: Handler = async (req, res, next) => {
   try {
     const listSocietiesParams = ListSocietiesSchema.parse(req.query);
     const listSocieties = await society.list(listSocietiesParams);
