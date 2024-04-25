@@ -62,3 +62,36 @@ export const list = async ({ electionId, societyId }: List) => {
     throw new Error('Something went wrong listing election candidate votes.');
   }
 };
+
+export type Retrieve = {
+  electionId: number;
+  memberId: number;
+};
+
+/**
+ * Retrieves a candidate vote.
+ */
+export const retrieve = async ({ electionId, memberId }: Retrieve) => {
+  try {
+    const [candidateVoteData] = await db
+      .select({
+        ...getTableColumns(candidateVote),
+      })
+      .from(candidateVote)
+      .innerJoin(
+        electionCandidate,
+        eq(candidateVote.electionCandidateId, electionCandidate.id),
+      )
+      .innerJoin(
+        electionOffice,
+        eq(electionCandidate.electionOfficeId, electionOffice.id),
+      )
+      .innerJoin(election, eq(electionOffice.electionId, election.id))
+      .where(
+        and(eq(election.id, electionId), eq(candidateVote.memberId, memberId)),
+      );
+    return candidateVoteData || null;
+  } catch (err) {
+    throw new Error('Something went wrong retrieving a candidate vote.');
+  }
+};

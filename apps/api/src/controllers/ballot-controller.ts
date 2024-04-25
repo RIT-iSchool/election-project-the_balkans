@@ -1,6 +1,7 @@
 import * as Ballot from '../data/ballot-data';
 import * as ElectionOffice from '../data/election-office-data';
 import * as ElectionCandidate from '../data/election-candidate-data';
+import * as CandidateVote from '../data/candidate-vote-data';
 
 /**
  * Submits a ballot.
@@ -8,6 +9,16 @@ import * as ElectionCandidate from '../data/election-candidate-data';
 export const submit = async (ballotSubmitParams: Ballot.Submit) => {
   //candidate vote is required
   if (!ballotSubmitParams.ballotSubmitData.candidateVotesData) throw Error;
+
+  //search for user's existing vote
+  const existingVote = await CandidateVote.retrieve({
+    electionId: ballotSubmitParams.ballotSubmitData.electionId,
+    memberId:
+      ballotSubmitParams.ballotSubmitData.candidateVotesData.pop()?.memberId!,
+  });
+
+  //user has already submitted a ballot
+  if (existingVote) throw Error;
 
   //write in logic
   if (ballotSubmitParams.ballotSubmitData.writeIn) {
