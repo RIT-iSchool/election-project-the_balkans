@@ -1,7 +1,7 @@
-import { CreateUser, society } from '../db/schema';
+import { CreateUser } from '../db/schema';
 import { db, withPagination } from '../db';
 import { user } from '../db/schema';
-import { eq, and, getTableColumns } from 'drizzle-orm';
+import { eq, and, getTableColumns, sql } from 'drizzle-orm';
 import { AuthenticationError } from '../errors/AuthenticationError';
 
 export type Create = {
@@ -54,15 +54,18 @@ export type Retrieve = {
   userId: number;
 };
 
+const retrieveUser = db
+  .select({ ...getTableColumns(user) })
+  .from(user)
+  .where(eq(user.id, sql.placeholder('id')))
+  .prepare('retrieve_user');
+
 /**
  * Retrieves a user by ID.
  */
 export const retrieve = async ({ userId }: Retrieve) => {
   try {
-    const [userData] = await db
-      .select({ ...getTableColumns(user) })
-      .from(user)
-      .where(eq(user.id, userId));
+    const [userData] = await retrieveUser.execute({ id: userId });
 
     if (!userData) throw new Error('User not found');
 
@@ -102,21 +105,29 @@ export type Login = {
   password: string;
 };
 
+const loginUser = db
+  .select({
+    ...getTableColumns(user),
+  })
+  .from(user)
+  .where(
+    and(
+      eq(user.email, sql.placeholder('email')),
+      eq(user.password, sql.placeholder('password')),
+    ),
+  )
+  .prepare('login_user');
+
 /**
  * Login a user.
  */
 export const login = async ({ email, password }: Login) => {
   try {
-    const [loginUser] = await db
-      .select({
-        ...getTableColumns(user),
-      })
-      .from(user)
-      .where(and(eq(user.email, email), eq(user.password, password)));
+    const [user] = await loginUser.execute({ email, password });
 
-    if (!loginUser) throw new AuthenticationError('Wrong email or password');
+    if (!user) throw new AuthenticationError('Wrong email or password');
 
-    return loginUser;
+    return user;
   } catch (err) {
     throw new AuthenticationError('Wrong email or password');
   }
