@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type ElectionOffice = {
+export type ElectionOffice = {
   id: number;
   electionId: number;
   officeName: string;
@@ -8,10 +8,10 @@ type ElectionOffice = {
 };
 
 type UseElectionOfficeOptions = {
-  officeId: string;
+  officeId: number;
 };
 
-export const useElectionOffices = ({ officeId }: UseElectionOfficeOptions) => {
+export const useElectionOffice = ({ officeId }: UseElectionOfficeOptions) => {
   const { data, error, isLoading } = useSWR<ElectionOffice>(
     `/api/v1/elections/election_offices/${officeId}`,
   );

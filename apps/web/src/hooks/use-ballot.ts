@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type Ballot = Election & {
+export type Ballot = Election & {
   offices: (ElectionOffice & { candidates: ElectionCandidate[] })[];
   initiatives: (ElectionInitiative & { options: InitiativeOption[] })[];
 };
