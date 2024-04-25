@@ -32,6 +32,9 @@ import { NewOffice } from './new-office';
 import { useCallback, useState } from 'react';
 import { DeleteOffice } from './delete-office';
 import { EditOffice } from './edit-office';
+import { NewCandidate } from './new-candidate';
+import { EditCandidate } from './update-candidate';
+import { DeleteCandidate } from './delete-candidate';
 
 type PageProps = {
   params: {
@@ -39,7 +42,7 @@ type PageProps = {
   };
 };
 
-const Row = ({ office }: { office: Ballot['offices'][number] }) => {
+const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -91,6 +94,68 @@ const Row = ({ office }: { office: Ballot['offices'][number] }) => {
   );
 };
 
+const CandidateRow = ({
+  candidate,
+  office,
+}: {
+  candidate: Ballot['offices'][number]['candidates'][number];
+  office: Ballot['offices'][number];
+}) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const handleOpenEdit = useCallback(() => setEditOpen(true), []);
+  const handleOpenDelete = useCallback(() => setDeleteOpen(true), []);
+
+  return (
+    <>
+      <TableRow>
+        <TableCell>
+          <Text color="gray">{candidate.name}</Text>
+        </TableCell>
+        <TableCell>
+          <Text color="gray">{office.officeName}</Text>
+        </TableCell>
+        <TableCell>
+          <DropdownMenuRoot>
+            <DropdownMenuTrigger>
+              <IconButton>
+                <ThreeDotsHorizontal20 />
+              </IconButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                <Pencil16 />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="w-32"
+                color="red"
+                onClick={handleOpenDelete}
+              >
+                <Trash16 />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenuRoot>
+        </TableCell>
+      </TableRow>
+
+      <EditCandidate
+        open={editOpen}
+        setOpen={setEditOpen}
+        candidate={candidate}
+      />
+      <DeleteCandidate
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        electionId={office.electionId}
+        candidateId={candidate.id}
+      />
+    </>
+  );
+};
+
 export default function Page({ params }: PageProps) {
   const { data: election } = useElection(params);
   const { data: ballot } = useBallot(params);
@@ -105,7 +170,7 @@ export default function Page({ params }: PageProps) {
         <PageTitle title={election.name} description={description} />
       </div>
 
-      <div className="w-screen space-y-4 overflow-auto px-6 md:w-full">
+      <div className="w-screen space-y-4 overflow-auto px-6 pb-6 md:w-full">
         {Boolean(ballot) && (
           <>
             <Card>
@@ -126,7 +191,7 @@ export default function Page({ params }: PageProps) {
                   </TableHeader>
                   <TableBody>
                     {ballot?.offices?.map((office) => (
-                      <Row office={office} key={office.id} />
+                      <OfficeRow office={office} key={office.id} />
                     ))}
                   </TableBody>
                 </Table>
@@ -140,10 +205,7 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Candidates
                     </Text>
-                    <Button color="gray" variant="classic">
-                      <Plus16 />
-                      Add candidate
-                    </Button>
+                    <NewCandidate electionId={params.electionId} />
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -156,19 +218,7 @@ export default function Page({ params }: PageProps) {
                     <TableBody>
                       {ballot?.offices.map((o) =>
                         o.candidates.map((c) => (
-                          <TableRow>
-                            <TableCell>
-                              <Text color="gray">{c.name}</Text>
-                            </TableCell>
-                            <TableCell>
-                              <Text color="gray">{o.officeName}</Text>
-                            </TableCell>
-                            <TableCell>
-                              <IconButton>
-                                <ThreeDotsHorizontal20 />
-                              </IconButton>
-                            </TableCell>
-                          </TableRow>
+                          <CandidateRow key={c.id} candidate={c} office={o} />
                         )),
                       )}
                     </TableBody>
