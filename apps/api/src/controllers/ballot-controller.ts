@@ -8,17 +8,22 @@ import * as CandidateVote from '../data/candidate-vote-data';
  */
 export const submit = async (ballotSubmitParams: Ballot.Submit) => {
   //candidate vote is required
-  if (!ballotSubmitParams.ballotSubmitData.candidateVotesData) throw Error;
+  if (!ballotSubmitParams.ballotSubmitData.candidateVotesData)
+    throw new Error();
+
+  const memberId =
+    ballotSubmitParams.ballotSubmitData.candidateVotesData.pop()?.memberId;
+
+  if (!memberId) throw new Error();
 
   //search for user's existing vote
   const existingVote = await CandidateVote.retrieve({
     electionId: ballotSubmitParams.ballotSubmitData.electionId,
-    memberId:
-      ballotSubmitParams.ballotSubmitData.candidateVotesData.pop()?.memberId!,
+    memberId: memberId,
   });
 
   //user has already submitted a ballot
-  if (existingVote) throw Error;
+  if (existingVote) throw new Error();
 
   //write in logic
   if (ballotSubmitParams.ballotSubmitData.writeIn) {
@@ -77,7 +82,7 @@ export const submit = async (ballotSubmitParams: Ballot.Submit) => {
 
   officeActualVotes.forEach((officeId, currentVotes) => {
     const maxVotes = officeMaxVotes.get(officeId) || 0;
-    if (currentVotes > maxVotes) throw Error;
+    if (currentVotes > maxVotes) throw new Error();
   });
 
   await Ballot.submit(ballotSubmitParams);
