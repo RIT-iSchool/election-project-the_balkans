@@ -23,6 +23,7 @@ export const user = pgTable(
   (table) => {
     return {
       indexOnEmail: index('user_email_index').on(table.email),
+      indexOnPassword: index('user_password_index').on(table.password),
     };
   },
 );
@@ -72,16 +73,24 @@ export type UpdateSession = Partial<CreateSession>;
 //#endregion
 
 //#region society
-export const society = pgTable('society', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 100 }).notNull(),
-  ownerId: integer('owner_id')
-    .references(() => user.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-});
+export const society = pgTable(
+  'society',
+  {
+    id: serial('id').primaryKey(),
+    name: varchar('name', { length: 100 }).notNull(),
+    ownerId: integer('owner_id')
+      .references(() => user.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      indexOnName: index('society_name_index').on(table.name),
+    };
+  },
+);
 
 export const societyRelations = relations(society, ({ one }) => ({
   owner: one(user, {
@@ -101,22 +110,32 @@ export type UpdateSociety = Partial<CreateSociety>;
 export const role = pgEnum('role', ['member', 'officer', 'employee']);
 export type Role = (typeof role)['enumValues'][number];
 
-export const societyMember = pgTable('societyMember', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id')
-    .references(() => user.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  societyId: integer('society_id')
-    .references(() => society.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  role: role('role').notNull(),
-});
+export const societyMember = pgTable(
+  'societyMember',
+  {
+    id: serial('id').primaryKey(),
+    userId: integer('user_id')
+      .references(() => user.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    societyId: integer('society_id')
+      .references(() => society.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    role: role('role').notNull(),
+  },
+  (table) => {
+    return {
+      indexOnUserIdSocietyId: index(
+        'society_member_user_id_society_id_index',
+      ).on(table.userId, table.societyId),
+    };
+  },
+);
 
 export const societyMemberRelations = relations(societyMember, ({ one }) => ({
   user: one(user, {
@@ -137,19 +156,29 @@ export type UpdateSocietyMember = Partial<CreateSocietyMember>;
 
 //#region election
 
-export const election = pgTable('election', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 100 }).notNull(),
-  societyId: integer('society_id')
-    .references(() => society.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  startDate: timestamp('start_date', { mode: 'string' }).notNull(),
-  endDate: timestamp('end_date', { mode: 'string' }).notNull(),
-  photoUrl: varchar('photo_url', { length: 250 }),
-});
+export const election = pgTable(
+  'election',
+  {
+    id: serial('id').primaryKey(),
+    name: varchar('name', { length: 100 }).notNull(),
+    societyId: integer('society_id')
+      .references(() => society.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    startDate: timestamp('start_date', { mode: 'string' }).notNull(),
+    endDate: timestamp('end_date', { mode: 'string' }).notNull(),
+    photoUrl: varchar('photo_url', { length: 250 }),
+  },
+  (table) => {
+    return {
+      societyIdIndex: index('election_society_id_index').on(table.societyId),
+      startDateIndex: index('election_start_date_index').on(table.startDate),
+      endDateIndex: index('election_end_date_index').on(table.endDate),
+    };
+  },
+);
 
 export const electionRelations = relations(election, ({ one, many }) => ({
   society: one(society, {
@@ -168,23 +197,33 @@ export type UpdateElection = Partial<CreateElection>;
 
 //#region electionOffice
 
-export const electionOffice = pgTable('electionOffice', {
-  id: serial('id').primaryKey(),
-  electionId: integer('election_id')
-    .references(() => election.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  officeName: varchar('office_name', { length: 30 }).notNull(),
-  maxVotes: integer('max_votes').notNull(),
-  societyId: integer('society_id')
-    .references(() => society.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-});
+export const electionOffice = pgTable(
+  'electionOffice',
+  {
+    id: serial('id').primaryKey(),
+    electionId: integer('election_id')
+      .references(() => election.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    officeName: varchar('office_name', { length: 30 }).notNull(),
+    maxVotes: integer('max_votes').notNull(),
+    societyId: integer('society_id')
+      .references(() => society.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      electionIdSocietyIdIndex: index(
+        'election_office_election_id_society_id_index',
+      ).on(table.electionId, table.societyId),
+    };
+  },
+);
 
 export const electionOfficeRelations = relations(
   electionOffice,
@@ -209,24 +248,38 @@ export type UpdateElectionOffice = Partial<CreateElectionOffice>;
 
 //#region electionCandidate
 
-export const electionCandidate = pgTable('electionCandidate', {
-  id: serial('id').primaryKey(),
-  electionOfficeId: integer('election_office_id')
-    .references(() => electionOffice.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  name: varchar('name', { length: 100 }).notNull(),
-  photoURL: varchar('photo_url', { length: 250 }),
-  description: text('description').notNull(),
-  societyId: integer('society_id')
-    .references(() => society.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-});
+export const electionCandidate = pgTable(
+  'electionCandidate',
+  {
+    id: serial('id').primaryKey(),
+    electionOfficeId: integer('election_office_id')
+      .references(() => electionOffice.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    name: varchar('name', { length: 100 }).notNull(),
+    photoURL: varchar('photo_url', { length: 250 }),
+    description: text('description').notNull(),
+    societyId: integer('society_id')
+      .references(() => society.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      electionOfficeIdSocietyIdIndex: index(
+        'election_candidate_election_office_id_society_id_index',
+      ).on(table.electionOfficeId, table.societyId),
+      nameSocietyIdIndex: index('election_candidate_name_society_id_index').on(
+        table.name,
+        table.societyId,
+      ),
+    };
+  },
+);
 
 export const electionCandidateRelations = relations(
   electionCandidate,
@@ -252,21 +305,32 @@ export type UpdateElectionCandidate = Partial<CreateElectionCandidate>;
 
 //#region candidateVote
 
-export const candidateVote = pgTable('candidateVote', {
-  id: serial('id').primaryKey(),
-  memberId: integer('member_id')
-    .references(() => societyMember.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  electionCandidateId: integer('election_candidate_id')
-    .references(() => electionCandidate.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-});
+export const candidateVote = pgTable(
+  'candidateVote',
+  {
+    id: serial('id').primaryKey(),
+    memberId: integer('member_id')
+      .references(() => societyMember.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    electionCandidateId: integer('election_candidate_id')
+      .references(() => electionCandidate.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      memberIdIndex: index('candidate_vote_member_id_index').on(table.memberId),
+      candidateIdIndex: index('candidate_vote_election_candidate_id_index').on(
+        table.electionCandidateId,
+      ),
+    };
+  },
+);
 
 export const candidateVoteRelations = relations(candidateVote, ({ one }) => ({
   member: one(societyMember, {
@@ -287,23 +351,33 @@ export type UpdateCandidateVote = Partial<CreateCandidateVote>;
 
 //#region electionInitiative
 
-export const electionInitiative = pgTable('electionInitiative', {
-  id: serial('id').primaryKey(),
-  electionId: integer('election_id')
-    .references(() => election.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  initiativeName: varchar('initiative_name', { length: 30 }).notNull(),
-  description: text('description').notNull(),
-  societyId: integer('society_id')
-    .references(() => society.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-});
+export const electionInitiative = pgTable(
+  'electionInitiative',
+  {
+    id: serial('id').primaryKey(),
+    electionId: integer('election_id')
+      .references(() => election.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    initiativeName: varchar('initiative_name', { length: 30 }).notNull(),
+    description: text('description').notNull(),
+    societyId: integer('society_id')
+      .references(() => society.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      electionIdSocietyIdIndex: index(
+        'election_initiative_election_id_society_id_index',
+      ).on(table.electionId, table.societyId),
+    };
+  },
+);
 
 export const electionInitiativeRelations = relations(
   electionInitiative,
@@ -331,22 +405,32 @@ export type UpdateElectionInitiative = Partial<CreateElectionInitiative>;
 
 //#region initiativeOption
 
-export const initiativeOption = pgTable('initiativeOption', {
-  id: serial('id').primaryKey(),
-  electionInitiativeId: integer('election_initiative_id')
-    .references(() => electionInitiative.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  title: varchar('title', { length: 30 }).notNull(),
-  societyId: integer('society_id')
-    .references(() => society.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-});
+export const initiativeOption = pgTable(
+  'initiativeOption',
+  {
+    id: serial('id').primaryKey(),
+    electionInitiativeId: integer('election_initiative_id')
+      .references(() => electionInitiative.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    title: varchar('title', { length: 30 }).notNull(),
+    societyId: integer('society_id')
+      .references(() => society.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      initiativeIdSocietyIdIndex: index(
+        'initiative_option_election_initiative_id_society_id',
+      ).on(table.electionInitiativeId, table.societyId),
+    };
+  },
+);
 
 export const initiativeOptionRelations = relations(
   initiativeOption,
@@ -370,27 +454,37 @@ export type UpdateInitiativeOption = Partial<CreateInitiativeOption>;
 
 //#region initiativeVote
 
-export const initiativeVote = pgTable('initiativeVote', {
-  id: serial('id').primaryKey(),
-  memberId: integer('member_id')
-    .references(() => societyMember.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  electionInitiativeId: integer('election_initiative_id')
-    .references(() => electionInitiative.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-  electionInitiativeOptionId: integer('election_initiative_option_id')
-    .references(() => initiativeOption.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    })
-    .notNull(),
-});
+export const initiativeVote = pgTable(
+  'initiativeVote',
+  {
+    id: serial('id').primaryKey(),
+    memberId: integer('member_id')
+      .references(() => societyMember.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    electionInitiativeId: integer('election_initiative_id')
+      .references(() => electionInitiative.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+    electionInitiativeOptionId: integer('election_initiative_option_id')
+      .references(() => initiativeOption.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      })
+      .notNull(),
+  },
+  (table) => {
+    return {
+      initiativeIdOptionIdIndex: index(
+        'initiative_vote_election_initiative_id_election_initiative_option_id_index',
+      ).on(table.electionInitiativeId, table.electionInitiativeOptionId),
+    };
+  },
+);
 
 export const initiativeVoteRelations = relations(initiativeVote, ({ one }) => ({
   member: one(societyMember, {
