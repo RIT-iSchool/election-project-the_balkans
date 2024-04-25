@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { Paginated } from './types';
 
-type User = {
+export type User = {
   email: string;
   firstName: string;
   lastName: string;

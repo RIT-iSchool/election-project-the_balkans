@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type ElectionOffice = {
+export type ElectionOffice = {
   id: number;
   electionId: number;
   officeName: string;

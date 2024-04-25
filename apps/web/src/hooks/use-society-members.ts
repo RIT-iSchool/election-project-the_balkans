@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type SocietyMember = {
+export type SocietyMember = {
   id: number;
   userId: number;
   societyId: number;

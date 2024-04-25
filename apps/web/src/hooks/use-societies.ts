@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { Paginated } from './types';
 
-type Society = {
+export type Society = {
   id: number;
   name: string;
   ownerId: number;

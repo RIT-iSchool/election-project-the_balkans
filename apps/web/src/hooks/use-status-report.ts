@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type StatusReport = {
+export type StatusReport = {
   startDate: {
     startDate: string;
   };

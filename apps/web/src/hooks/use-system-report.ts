@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type SystemReport = {
+export type SystemReport = {
   loggedInUsers: number;
   activeElections: number;
   averageRequestTime: number;

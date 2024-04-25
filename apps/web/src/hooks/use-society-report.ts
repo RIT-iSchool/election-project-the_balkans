@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-type SocietyReport = {
+export type SocietyReport = {
   activeBallots: number;
   inActiveBallots: number;
   societyUsers: number;
