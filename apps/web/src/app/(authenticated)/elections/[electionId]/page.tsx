@@ -35,6 +35,9 @@ import { EditOffice } from './edit-office';
 import { NewCandidate } from './new-candidate';
 import { EditCandidate } from './update-candidate';
 import { DeleteCandidate } from './delete-candidate';
+import { EditInitiative } from './update-initiative';
+import { DeleteInitiative } from './delete-initiative';
+import { NewInitiative } from './new-initiative';
 
 type PageProps = {
   params: {
@@ -156,6 +159,66 @@ const CandidateRow = ({
   );
 };
 
+const InitiativeRow = ({
+  initiative,
+}: {
+  initiative: Ballot['initiatives'][number];
+}) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const handleOpenEdit = useCallback(() => setEditOpen(true), []);
+  const handleOpenDelete = useCallback(() => setDeleteOpen(true), []);
+
+  return (
+    <>
+      <TableRow>
+        <TableCell>
+          <Text color="gray">{initiative.initiativeName}</Text>
+        </TableCell>
+        <TableCell>
+          <Text color="gray">{initiative.options.length}</Text>
+        </TableCell>
+        <TableCell>
+          <DropdownMenuRoot>
+            <DropdownMenuTrigger>
+              <IconButton>
+                <ThreeDotsHorizontal20 />
+              </IconButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                <Pencil16 />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="w-32"
+                color="red"
+                onClick={handleOpenDelete}
+              >
+                <Trash16 />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenuRoot>
+        </TableCell>
+      </TableRow>
+
+      <EditInitiative
+        open={editOpen}
+        setOpen={setEditOpen}
+        initiative={initiative}
+      />
+      <DeleteInitiative
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        electionId={initiative.electionId}
+        initiativeId={initiative.id}
+      />
+    </>
+  );
+};
+
 export default function Page({ params }: PageProps) {
   const { data: election } = useElection(params);
   const { data: ballot } = useBallot(params);
@@ -231,10 +294,7 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Initiatives
                     </Text>
-                    <Button color="gray" variant="classic">
-                      <Plus16 />
-                      Add initiative
-                    </Button>
+                    <NewInitiative electionId={params.electionId} />
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -246,19 +306,7 @@ export default function Page({ params }: PageProps) {
                     </TableHeader>
                     <TableBody>
                       {ballot?.initiatives.map((i) => (
-                        <TableRow>
-                          <TableCell>
-                            <Text color="gray">{i.initiativeName}</Text>
-                          </TableCell>
-                          <TableCell>
-                            <Text color="gray">{i.options.length}</Text>
-                          </TableCell>
-                          <TableCell>
-                            <IconButton>
-                              <ThreeDotsHorizontal20 />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
+                        <InitiativeRow key={i.id} initiative={i} />
                       ))}
                     </TableBody>
                   </Table>
