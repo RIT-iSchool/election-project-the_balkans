@@ -1,4 +1,4 @@
-import { CreateUser, society } from '../db/schema';
+import { CreateUser } from '../db/schema';
 import { db, withPagination } from '../db';
 import { user } from '../db/schema';
 import { eq, and, getTableColumns, sql } from 'drizzle-orm';
