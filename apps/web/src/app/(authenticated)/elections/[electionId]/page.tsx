@@ -286,12 +286,12 @@ export default function Page({ params }: PageProps) {
   const description = `${dayjs(election.startDate).format('MMMM DD, YYYY')} - ${dayjs(election.endDate).format('MMMM DD, YYYY')}`;
 
   return (
-    <div className="flex min-h-screen flex-col gap-5 pt-6">
+    <div className="flex min-h-screen grid-cols-1 flex-col gap-5 pt-6">
       <div className="flex justify-between space-y-5 px-6">
         <PageTitle title={election.name} description={description} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
         <StatsCard label="Total Votes" count={status?.totalVotes} />
 
         <StatsCard
@@ -311,11 +311,11 @@ export default function Page({ params }: PageProps) {
         />
       </div>
 
-      <div className="w-screen space-y-4 overflow-auto px-6 pb-6 md:w-full">
+      <div className="w-screen space-y-4 overflow-auto pb-6 md:w-full">
         {Boolean(ballot) && (
           <>
-            <div className="flex justify-between gap-4">
-              <Card className="flex-grow">
+            <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-1 lg:grid-cols-2">
+              <Card>
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                     <Text size="4" weight="medium">
@@ -365,8 +365,8 @@ export default function Page({ params }: PageProps) {
               </Card>
             </div>
 
-            <div className="flex justify-between gap-4">
-              <Card className="flex-grow">
+            <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+              <Card>
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                     <Text size="4" weight="medium">
@@ -392,7 +392,7 @@ export default function Page({ params }: PageProps) {
                   </Table>
                 </Inset>
               </Card>
-              <Card className="flex-grow">
+              <Card>
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                     <Text size="4" weight="medium">
@@ -422,8 +422,8 @@ export default function Page({ params }: PageProps) {
           </>
         )}
 
-        <div className="flex justify-between gap-4">
-          <Card className="flex-grow">
+        <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+          <Card>
             <Inset pb="0" side="top">
               <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                 <Text size="4" weight="medium">
@@ -450,7 +450,7 @@ export default function Page({ params }: PageProps) {
               </Table>
             </Inset>
           </Card>
-          <Card className="flex-grow">
+          <Card>
             <Inset pb="0" side="top">
               <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                 <Text size="4" weight="medium">
