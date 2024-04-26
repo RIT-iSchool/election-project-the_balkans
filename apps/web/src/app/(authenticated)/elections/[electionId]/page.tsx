@@ -34,6 +34,8 @@ import { DeleteInitiative } from './delete-initiative';
 import { NewInitiative } from './new-initiative';
 import { useStatusReport } from '@/hooks/use-status-report';
 import { StatsCard } from '@/components/shared/stats-card';
+import { EditOption } from './edit-option';
+import { DeleteOption } from './delete-option';
 
 type PageProps = {
   params: {
@@ -215,6 +217,65 @@ const InitiativeRow = ({
   );
 };
 
+const OptionRow = ({
+  option,
+  initiative,
+}: {
+  option: Ballot['initiatives'][number]['options'][number];
+  initiative: Ballot['initiatives'][number];
+}) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const handleOpenEdit = useCallback(() => setEditOpen(true), []);
+  const handleOpenDelete = useCallback(() => setDeleteOpen(true), []);
+
+  return (
+    <>
+      <TableRow>
+        <TableCell>
+          <Text color="gray">{option.title}</Text>
+        </TableCell>
+        <TableCell>
+          <Text color="gray">{initiative.initiativeName}</Text>
+        </TableCell>
+        <TableCell>
+          <DropdownMenuRoot>
+            <DropdownMenuTrigger>
+              <IconButton>
+                <ThreeDotsHorizontal20 />
+              </IconButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                <Pencil16 />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="w-32"
+                color="red"
+                onClick={handleOpenDelete}
+              >
+                <Trash16 />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenuRoot>
+        </TableCell>
+      </TableRow>
+
+      <EditOption open={editOpen} setOpen={setEditOpen} option={option} />
+
+      <DeleteOption
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        electionId={initiative.electionId}
+        optionId={option.id}
+      />
+    </>
+  );
+};
+
 export default function Page({ params }: PageProps) {
   const { data: election } = useElection(params);
   const { data: ballot } = useBallot(params);
@@ -253,30 +314,56 @@ export default function Page({ params }: PageProps) {
       <div className="w-screen space-y-4 overflow-auto px-6 pb-6 md:w-full">
         {Boolean(ballot) && (
           <>
-            <Card>
-              <Inset pb="0" side="top">
-                <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
-                  <Text size="4" weight="medium">
-                    Offices
-                  </Text>
-                  <NewOffice electionId={params.electionId} />
-                </div>
-              </Inset>
-              <Inset clip="border-box" side="bottom">
-                <Table>
-                  <TableHeader className="bg-white">
-                    <TableHead className="!border-t-0">Position</TableHead>
-                    <TableHead className="!border-t-0">Candidates</TableHead>
-                    <TableHead className="!border-t-0">Actions</TableHead>
-                  </TableHeader>
-                  <TableBody>
-                    {ballot?.offices?.map((office) => (
-                      <OfficeRow office={office} key={office.id} />
-                    ))}
-                  </TableBody>
-                </Table>
-              </Inset>
-            </Card>
+            <div className="flex justify-between gap-4">
+              <Card className="flex-grow">
+                <Inset pb="0" side="top">
+                  <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                    <Text size="4" weight="medium">
+                      Offices
+                    </Text>
+                    <NewOffice electionId={params.electionId} />
+                  </div>
+                </Inset>
+                <Inset clip="border-box" side="bottom">
+                  <Table>
+                    <TableHeader className="bg-white">
+                      <TableHead className="!border-t-0">Position</TableHead>
+                      <TableHead className="!border-t-0">Candidates</TableHead>
+                      <TableHead className="!border-t-0">Actions</TableHead>
+                    </TableHeader>
+                    <TableBody>
+                      {ballot?.offices?.map((office) => (
+                        <OfficeRow office={office} key={office.id} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Inset>
+              </Card>
+              <Card>
+                <Inset pb="0" side="top">
+                  <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                    <Text size="4" weight="medium">
+                      Initiatives
+                    </Text>
+                    <NewInitiative electionId={params.electionId} />
+                  </div>
+                </Inset>
+                <Inset clip="border-box" side="bottom">
+                  <Table>
+                    <TableHeader className="bg-white">
+                      <TableHead className="!border-t-0">Title</TableHead>
+                      <TableHead className="!border-t-0">Options</TableHead>
+                      <TableHead className="!border-t-0">Actions</TableHead>
+                    </TableHeader>
+                    <TableBody>
+                      {ballot?.initiatives.map((i) => (
+                        <InitiativeRow key={i.id} initiative={i} />
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Inset>
+              </Card>
+            </div>
 
             <div className="flex justify-between gap-4">
               <Card className="flex-grow">
@@ -309,22 +396,24 @@ export default function Page({ params }: PageProps) {
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                     <Text size="4" weight="medium">
-                      Initiatives
+                      Options
                     </Text>
-                    <NewInitiative electionId={params.electionId} />
+                    <NewCandidate electionId={params.electionId} />
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
                   <Table>
                     <TableHeader className="bg-white">
                       <TableHead className="!border-t-0">Title</TableHead>
-                      <TableHead className="!border-t-0">Options</TableHead>
+                      <TableHead className="!border-t-0">Initiative</TableHead>
                       <TableHead className="!border-t-0">Actions</TableHead>
                     </TableHeader>
                     <TableBody>
-                      {ballot?.initiatives.map((i) => (
-                        <InitiativeRow key={i.id} initiative={i} />
-                      ))}
+                      {ballot?.initiatives.map((i) =>
+                        i.options.map((o) => (
+                          <OptionRow key={o.id} option={o} initiative={i} />
+                        )),
+                      )}
                     </TableBody>
                   </Table>
                 </Inset>
@@ -332,6 +421,63 @@ export default function Page({ params }: PageProps) {
             </div>
           </>
         )}
+
+        <div className="flex justify-between gap-4">
+          <Card className="flex-grow">
+            <Inset pb="0" side="top">
+              <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                <Text size="4" weight="medium">
+                  Voting Members
+                </Text>
+              </div>
+            </Inset>
+            <Inset clip="border-box" side="bottom">
+              <Table>
+                <TableHeader className="bg-white">
+                  <TableHead className="!border-t-0">Name</TableHead>
+                </TableHeader>
+                <TableBody>
+                  {status?.votingMembers.map((member, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell>
+                        <Text color="gray">
+                          {member.firstName} {member.lastName}
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Inset>
+          </Card>
+          <Card className="flex-grow">
+            <Inset pb="0" side="top">
+              <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                <Text size="4" weight="medium">
+                  Non-Voting Members
+                </Text>
+              </div>
+            </Inset>
+            <Inset clip="border-box" side="bottom">
+              <Table>
+                <TableHeader className="bg-white">
+                  <TableHead className="!border-t-0">Name</TableHead>
+                </TableHeader>
+                <TableBody>
+                  {status?.nonVotingMembers.map((member, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell>
+                        <Text color="gray">
+                          {member.firstName} {member.lastName}
+                        </Text>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Inset>
+          </Card>
+        </div>
       </div>
     </div>
   );
