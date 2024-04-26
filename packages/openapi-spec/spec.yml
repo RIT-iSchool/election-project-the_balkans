@@ -1094,16 +1094,6 @@ paths:
               schema:
                 type: 'object'
                 properties:
-                  startDate:
-                    type: 'object'
-                    properties:
-                      startDate:
-                        type: 'string'
-                  endDate:
-                    type: 'object'
-                    properties:
-                      endData:
-                        type: 'string'
                   totalVotes:
                     type: 'integer'
                   votingMembers:
@@ -1147,38 +1137,6 @@ paths:
               schema:
                 type: 'object'
                 properties:
-                  startDate:
-                    type: 'object'
-                    properties:
-                      startDate:
-                        type: 'string'
-                  endDate:
-                    type: 'object'
-                    properties:
-                      endData:
-                        type: 'string'
-                  totalVotes:
-                    type: 'integer'
-                  votingMembers:
-                    type: 'array'
-                    items:
-                      type: 'object'
-                      properties:
-                        firstName:
-                          type: 'string'
-                        lastName:
-                          type: 'string'
-                  nonVotingMembers:
-                    type: 'array'
-                    items:
-                      type: 'object'
-                      properties:
-                        firstName:
-                          type: 'string'
-                        lastName:
-                          type: 'string'
-                  votingMemberPercentage:
-                    type: 'number'
                   officeResults:
                     type: 'array'
                     items:

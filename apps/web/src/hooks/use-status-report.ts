@@ -1,12 +1,6 @@
 import useSWR from 'swr';
 
 export type StatusReport = {
-  startDate: {
-    startDate: string;
-  };
-  endDate: {
-    endData: string;
-  };
   totalVotes: number;
   votingMembers: {
     firstName: string;

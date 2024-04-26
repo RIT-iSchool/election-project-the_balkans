@@ -1,22 +1,6 @@
 import useSWR from 'swr';
 
 export type ResultsReport = {
-  startDate: {
-    startDate: string;
-  };
-  endDate: {
-    endData: string;
-  };
-  totalVotes: number;
-  votingMembers: {
-    firstName: string;
-    lastName: string;
-  }[];
-  nonVotingMembers: {
-    firstName: string;
-    lastName: string;
-  }[];
-  votingMemberPercentage: number;
   officeResults: {
     election: {
       id: number;

@@ -137,64 +137,51 @@ export type Status = {
  */
 export const statusReport = async ({ electionId }: Status) => {
   try {
-    const [[startDate], [endDate], [totalVotes], votingMembers, members] =
-      await Promise.all([
-        db
-          .select({
-            startDate: election.startDate,
-          })
-          .from(election)
-          .where(eq(election.id, electionId)),
-        db
-          .select({
-            endData: election.endDate,
-          })
-          .from(election)
-          .where(eq(election.id, electionId)),
-        db
-          .select({ count: count() })
-          .from(candidateVote)
-          .innerJoin(
-            electionCandidate,
-            eq(electionCandidate.id, candidateVote.electionCandidateId),
-          )
-          .innerJoin(
-            electionOffice,
-            eq(electionOffice.id, electionCandidate.electionOfficeId),
-          )
-          .where(eq(electionOffice.electionId, electionId)),
-        db
-          .selectDistinctOn([user.id], {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-          })
-          .from(user)
-          .innerJoin(societyMember, eq(societyMember.userId, user.id))
-          .innerJoin(society, eq(society.id, societyMember.societyId))
-          .innerJoin(election, eq(election.societyId, society.id))
-          .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
-          .innerJoin(
-            electionCandidate,
-            eq(electionCandidate.electionOfficeId, electionOffice.id),
-          )
-          .innerJoin(
-            candidateVote,
-            eq(candidateVote.electionCandidateId, electionCandidate.id),
-          )
-          .where(eq(election.id, electionId)),
-        db
-          .selectDistinctOn([user.id], {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-          })
-          .from(user)
-          .innerJoin(societyMember, eq(societyMember.userId, user.id))
-          .innerJoin(society, eq(society.id, societyMember.societyId))
-          .innerJoin(election, eq(election.societyId, society.id))
-          .where(eq(election.id, electionId)),
-      ]);
+    const [[totalVotes], votingMembers, members] = await Promise.all([
+      db
+        .select({ count: count() })
+        .from(candidateVote)
+        .innerJoin(
+          electionCandidate,
+          eq(electionCandidate.id, candidateVote.electionCandidateId),
+        )
+        .innerJoin(
+          electionOffice,
+          eq(electionOffice.id, electionCandidate.electionOfficeId),
+        )
+        .where(eq(electionOffice.electionId, electionId)),
+      db
+        .selectDistinctOn([user.id], {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+        .from(user)
+        .innerJoin(societyMember, eq(societyMember.userId, user.id))
+        .innerJoin(society, eq(society.id, societyMember.societyId))
+        .innerJoin(election, eq(election.societyId, society.id))
+        .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
+        .innerJoin(
+          electionCandidate,
+          eq(electionCandidate.electionOfficeId, electionOffice.id),
+        )
+        .innerJoin(
+          candidateVote,
+          eq(candidateVote.electionCandidateId, electionCandidate.id),
+        )
+        .where(eq(election.id, electionId)),
+      db
+        .selectDistinctOn([user.id], {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        })
+        .from(user)
+        .innerJoin(societyMember, eq(societyMember.userId, user.id))
+        .innerJoin(society, eq(society.id, societyMember.societyId))
+        .innerJoin(election, eq(election.societyId, society.id))
+        .where(eq(election.id, electionId)),
+    ]);
 
     const nonVotingMembers = members.filter(
       (member) =>
@@ -211,8 +198,6 @@ export const statusReport = async ({ electionId }: Status) => {
       ) * 100;
 
     return {
-      startDate: startDate!,
-      endDate: endDate!,
       totalVotes: totalVotes?.count || 0,
       votingMembers,
       nonVotingMembers,
@@ -232,8 +217,6 @@ export type Results = {
  */
 export const resultsReport = async ({ electionId }: Results) => {
   try {
-    const statusData = await statusReport({ electionId });
-
     const officeQuery = db
       .select({
         election: getTableColumns(election),
@@ -281,7 +264,6 @@ export const resultsReport = async ({ electionId }: Results) => {
     ]);
 
     return {
-      ...statusData,
       officeResults,
       initiativeResults,
     };
