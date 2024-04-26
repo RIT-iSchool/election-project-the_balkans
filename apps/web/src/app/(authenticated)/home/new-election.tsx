@@ -92,21 +92,25 @@ export const NewElection = () => {
               )}
             </div>
 
-            <div className="bg-gray-a3 text-gray-8 border-gray-a5 hover:bg-gray-a4 flex size-20 items-center justify-center rounded border">
-              {!fileName && (
-                <FileUploader type="election" onUploadComplete={setFileName}>
-                  <Document32 />
-                </FileUploader>
-              )}
-              {fileName && (
-                <img
-                  src={`/ajax/uploads/election/${fileName}`}
-                  className="size-full object-cover"
-                />
-              )}
+            <div>
+              <div className="flex flex-1 flex-col">
+                <label className="text-sm font-medium">Photo</label>
+              </div>
+              <div className="bg-gray-a3 text-gray-8 border-gray-a5 hover:bg-gray-a4 flex size-20 items-center justify-center rounded border">
+                {!fileName && (
+                  <FileUploader type="election" onUploadComplete={setFileName}>
+                    <Document32 />
+                  </FileUploader>
+                )}
+                {fileName && (
+                  <img
+                    src={`/ajax/uploads/election/${fileName}`}
+                    className="size-full object-cover"
+                  />
+                )}
+              </div>
             </div>
           </div>
-
           <div className="flex flex-row">
             <div className="flex w-1/2 flex-col">
               <label className="text-sm font-medium">Start date</label>
