@@ -191,11 +191,9 @@ export const statusReport = async ({ electionId }: Status) => {
     const totalMembers =
       (votingMembers?.length ?? 0) + (nonVotingMembers?.length ?? 0);
 
-    const votingMemberPercentage =
-      Math.ceil(
-        ((nonVotingMembers?.length ?? 0) - (votingMembers?.length ?? 0)) /
-          totalMembers,
-      ) * 100;
+    const votingMemberPercentage = Math.ceil(
+      ((votingMembers?.length ?? 0) / totalMembers) * 100,
+    );
 
     return {
       totalVotes: totalVotes?.count || 0,

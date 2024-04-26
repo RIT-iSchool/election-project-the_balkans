@@ -3,7 +3,6 @@ import { Ballot, useBallot } from '@/hooks/use-ballot';
 import { useElection } from '@/hooks/use-election';
 import { PageTitle } from '@/components/shared/page-title';
 import {
-  Button,
   Text,
   Card,
   Inset,
@@ -22,22 +21,18 @@ import {
   TableRow,
 } from '@/components/shared/table';
 import dayjs from 'dayjs';
-import {
-  Pencil16,
-  Plus16,
-  ThreeDotsHorizontal20,
-  Trash16,
-} from '@frosted-ui/icons';
+import { Pencil16, ThreeDotsHorizontal20, Trash16 } from '@frosted-ui/icons';
 import { NewOffice } from './new-office';
 import { useCallback, useState } from 'react';
 import { DeleteOffice } from './delete-office';
 import { EditOffice } from './edit-office';
 import { NewCandidate } from './new-candidate';
-import { EditCandidate } from './update-candidate';
+import { EditCandidate } from './edit-candidate';
 import { DeleteCandidate } from './delete-candidate';
-import { EditInitiative } from './update-initiative';
+import { EditInitiative } from './edit-initiative';
 import { DeleteInitiative } from './delete-initiative';
 import { NewInitiative } from './new-initiative';
+import { useStatusReport } from '@/hooks/use-status-report';
 
 type PageProps = {
   params: {
@@ -222,6 +217,7 @@ const InitiativeRow = ({
 export default function Page({ params }: PageProps) {
   const { data: election } = useElection(params);
   const { data: ballot } = useBallot(params);
+  const { data: status } = useStatusReport(params);
 
   if (!election) return null;
 
@@ -231,6 +227,10 @@ export default function Page({ params }: PageProps) {
     <div className="flex min-h-screen flex-col gap-5 pt-6">
       <div className="flex justify-between space-y-5 px-6">
         <PageTitle title={election.name} description={description} />
+      </div>
+
+      <div>
+        <pre>{JSON.stringify(status, null, 2)}</pre>
       </div>
 
       <div className="w-screen space-y-4 overflow-auto px-6 pb-6 md:w-full">
