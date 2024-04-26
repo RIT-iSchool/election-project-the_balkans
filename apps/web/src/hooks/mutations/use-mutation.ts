@@ -40,6 +40,6 @@ export const useMutation = <T extends (...args: any) => Promise<any>>({
 
   return {
     mutateAsync: callback,
-    isLoading: isLoading,
+    isLoading,
   };
 };

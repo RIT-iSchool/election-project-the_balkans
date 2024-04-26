@@ -53,7 +53,6 @@ export const NewElection = () => {
       endDate: yup.date().required('Please enter an end date'),
     }),
     validateOnChange: false,
-    validateOnBlur: false,
     isInitialValid: false,
   });
 
@@ -87,7 +86,9 @@ export const NewElection = () => {
                 />
               </TextFieldRoot>
               {errors.name && (
-                <div className="text-sm text-red-500">{errors.name}</div>
+                <Text color="red" size="2" className="mt-0.5">
+                  {errors.name}
+                </Text>
               )}
             </div>
 
