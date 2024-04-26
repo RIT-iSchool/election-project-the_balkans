@@ -1,28 +1,7 @@
 'use client';
 import { PageTitle } from '@/components/shared/page-title';
+import { StatsCard } from '@/components/shared/stats-card';
 import { useSystemReport } from '@/hooks/use-system-report';
-import { Card, Flex, Text } from 'frosted-ui';
-
-type StatsCardProps = {
-  label: string;
-  count?: number | string;
-  unit?: string;
-};
-
-const StatsCard = ({ label, count, unit }: StatsCardProps) => {
-  return (
-    <Card>
-      <Flex direction="column">
-        <Text size="2" weight="medium" color="gray">
-          {label}
-        </Text>
-        <Text size="6" weight="medium">
-          {count} {unit}
-        </Text>
-      </Flex>
-    </Card>
-  );
-};
 
 export default function Page() {
   const { data: systemReport } = useSystemReport();

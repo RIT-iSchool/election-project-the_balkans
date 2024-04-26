@@ -33,6 +33,7 @@ import { EditInitiative } from './edit-initiative';
 import { DeleteInitiative } from './delete-initiative';
 import { NewInitiative } from './new-initiative';
 import { useStatusReport } from '@/hooks/use-status-report';
+import { StatsCard } from '@/components/shared/stats-card';
 
 type PageProps = {
   params: {
@@ -229,8 +230,24 @@ export default function Page({ params }: PageProps) {
         <PageTitle title={election.name} description={description} />
       </div>
 
-      <div>
-        <pre>{JSON.stringify(status, null, 2)}</pre>
+      <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+        <StatsCard label="Total Votes" count={status?.totalVotes} />
+
+        <StatsCard
+          label="Voting Member Percentage"
+          count={status?.votingMemberPercentage}
+          unit="%"
+        />
+
+        <StatsCard
+          label="Voting Members"
+          count={status?.votingMembers.length}
+        />
+
+        <StatsCard
+          label="Non-Voting Members"
+          count={status?.nonVotingMembers.length}
+        />
       </div>
 
       <div className="w-screen space-y-4 overflow-auto px-6 pb-6 md:w-full">
