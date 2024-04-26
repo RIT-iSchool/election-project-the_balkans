@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid';
  */
 export const create = async (userCreateParams: User.Create) => {
   const newUser = await User.create(userCreateParams);
+  if (newUser.admin) throw new Error('Admin users cannot be created');
   return newUser;
 };
 
