@@ -1764,22 +1764,6 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "startDate": {
-                      "type": "object",
-                      "properties": {
-                        "startDate": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "endDate": {
-                      "type": "object",
-                      "properties": {
-                        "endData": {
-                          "type": "string"
-                        }
-                      }
-                    },
                     "totalVotes": {
                       "type": "integer"
                     },
@@ -1847,56 +1831,6 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "startDate": {
-                      "type": "object",
-                      "properties": {
-                        "startDate": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "endDate": {
-                      "type": "object",
-                      "properties": {
-                        "endData": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "totalVotes": {
-                      "type": "integer"
-                    },
-                    "votingMembers": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "firstName": {
-                            "type": "string"
-                          },
-                          "lastName": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "nonVotingMembers": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "firstName": {
-                            "type": "string"
-                          },
-                          "lastName": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "votingMemberPercentage": {
-                      "type": "number"
-                    },
                     "officeResults": {
                       "type": "array",
                       "items": {
@@ -2375,34 +2309,34 @@
       "OfficeResult": {
         "type": "object",
         "properties": {
-          "election": {
-            "$ref": "#/components/schemas/Election"
+          "candidate": {
+            "nullable": false,
+            "type": "string"
           },
-          "electionOffice": {
-            "$ref": "#/components/schemas/ElectionOffice"
+          "office": {
+            "nullable": false,
+            "type": "string"
           },
-          "electionCandidate": {
-            "$ref": "#/components/schemas/ElectionCandidate"
-          },
-          "candidateVote": {
-            "$ref": "#/components/schemas/CandidateVote"
+          "voteCount": {
+            "nullable": false,
+            "type": "integer"
           }
         }
       },
       "InitiativeResult": {
         "type": "object",
         "properties": {
-          "election": {
-            "$ref": "#/components/schemas/Election"
+          "title": {
+            "nullable": false,
+            "type": "string"
           },
-          "electionInitiative": {
-            "$ref": "#/components/schemas/ElectionInitiative"
+          "initiative": {
+            "nullable": false,
+            "type": "string"
           },
-          "initiativeOption": {
-            "$ref": "#/components/schemas/InitiativeOption"
-          },
-          "initiativeVote": {
-            "$ref": "#/components/schemas/InitiativeVote"
+          "voteCount": {
+            "nullable": false,
+            "type": "integer"
           }
         }
       },

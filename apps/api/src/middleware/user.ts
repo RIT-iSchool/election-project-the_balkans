@@ -47,11 +47,13 @@ export const user = () => {
         );
 
       // Assign the user and society to the request object
+      const userRole = userData.admin ? 'admin' : societyMemberData!.role;
+
+      // Assign the user and society to the request object
       req.user = userData;
 
-      if (societyMemberData) {
-        req.role = societyMemberData.role;
-      }
+      // Assign the user's role to the request object
+      req.role = userRole;
 
       next();
     } catch (err) {
