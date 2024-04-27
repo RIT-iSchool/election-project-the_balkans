@@ -6,6 +6,7 @@ type UserData = {
   password: string;
   firstName: string;
   lastName: string;
+  id?: number | undefined;
 };
 
 const createUser = async (userData: UserData) => {

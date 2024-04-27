@@ -12,7 +12,6 @@ import {
 import { useUsers } from '@/hooks/use-users';
 import { Pagination } from '@/components/shared/pagination';
 import { useSearchParams } from 'next/navigation';
-import { NewUser } from './new-user';
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -27,8 +26,6 @@ export default function Page() {
           title="Users"
           description="Manage all users from one place."
         />
-
-        <NewUser />
       </div>
 
       <div className="w-screen overflow-auto md:w-full">

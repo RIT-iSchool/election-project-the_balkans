@@ -23,6 +23,7 @@ import {
 } from '@/components/shared/table';
 import { useMemo } from 'react';
 import { useSocietyReport } from '@/hooks/use-society-report';
+import { NewUser } from './new-user';
 
 type PageProps = {
   params: {
@@ -63,7 +64,7 @@ export default function Page({ params }: PageProps) {
         <Text size="5" weight="medium">
           Society Members
         </Text>
-        2
+        <NewUser />
         <Card className="inset-0">
           <Inset>
             <Table>

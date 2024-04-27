@@ -20,11 +20,10 @@ const ClientProviders = ({ children }: PropsWithChildren) => {
   // Set the society ID on first page load
   useEffect(() => {
     if (isLoading || !user) return;
-    if (!user.societies.length) return;
+    // if (!user.societies.length) return; adding election works after commenting this line
 
     const societyId =
-      localStorage.getItem('society_id') ||
-      user.societies[0].society.id.toString();
+      localStorage.getItem('society_id') || user.societies[0].id.toString(); // removed .society after [0]
 
     axios.defaults.headers.common['x-society-id'] = societyId;
     localStorage.setItem('society_id', societyId);
