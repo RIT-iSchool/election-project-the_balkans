@@ -36,6 +36,7 @@ import { useStatusReport } from '@/hooks/use-status-report';
 import { StatsCard } from '@/components/shared/stats-card';
 import { EditOption } from './edit-option';
 import { DeleteOption } from './delete-option';
+import { useResultsReport } from '@/hooks/use-results-report';
 
 type PageProps = {
   params: {
@@ -280,6 +281,7 @@ export default function Page({ params }: PageProps) {
   const { data: election } = useElection(params);
   const { data: ballot } = useBallot(params);
   const { data: status } = useStatusReport(params);
+  const { data: results } = useResultsReport(params);
 
   if (!election) return null;
 
@@ -470,6 +472,75 @@ export default function Page({ params }: PageProps) {
                         <Text color="gray">
                           {member.firstName} {member.lastName}
                         </Text>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Inset>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+          <Card>
+            <Inset pb="0" side="top">
+              <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                <Text size="4" weight="medium">
+                  Office Results
+                </Text>
+              </div>
+            </Inset>
+            <Inset clip="border-box" side="bottom">
+              <Table>
+                <TableHeader className="bg-white">
+                  <TableHead className="!border-t-0">Name</TableHead>
+                  <TableHead className="!border-t-0">Office</TableHead>
+                  <TableHead className="!border-t-0">Votes</TableHead>
+                </TableHeader>
+                <TableBody>
+                  {results?.officeResults.map((oR, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell>
+                        <Text color="gray">{oR.candidate.name}</Text>
+                      </TableCell>
+                      <TableCell>
+                        <Text color="gray">{oR.candidate.office}</Text>
+                      </TableCell>
+                      <TableCell>
+                        <Text color="gray">{oR.candidate.voteCount}</Text>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Inset>
+          </Card>
+          <Card>
+            <Inset pb="0" side="top">
+              <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                <Text size="4" weight="medium">
+                  Initiative Results
+                </Text>
+              </div>
+            </Inset>
+            <Inset clip="border-box" side="bottom">
+              <Table>
+                <TableHeader className="bg-white">
+                  <TableHead className="!border-t-0">Title</TableHead>
+                  <TableHead className="!border-t-0">Initiative</TableHead>
+                  <TableHead className="!border-t-0">Vote Count</TableHead>
+                </TableHeader>
+                <TableBody>
+                  {results?.initiativeResults.map((iR, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell>
+                        <Text color="gray">{iR.option.title}</Text>
+                      </TableCell>
+                      <TableCell>
+                        <Text color="gray">{iR.option.initiative}</Text>
+                      </TableCell>
+                      <TableCell>
+                        <Text color="gray">{iR.option.voteCount}</Text>
                       </TableCell>
                     </TableRow>
                   ))}

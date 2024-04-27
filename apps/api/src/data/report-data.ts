@@ -8,7 +8,7 @@ import {
   eq,
   lt,
   or,
-  getTableColumns,
+  desc,
 } from 'drizzle-orm';
 import { db } from '../db';
 import {
@@ -217,10 +217,11 @@ export const resultsReport = async ({ electionId }: Results) => {
   try {
     const officeQuery = db
       .select({
-        election: getTableColumns(election),
-        electionOffice: getTableColumns(electionOffice),
-        electionCandidate: getTableColumns(electionCandidate),
-        candidateVote: getTableColumns(candidateVote),
+        candidate: {
+          name: electionCandidate.name,
+          office: electionOffice.officeName,
+          voteCount: count(candidateVote.electionCandidateId),
+        },
       })
       .from(election)
       .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
@@ -232,14 +233,17 @@ export const resultsReport = async ({ electionId }: Results) => {
         candidateVote,
         eq(candidateVote.electionCandidateId, electionCandidate.id),
       )
-      .where(eq(election.id, electionId));
+      .where(eq(election.id, electionId))
+      .groupBy(electionCandidate.name, electionOffice.officeName)
+      .orderBy(desc(count(candidateVote.electionCandidateId)));
 
     const intiativeQuery = db
       .select({
-        election: getTableColumns(election),
-        electionInitiative: getTableColumns(electionInitiative),
-        initiativeOption: getTableColumns(initiativeOption),
-        initiativeVote: getTableColumns(initiativeVote),
+        option: {
+          title: initiativeOption.title,
+          initiative: electionInitiative.initiativeName,
+          voteCount: count(initiativeVote.electionInitiativeOptionId),
+        },
       })
       .from(election)
       .innerJoin(
@@ -254,7 +258,9 @@ export const resultsReport = async ({ electionId }: Results) => {
         initiativeVote,
         eq(initiativeVote.electionInitiativeId, initiativeOption.id),
       )
-      .where(eq(election.id, electionId));
+      .where(eq(election.id, electionId))
+      .groupBy(initiativeOption.title, electionInitiative.initiativeName)
+      .orderBy(desc(count(initiativeVote.electionInitiativeOptionId)));
 
     const [officeResults, initiativeResults] = await Promise.all([
       officeQuery,
@@ -266,6 +272,7 @@ export const resultsReport = async ({ electionId }: Results) => {
       initiativeResults,
     };
   } catch (err) {
+    console.error(err);
     throw new Error('Something went wrong with the report.');
   }
 };

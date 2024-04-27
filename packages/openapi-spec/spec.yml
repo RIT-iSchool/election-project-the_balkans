@@ -1451,25 +1451,27 @@ components:
     OfficeResult:
       type: 'object'
       properties:
-        election:
-          $ref: '#/components/schemas/Election'
-        electionOffice:
-          $ref: '#/components/schemas/ElectionOffice'
-        electionCandidate:
-          $ref: '#/components/schemas/ElectionCandidate'
-        candidateVote:
-          $ref: '#/components/schemas/CandidateVote'
+        candidate:
+          nullable: false
+          type: 'string'
+        office:
+          nullable: false
+          type: 'string'
+        voteCount:
+          nullable: false
+          type: 'integer'
     InitiativeResult:
       type: 'object'
       properties:
-        election:
-          $ref: '#/components/schemas/Election'
-        electionInitiative:
-          $ref: '#/components/schemas/ElectionInitiative'
-        initiativeOption:
-          $ref: '#/components/schemas/InitiativeOption'
-        initiativeVote:
-          $ref: '#/components/schemas/InitiativeVote'
+        title:
+          nullable: false
+          type: 'string'
+        initiative:
+          nullable: false
+          type: 'string'
+        voteCount:
+          nullable: false
+          type: 'integer'
 
     # Request bodies
     CreateLoginBody:
