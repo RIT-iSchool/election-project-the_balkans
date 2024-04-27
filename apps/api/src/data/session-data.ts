@@ -6,14 +6,14 @@ import {
   user,
 } from '../db/schema';
 import { db } from '../db';
-import { eq, getTableColumns } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 export type Create = CreateSession;
 
 /**
  * Creates a new entry in the session table.
  */
-export const create = async ({ ...sessionData }: CreateSession) => {
+export const create = async (sessionData: CreateSession) => {
   try {
     const [newSession] = await db.transaction(
       async (dbClient) =>
@@ -27,16 +27,26 @@ export const create = async ({ ...sessionData }: CreateSession) => {
 
 export type Retrieve = {
   sessionToken: string;
+  societyId: number;
   userId: number;
 };
 
 /**
  * Retrieves a session by ID.
  */
-export const retrieve = async ({ sessionToken, userId }: Retrieve) => {
+export const retrieve = async ({
+  sessionToken,
+  societyId,
+  userId,
+}: Retrieve) => {
   try {
     const [sessionData] = await db
-      .select({ ...getTableColumns(user) })
+      .select({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        admin: user.admin,
+      })
       .from(session)
       .innerJoin(user, eq(session.userId, user.id))
       .where(eq(session.token, sessionToken));
@@ -44,12 +54,20 @@ export const retrieve = async ({ sessionToken, userId }: Retrieve) => {
     if (!sessionData) throw new Error('Session not found');
 
     const societies = await db
-      .select({ society: getTableColumns(society) })
+      .select({ id: society.id, name: society.name })
       .from(societyMember)
       .leftJoin(society, eq(society.id, societyMember.societyId))
       .where(eq(societyMember.userId, userId));
 
-    return { ...sessionData, societies };
+    const [currentSociety] = await db
+      .select({
+        id: society.id,
+        name: society.name,
+      })
+      .from(society)
+      .where(eq(society.id, societyId));
+
+    return { ...sessionData, societies, society: currentSociety };
   } catch (err) {
     throw new Error('Something went wrong retrieving a session.');
   }

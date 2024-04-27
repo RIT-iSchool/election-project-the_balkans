@@ -79,7 +79,7 @@ export const auth = (permission?: Permission) => {
       const userRole = userData.admin ? 'admin' : societyMemberData!.role;
 
       // If the user's permissions do not include the specified permission, throw an error.
-      if (!permissions[userRole].includes(permission!)) {
+      if (permission && !permissions[userRole].includes(permission)) {
         throw new UnauthorizedError(
           `Role is not able to access this resource. Role ${userRole} does not have permission ${permission}`,
         );

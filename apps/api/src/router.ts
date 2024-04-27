@@ -12,15 +12,14 @@ import * as society from './services/society-service';
 import * as report from './services/report-service';
 import * as file from './services/file-service';
 import { auth } from './middleware/auth';
-import { user } from './middleware/user';
 import { upload } from './middleware/upload';
 
 const router = Router();
 
 // Auth
 router.post('/auth/login', userService.login);
-router.post('/auth/logout', user(), session.remove);
-router.get('/auth/session', user(), session.retrieve);
+router.post('/auth/logout', session.remove);
+router.get('/auth/session', auth(), session.retrieve);
 
 // Uploads
 router.post('/uploads/:type(election|candidate)', upload.single('photo'), file.create);

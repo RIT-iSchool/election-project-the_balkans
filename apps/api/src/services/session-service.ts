@@ -1,13 +1,20 @@
 import { Handler } from 'express';
 import * as session from '../controllers/session-controller';
 import { UnauthorizedError } from '../errors/UnauthorizedError';
+import { BadRequestError } from '../errors/BadRequestError';
 
 export const retrieve: Handler = async (req, res, next) => {
   try {
-    if (!req.user) throw new UnauthorizedError('Unauthorized');
+    if (!req.user) {
+      throw new UnauthorizedError('Unauthorized');
+    }
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
 
     const sessionData = await session.retrieve({
       sessionToken: req.cookies.session,
+      societyId: req.society.id,
       userId: req.user.id,
     });
 

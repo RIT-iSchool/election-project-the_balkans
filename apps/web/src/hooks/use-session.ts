@@ -3,17 +3,17 @@ import useSWR from 'swr';
 export type User = {
   id: number;
   email: string;
-  password: string;
   firstName: string;
   lastName: string;
   admin: boolean;
   societies: {
-    society: {
-      id: number;
-      name: string;
-      ownerId: number;
-    };
+    id: number;
+    name: string;
   }[];
+  society: {
+    id: number;
+    name: string;
+  };
   role: 'admin' | 'member' | 'officer' | 'employee';
 };
 

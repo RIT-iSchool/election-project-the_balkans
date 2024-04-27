@@ -2,7 +2,7 @@
 import { SearchIcon } from '@/components/icons/search';
 import { PageTitle } from '@/components/shared/page-title';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useSocieties } from '@/hooks/use-societies';
+import { useSocieties, type Society } from '@/hooks/use-societies';
 import {
   TextFieldInput,
   TextFieldRoot,
@@ -11,7 +11,7 @@ import {
   Text,
 } from 'frosted-ui';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   Table,
   TableHeader,
@@ -23,7 +23,33 @@ import {
 import { Pagination } from '@/components/shared/pagination';
 import { Empty } from '@/components/shared/empty';
 import { Sad32 } from '@frosted-ui/icons';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+const SocietyRow = ({ society }: { society: Society }) => {
+  const router = useRouter();
+
+  const handleInvestigate = useCallback(() => {
+    localStorage.setItem('society_id', society.id.toString());
+    router.push('/home');
+  }, []);
+
+  return (
+    <TableRow>
+      <TableCell>
+        <Text weight="bold">{society.id}</Text>
+      </TableCell>
+      <TableCell>
+        <Text color="gray">{society.name}</Text>
+      </TableCell>
+      <TableCell className="flex h-full w-full gap-x-2">
+        <Button onClick={handleInvestigate}>Investigate Society</Button>
+        <Link href={`/admin/societies/${society.id}`}>
+          <Button>Manage Society</Button>
+        </Link>
+      </TableCell>
+    </TableRow>
+  );
+};
 
 export default function Page() {
   const [query, setQuery] = useState('');
@@ -80,22 +106,7 @@ export default function Page() {
                 <TableHead />
               </TableHeader>
               <TableBody>
-                {societies?.map((s) => (
-                  <TableRow key={s.id}>
-                    <TableCell>
-                      <Text weight="bold">{s.id}</Text>
-                    </TableCell>
-                    <TableCell>
-                      <Text color="gray">{s.name}</Text>
-                    </TableCell>
-                    <TableCell className="flex h-full w-full gap-x-2">
-                      <Button>Investigate Society</Button>
-                      <Link href={`/admin/societies/${s.id}`}>
-                        <Button>Manage Society</Button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {societies?.map((s) => <SocietyRow key={s.id} society={s} />)}
               </TableBody>
             </Table>
 
