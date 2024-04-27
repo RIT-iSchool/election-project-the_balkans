@@ -51,7 +51,7 @@ app.get('/', (_req, res) =>
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html')),
 );
 
-app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof AuthenticationError || err instanceof BadRequestError) {
     return res.status(400).json({
       error: true,
@@ -68,8 +68,10 @@ app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
 
   // If we reach this statement, it means the application has an unhandled error. It should be logged.
   console.error(err);
-
-  next();
+  return res.status(400).json({
+    error: true,
+    message: err.message,
+  });
 });
 
 // Listen for requests
