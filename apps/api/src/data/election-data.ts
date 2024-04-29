@@ -18,6 +18,7 @@ export const create = async ({ electionData }: Create) => {
     );
     return newElection!;
   } catch (err) {
+    console.log(err);
     throw new Error('Something went wrong creating an election');
   }
 };
