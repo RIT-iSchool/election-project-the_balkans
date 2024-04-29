@@ -1,6 +1,6 @@
 import { CreateSocietyMember, societyMember, user } from '../db/schema';
 import { db } from '../db';
-import { eq, and, getTableColumns } from 'drizzle-orm';
+import { eq, getTableColumns } from 'drizzle-orm';
 
 export type Create = {
   societyMemberData: CreateSocietyMember;

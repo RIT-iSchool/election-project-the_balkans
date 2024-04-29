@@ -99,7 +99,7 @@ export const login: Handler = async (req, res, next) => {
       maxAge: Date.now() + 1000 * 60 * 60 * 24 * 7 /* 1 week */,
     });
 
-    res.sendStatus(204);
+    res.json(loginUser);
   } catch (err) {
     next(err);
   }
