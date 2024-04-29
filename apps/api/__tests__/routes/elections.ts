@@ -27,7 +27,7 @@ describe('GET /v1/elections', () => {
           startDate: expect.any(String),
           endDate: expect.any(String),
           societyId: expect.any(Number),
-          photoURL: null,
+          photoUrl: null,
         }),
       ]),
     );
@@ -64,7 +64,7 @@ describe('POST /v1/elections', () => {
       societyId: expect.any(Number),
       startDate: expect.any(String),
       endDate: expect.any(String),
-      photoURL: null,
+      photoUrl: null,
     });
   });
 
@@ -112,12 +112,12 @@ describe('PUT /v1/elections/:election_id', () => {
     } else {
       expect(response.body).toEqual(
         expect.objectContaining({
+          endDate: expect.any(String),
           id: 2002,
           name: expect.any(String),
-          startDate: expect.any(String),
-          endDate: expect.any(String),
+          photoUrl: null,
           societyId: expect.any(Number),
-          photoURL: null,
+          startDate: expect.any(String),
         }),
       );
     }
@@ -148,7 +148,7 @@ describe('GET /v1/elections/:election_id', () => {
         startDate: expect.any(String),
         endDate: expect.any(String),
         societyId: expect.any(Number),
-        photoURL: null,
+        photoUrl: null,
       }),
     );
   });

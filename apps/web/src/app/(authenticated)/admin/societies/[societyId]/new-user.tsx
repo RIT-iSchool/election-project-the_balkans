@@ -1,4 +1,7 @@
-import { useCreateSocietyMember } from '@/hooks/mutations/use-create-society-member';
+import {
+  useCreateSocietyMember,
+  type SocietyMemberData,
+} from '@/hooks/mutations/use-create-society-member';
 import { useCreateUser } from '@/hooks/mutations/use-create-user';
 import { useDebounce } from '@/hooks/use-debounce';
 import { Plus16 } from '@frosted-ui/icons';
@@ -17,6 +20,7 @@ import {
 } from 'frosted-ui';
 import { useEffect, useState } from 'react';
 import * as yup from 'yup';
+
 const initialValues = {
   email: '',
   password: '',
@@ -26,32 +30,48 @@ const initialValues = {
   role: '',
 };
 export const NewUser = () => {
-  const { mutateAsync: createUser, isLoading } = useCreateUser({
+  const societyId = parseInt(localStorage.getItem('society_id') || '');
+  // const [dialogOpen, setDialogOpen] = useState(false); // Manage dialog state
+
+  const { mutateAsync: createUser, isLoading: isLoadingUser } = useCreateUser({
     onSuccess: (data) => {
       const userId = (data as { id: number }).id;
+      console.log('before socmember', values.role);
+      createSocietyMember({
+        societyId: societyId,
+        userId: userId,
+        role: values.role as SocietyMemberData['role'],
+      });
     },
   });
 
-  const { getFieldProps, submitForm, errors, isValid } = useFormik({
-    initialValues: initialValues,
-    onSubmit: async (values) => {
-      createUser({
-        email: values.email,
-        password: values.password,
-        firstName: values.firstName,
-        lastName: values.lastName,
-      });
-    },
-    validationSchema: yup.object().shape({
-      email: yup.string().required('Please enter a valid email'),
-      password: yup.string().required('Please enter a password'),
-      firstName: yup.string().required('Please enter first name'),
-      lastName: yup.string().required('Please enter last name'),
-    }),
-    validateOnChange: false,
-    isInitialValid: false,
-    validateOnBlur: false,
-  });
+  const { mutateAsync: createSocietyMember, isLoading } =
+    useCreateSocietyMember({
+      onSuccess: (data) => {},
+    });
+
+  const { getFieldProps, submitForm, errors, isValid, values, setFieldValue } =
+    useFormik({
+      initialValues: initialValues,
+      onSubmit: async (values) => {
+        createUser({
+          email: values.email,
+          password: values.password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+        });
+      },
+      validationSchema: yup.object().shape({
+        email: yup.string().required('Please enter a valid email'),
+        password: yup.string().required('Please enter a password'),
+        firstName: yup.string().required('Please enter first name'),
+        lastName: yup.string().required('Please enter last name'),
+        role: yup.string().required('Please pick Role'),
+      }),
+      validateOnChange: false,
+      validateOnBlur: false,
+    });
+
   return (
     <DialogRoot>
       <DialogTrigger>
@@ -130,10 +150,16 @@ export const NewUser = () => {
           )}
         </div>
         <div>
-          <label className="text-sm font-medium">Select Role</label>
+          <label className="text-sm font-medium" {...getFieldProps('role')}>
+            Select Role
+          </label>
           <select
             className="w-full rounded-md border border-gray-300 p-3"
             style={{ borderColor: 'rgba(209, 213, 219, 0.5)' }}
+            value={values.role} // Set the select value to the current role
+            onChange={(e) => {
+              setFieldValue('role', e.target.value);
+            }}
           >
             <option value=""></option>
             <option value="member">Member</option>

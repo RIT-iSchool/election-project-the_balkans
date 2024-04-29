@@ -32,6 +32,9 @@ const SocietyRow = ({ society }: { society: Society }) => {
     localStorage.setItem('society_id', society.id.toString());
     router.push('/home');
   }, []);
+  const handleManage = useCallback(() => {
+    localStorage.setItem('society_id', society.id.toString());
+  }, []);
 
   return (
     <TableRow>
@@ -44,7 +47,7 @@ const SocietyRow = ({ society }: { society: Society }) => {
       <TableCell className="flex h-full w-full gap-x-2">
         <Button onClick={handleInvestigate}>Investigate Society</Button>
         <Link href={`/admin/societies/${society.id}`}>
-          <Button>Manage Society</Button>
+          <Button onClick={handleManage}>Manage Society</Button>
         </Link>
       </TableCell>
     </TableRow>

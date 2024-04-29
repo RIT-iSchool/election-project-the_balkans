@@ -55,7 +55,10 @@ export default function Page({ params }: PageProps) {
 
   return (
     <div className="flex min-h-screen flex-col gap-5 p-8 py-6">
-      <PageTitle title={society.name} description="Placeholder." />
+      <div className="flex items-center justify-between">
+        <PageTitle title={society.name} description="Placeholder." />
+        <NewUser />
+      </div>
 
       <pre>{JSON.stringify(society, null, 2)}</pre>
       <pre>{JSON.stringify(societyReport, null, 2)}</pre>
@@ -64,7 +67,6 @@ export default function Page({ params }: PageProps) {
         <Text size="5" weight="medium">
           Society Members
         </Text>
-        <NewUser />
         <Card className="inset-0">
           <Inset>
             <Table>

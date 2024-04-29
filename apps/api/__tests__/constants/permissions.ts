@@ -42,9 +42,14 @@ describe('test officer permissions', () => {
 
     // Ballots
     Permissions.submit_ballot,
+    Permissions.retrieve_ballot,
 
     // Society Members
     Permissions.list_society_members,
+
+    //Report
+    Permissions.report_status,
+    Permissions.report_results,
   ];
 
   test('an officer has all the correct permissions', () => {
@@ -73,32 +78,43 @@ describe('test employee permissions', () => {
     Permissions.list_offices,
     Permissions.retrieve_office,
     Permissions.update_election,
+    Permissions.remove_office,
 
     // Candidates
     Permissions.create_candidate,
     Permissions.list_candidates,
     Permissions.retrieve_candidate,
     Permissions.update_candidate,
+    Permissions.remove_candidate,
 
     // Initiatives
     Permissions.create_initiative,
     Permissions.list_initiatives,
     Permissions.retrieve_initiative,
     Permissions.update_initiative,
+    Permissions.remove_initiative,
 
     // Initiative Options
     Permissions.list_initiative_options,
     Permissions.create_initiative_option,
     Permissions.retrieve_initiative_option,
     Permissions.update_initiative_option,
+    Permissions.remove_initiative_option,
 
     // Society Members
     Permissions.create_society_member,
     Permissions.list_society_members,
 
+    //Ballot
+    Permissions.retrieve_ballot,
+
     // Society
     Permissions.list_societies,
     Permissions.retrieve_society,
+
+    //Report
+    Permissions.report_status,
+    Permissions.report_results,
   ];
 
   test('an employee has all the correct permissions', () => {
@@ -150,6 +166,9 @@ describe('test admin permissions', () => {
     Permissions.create_society_member,
     Permissions.list_society_members,
 
+    //Ballot
+    Permissions.retrieve_ballot,
+
     // Society
     Permissions.list_societies,
     Permissions.retrieve_society,
@@ -157,6 +176,8 @@ describe('test admin permissions', () => {
     // Report
     Permissions.report_society,
     Permissions.report_system,
+    Permissions.report_status,
+    Permissions.report_results,
 
     // Users
     Permissions.create_user,

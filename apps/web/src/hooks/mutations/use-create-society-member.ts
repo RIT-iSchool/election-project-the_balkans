@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ProxiedUseMutationOptions, useMutation } from './use-mutation';
 
-type SocietyMemberData = {
+export type SocietyMemberData = {
   societyId: number;
   userId: number;
   role: 'member' | 'officer' | 'employee';
