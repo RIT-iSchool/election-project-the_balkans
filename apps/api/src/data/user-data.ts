@@ -130,6 +130,8 @@ export const login = async ({ email, password }: Login) => {
       throw new BadRequestError('Not a member of any societies');
     }
 
+    // Default admins to the first society since they can see everything. They might not necessarily
+    // belong to a society
     [societyData] = await db.select({ id: society.id }).from(society).limit(1);
 
     return {
