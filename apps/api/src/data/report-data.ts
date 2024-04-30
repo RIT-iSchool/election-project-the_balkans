@@ -8,7 +8,7 @@ import {
   eq,
   lt,
   or,
-  desc,
+  sql,
 } from 'drizzle-orm';
 import { db } from '../db';
 import {
@@ -20,9 +20,8 @@ import {
   electionCandidate,
   society,
   user,
-  electionInitiative,
-  initiativeOption,
-  initiativeVote,
+  officeResultsView,
+  initiativeResultsView,
 } from '../db/schema';
 import { calculate } from '../helpers/log-helper';
 
@@ -215,56 +214,26 @@ export type Results = {
  */
 export const resultsReport = async ({ electionId }: Results) => {
   try {
-    const officeQuery = db
-      .select({
-        candidate: {
-          name: electionCandidate.name,
-          office: electionOffice.officeName,
-          voteCount: count(candidateVote.electionCandidateId),
-        },
-      })
-      .from(election)
-      .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
-      .innerJoin(
-        electionCandidate,
-        eq(electionCandidate.electionOfficeId, electionOffice.id),
-      )
-      .innerJoin(
-        candidateVote,
-        eq(candidateVote.electionCandidateId, electionCandidate.id),
-      )
-      .where(eq(election.id, electionId))
-      .groupBy(electionCandidate.name, electionOffice.officeName)
-      .orderBy(desc(count(candidateVote.electionCandidateId)));
-
-    const intiativeQuery = db
-      .select({
-        option: {
-          title: initiativeOption.title,
-          initiative: electionInitiative.initiativeName,
-          voteCount: count(initiativeVote.electionInitiativeOptionId),
-        },
-      })
-      .from(election)
-      .innerJoin(
-        electionInitiative,
-        eq(electionInitiative.electionId, election.id),
-      )
-      .innerJoin(
-        initiativeOption,
-        eq(initiativeOption.electionInitiativeId, electionInitiative.id),
-      )
-      .innerJoin(
-        initiativeVote,
-        eq(initiativeVote.electionInitiativeId, initiativeOption.id),
-      )
-      .where(eq(election.id, electionId))
-      .groupBy(initiativeOption.title, electionInitiative.initiativeName)
-      .orderBy(desc(count(initiativeVote.electionInitiativeOptionId)));
+    await Promise.all([
+      db.refreshMaterializedView(officeResultsView),
+      db.refreshMaterializedView(initiativeResultsView),
+    ]);
 
     const [officeResults, initiativeResults] = await Promise.all([
-      officeQuery,
-      intiativeQuery,
+      db.execute<{
+        candidate: {
+          name: string;
+          office: string;
+          voteCount: number;
+        };
+      }>(sql`SELECT candidate from officeResultsFunction(${electionId})`),
+      db.execute<{
+        option: {
+          title: string;
+          initiative: string;
+          voteCount: number;
+        };
+      }>(sql`SELECT option from initiativeResultsFunction(${electionId})`),
     ]);
 
     return {

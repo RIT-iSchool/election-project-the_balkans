@@ -1,6 +1,11 @@
-import { relations } from 'drizzle-orm';
+import { count, desc, eq, relations } from 'drizzle-orm';
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
-import { boolean, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  pgMaterializedView,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 import { pgEnum } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
@@ -464,3 +469,59 @@ export const initiativeVoteRelations = relations(initiativeVote, ({ one }) => ({
 export type CreateInitiativeVote = InferInsertModel<typeof initiativeVote>;
 export type InitiativeVote = InferSelectModel<typeof initiativeVote>;
 export type UpdateInitiativeVote = Partial<CreateInitiativeVote>;
+
+export const officeResultsView = pgMaterializedView('officeResultsView').as(
+  (qb) =>
+    qb
+      .select({
+        candidate: {
+          name: electionCandidate.name,
+          office: electionOffice.officeName,
+          voteCount: count(candidateVote.electionCandidateId).as('voteCount'),
+        },
+        electionId: election.id,
+      })
+      .from(election)
+      .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
+      .innerJoin(
+        electionCandidate,
+        eq(electionCandidate.electionOfficeId, electionOffice.id),
+      )
+      .innerJoin(
+        candidateVote,
+        eq(candidateVote.electionCandidateId, electionCandidate.id),
+      )
+      .groupBy(electionCandidate.name, electionOffice.officeName)
+      .orderBy(desc(count(candidateVote.electionCandidateId))),
+);
+
+export const initiativeResultsView = pgMaterializedView(
+  'initiativeResultsView',
+).as((qb) =>
+  qb
+    .select({
+      option: {
+        title: initiativeOption.title,
+        initiative: electionInitiative.initiativeName,
+        voteCount: count(initiativeVote.electionInitiativeOptionId).as(
+          'voteCount',
+        ),
+      },
+      electionId: election.id,
+    })
+    .from(election)
+    .innerJoin(
+      electionInitiative,
+      eq(electionInitiative.electionId, election.id),
+    )
+    .innerJoin(
+      initiativeOption,
+      eq(initiativeOption.electionInitiativeId, electionInitiative.id),
+    )
+    .innerJoin(
+      initiativeVote,
+      eq(initiativeVote.electionInitiativeId, initiativeOption.id),
+    )
+    .groupBy(initiativeOption.title, electionInitiative.initiativeName)
+    .orderBy(desc(count(initiativeVote.electionInitiativeOptionId))),
+);
