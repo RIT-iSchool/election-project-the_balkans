@@ -1,6 +1,12 @@
-import { relations } from 'drizzle-orm';
+import { count, desc, eq, relations } from 'drizzle-orm';
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
-import { boolean, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  json,
+  pgMaterializedView,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 import { pgEnum } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
@@ -464,3 +470,32 @@ export const initiativeVoteRelations = relations(initiativeVote, ({ one }) => ({
 export type CreateInitiativeVote = InferInsertModel<typeof initiativeVote>;
 export type InitiativeVote = InferSelectModel<typeof initiativeVote>;
 export type UpdateInitiativeVote = Partial<CreateInitiativeVote>;
+
+export const officeResultsView = pgMaterializedView('officeResultsView', {
+  electionId: integer('electionId'),
+  candidate: json('candidate'),
+}).existing();
+
+export const initiativeResultsView = pgMaterializedView(
+  'initiativeResultsView',
+  {
+    electionId: integer('electionId'),
+    option: json('option'),
+  },
+).existing();
+
+export const loggedInUsersView = pgMaterializedView('loggedInUsersView', {
+  count: integer('count'),
+}).existing();
+
+export const activeElectionsView = pgMaterializedView('activeElectionsView', {
+  count: integer('count'),
+}).existing();
+
+export const activeBallotsView = pgMaterializedView('activeBallotsView', {
+  count: integer('count'),
+}).existing();
+
+export const inactiveBallotsView = pgMaterializedView('inactiveBallotsView', {
+  count: integer('count'),
+}).existing();

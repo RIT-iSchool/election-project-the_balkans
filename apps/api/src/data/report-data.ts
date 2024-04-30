@@ -1,18 +1,6 @@
-import {
-  countDistinct,
-  gt,
-  count,
-  and,
-  lte,
-  gte,
-  eq,
-  lt,
-  or,
-  desc,
-} from 'drizzle-orm';
+import { countDistinct, count, eq, sql } from 'drizzle-orm';
 import { db } from '../db';
 import {
-  session,
   election,
   candidateVote,
   societyMember,
@@ -20,9 +8,12 @@ import {
   electionCandidate,
   society,
   user,
-  electionInitiative,
-  initiativeOption,
-  initiativeVote,
+  officeResultsView,
+  initiativeResultsView,
+  activeElectionsView,
+  loggedInUsersView,
+  activeBallotsView,
+  inactiveBallotsView,
 } from '../db/schema';
 import { calculate } from '../helpers/log-helper';
 
@@ -35,34 +26,23 @@ export type Society = {
  */
 export const societyReport = async ({ societyId }: Society) => {
   try {
+    await Promise.all([
+      db.refreshMaterializedView(activeBallotsView),
+      db.refreshMaterializedView(inactiveBallotsView),
+    ]);
+
     const [
       [activeBallots],
       [inActiveBallots],
       [societyUsers],
       [votingMembers],
     ] = await Promise.all([
-      db
-        .select({ count: count() })
-        .from(election)
-        .where(
-          and(
-            eq(election.societyId, societyId),
-            lte(election.startDate, new Date().toString()),
-            gte(election.endDate, new Date().toString()),
-          ),
-        ),
-      db
-        .select({ count: count() })
-        .from(election)
-        .where(
-          and(
-            eq(election.societyId, societyId),
-            or(
-              gt(election.startDate, new Date().toString()),
-              lt(election.endDate, new Date().toString()),
-            ),
-          ),
-        ),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from activeBallotsFunction(${societyId})`),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from inactiveBallotsFunction(${societyId})`),
       db
         .select({ count: count() })
         .from(societyMember)
@@ -96,24 +76,22 @@ export const societyReport = async ({ societyId }: Society) => {
  */
 export const systemReport = async () => {
   try {
+    await Promise.all([
+      db.refreshMaterializedView(loggedInUsersView),
+      db.refreshMaterializedView(activeElectionsView),
+    ]);
+
     const [
       [loggedInUsers],
       [activeElections],
       { averageRequestTime, averageResponseTime },
     ] = await Promise.all([
-      db
-        .select({ count: countDistinct(session.userId) })
-        .from(session)
-        .where(gt(session.expiresAt, new Date())),
-      db
-        .select({ count: count() })
-        .from(election)
-        .where(
-          and(
-            lte(election.startDate, new Date().toString()),
-            gte(election.endDate, new Date().toString()),
-          ),
-        ),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from loggedInUsersFunction()`),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from activeElectionsFunction()`),
       calculate(),
     ]);
 
@@ -215,56 +193,26 @@ export type Results = {
  */
 export const resultsReport = async ({ electionId }: Results) => {
   try {
-    const officeQuery = db
-      .select({
+    await Promise.all([
+      db.refreshMaterializedView(officeResultsView),
+      db.refreshMaterializedView(initiativeResultsView),
+    ]);
+
+    const [[officeResults], [initiativeResults]] = await Promise.all([
+      db.execute<{
         candidate: {
-          name: electionCandidate.name,
-          office: electionOffice.officeName,
-          voteCount: count(candidateVote.electionCandidateId),
-        },
-      })
-      .from(election)
-      .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
-      .innerJoin(
-        electionCandidate,
-        eq(electionCandidate.electionOfficeId, electionOffice.id),
-      )
-      .innerJoin(
-        candidateVote,
-        eq(candidateVote.electionCandidateId, electionCandidate.id),
-      )
-      .where(eq(election.id, electionId))
-      .groupBy(electionCandidate.name, electionOffice.officeName)
-      .orderBy(desc(count(candidateVote.electionCandidateId)));
-
-    const intiativeQuery = db
-      .select({
+          name: string;
+          office: string;
+          voteCount: number;
+        };
+      }>(sql`SELECT candidate from officeResultsFunction(${electionId})`),
+      db.execute<{
         option: {
-          title: initiativeOption.title,
-          initiative: electionInitiative.initiativeName,
-          voteCount: count(initiativeVote.electionInitiativeOptionId),
-        },
-      })
-      .from(election)
-      .innerJoin(
-        electionInitiative,
-        eq(electionInitiative.electionId, election.id),
-      )
-      .innerJoin(
-        initiativeOption,
-        eq(initiativeOption.electionInitiativeId, electionInitiative.id),
-      )
-      .innerJoin(
-        initiativeVote,
-        eq(initiativeVote.electionInitiativeId, initiativeOption.id),
-      )
-      .where(eq(election.id, electionId))
-      .groupBy(initiativeOption.title, electionInitiative.initiativeName)
-      .orderBy(desc(count(initiativeVote.electionInitiativeOptionId)));
-
-    const [officeResults, initiativeResults] = await Promise.all([
-      officeQuery,
-      intiativeQuery,
+          title: string;
+          initiative: string;
+          voteCount: number;
+        };
+      }>(sql`SELECT option from initiativeResultsFunction(${electionId})`),
     ]);
 
     return {
