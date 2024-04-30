@@ -1,15 +1,4 @@
-import {
-  countDistinct,
-  gt,
-  count,
-  and,
-  lte,
-  gte,
-  eq,
-  lt,
-  or,
-  sql,
-} from 'drizzle-orm';
+import { countDistinct, count, eq, sql } from 'drizzle-orm';
 import { db } from '../db';
 import {
   election,
@@ -50,10 +39,10 @@ export const societyReport = async ({ societyId }: Society) => {
     ] = await Promise.all([
       db.execute<{
         count: number;
-      }>(sql`SELECT count from activeBallotsFunction()`),
+      }>(sql`SELECT count from activeBallotsFunction(${societyId})`),
       db.execute<{
         count: number;
-      }>(sql`SELECT count from inactiveBallotsFunction()`),
+      }>(sql`SELECT count from inactiveBallotsFunction(${societyId})`),
       db
         .select({ count: count() })
         .from(societyMember)
