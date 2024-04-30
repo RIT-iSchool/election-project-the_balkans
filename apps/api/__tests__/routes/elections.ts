@@ -93,12 +93,20 @@ describe('GET /v1/elections', () => {
       .set('x-society-id', '7')
       .expect(401);
   });
+
+  it('Officer receives unauthorized for societies he doesnt belong in', async () => {
+    await request(server)
+      .get('/v1/elections')
+      .set('Cookie', officerToken || '')
+      .set('x-society-id', '7')
+      .expect(401);
+  });
 });
 
 describe('POST /v1/elections', () => {
   let societyId = 19;
   it('creates a new election', async () => {
-    const authToken = await adminLogin(); // Obtain authentication token
+    const authToken = await adminLogin();
 
     const response = await request(server)
       .post('/v1/elections')
@@ -114,7 +122,7 @@ describe('POST /v1/elections', () => {
 
     expect(response.body).toEqual({
       id: expect.any(Number),
-      name: 'Test Election',
+      name: 'Future Election',
       societyId: expect.any(Number),
       startDate: expect.any(String),
       endDate: expect.any(String),
@@ -131,7 +139,6 @@ describe('POST /v1/elections', () => {
         name: 'Test Election',
         startDate: '2024-04-13T00:00:00.000Z',
         endDate: '2024-04-14T00:00:00.000Z',
-        photoUrl: 'testimage.com',
       })
       .set('Cookie', authToken || '') // Set authentication cookie
       .set('Accept', 'application/json')

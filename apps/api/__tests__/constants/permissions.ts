@@ -143,6 +143,7 @@ describe('test admin permissions', () => {
     Permissions.list_offices,
     Permissions.retrieve_office,
     Permissions.update_election,
+    Permissions.remove_office,
 
     // Candidates
     Permissions.create_candidate,

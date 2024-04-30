@@ -6,10 +6,12 @@ type UserData = {
   password: string;
   firstName: string;
   lastName: string;
-  id?: number | undefined;
+  id: number;
 };
 
-const createUser = async (userData: UserData) => {
+type CreateUserData = Omit<UserData, 'id'>;
+
+const createUser = async (userData: CreateUserData) => {
   const response = await axios.post('/api/v1/user', userData);
 
   return response.data as UserData;
