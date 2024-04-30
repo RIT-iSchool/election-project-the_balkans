@@ -1,19 +1,26 @@
 import request from 'supertest';
 import { server } from '../../src/server';
-import { adminLogin, userLogin } from './auth';
+import { adminLogin, employeeLogin, officerLogin, userLogin } from './auth';
 
 describe('GET /v1/elections', () => {
-  let authToken: string | undefined;
+  let userToken: string | undefined;
+  let adminToken: string | undefined;
+  let employeeToken: string | undefined;
+  let officerToken: string | undefined;
   let societyId: number;
 
   beforeAll(async () => {
-    authToken = await userLogin(); // Use the login function to obtain the authentication token
+    userToken = await userLogin();
+    adminToken = await adminLogin();
+    employeeToken = await employeeLogin();
+    officerToken = await officerLogin();
     societyId = 19;
   });
+
   it('User gets the election data for his own society', async () => {
     const response = await request(server)
       .get('/v1/elections')
-      .set('Cookie', authToken || '') // Set authorization header with the obtained token
+      .set('Cookie', userToken || '') // Set authorization header with the obtained token
       .set('x-society-id', societyId.toString()) // Set society ID header
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
@@ -32,11 +39,58 @@ describe('GET /v1/elections', () => {
       ]),
     );
   });
+
+  it('Officer gets the election data for his own society', async () => {
+    const response = await request(server)
+      .get('/v1/elections')
+      .set('Cookie', officerToken || '')
+      .set('x-society-id', societyId.toString())
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          startDate: expect.any(String),
+          endDate: expect.any(String),
+          societyId: expect.any(Number),
+          photoUrl: null,
+        }),
+      ]),
+    );
+  });
+
+  it('Employee gets the election data for a society he is assigned to', async () => {
+    const response = await request(server)
+      .get('/v1/elections')
+      .set('Cookie', employeeToken || '')
+      .set('x-society-id', societyId.toString())
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          startDate: expect.any(String),
+          endDate: expect.any(String),
+          societyId: expect.any(Number),
+          photoUrl: null,
+        }),
+      ]),
+    );
+  });
+
   it('User receives unauthorized for societies he doesnt belong in', async () => {
     await request(server)
       .get('/v1/elections')
-      .set('Cookie', authToken || '') // Set authorization header with the obtained token
-      .set('x-society-id', '7') // Set society ID header
+      .set('Cookie', userToken || '')
+      .set('x-society-id', '7')
       .expect(401);
   });
 });
@@ -49,9 +103,9 @@ describe('POST /v1/elections', () => {
     const response = await request(server)
       .post('/v1/elections')
       .send({
-        name: 'Test Election',
-        startDate: '2000-04-20 00:00:00',
-        endDate: '2000-04-30 00:00:00',
+        name: 'Future Election',
+        startDate: '2024-05-20 00:00:00',
+        endDate: '2024-05-30 00:00:00',
       })
       .set('Cookie', authToken || '')
       .set('x-society-id', societyId.toString())
