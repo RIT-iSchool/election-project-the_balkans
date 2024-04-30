@@ -30,22 +30,3 @@ migrate(db, { migrationsFolder: 'src/db/migrations' })
     }
     process.exit(1);
   });
-
-migrate(db, { migrationsFolder: 'src/db/functions' })
-  .then(() => {
-    console.log('Function migrations complete!');
-    process.exit(0);
-  })
-  .catch((err) => {
-    console.error('Error running function migrations:', err.message);
-    console.error('Error details:', err);
-
-    if (err.query) {
-      console.error('Failed function migration SQL:', err.query);
-    }
-
-    if (err.response) {
-      console.error('Error response:', err.response);
-    }
-    process.exit(1);
-  });

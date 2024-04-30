@@ -96,29 +96,22 @@ export const societyReport = async ({ societyId }: Society) => {
 export const systemReport = async () => {
   try {
     const [
-      [loggedInUsers],
-      [activeElections],
+      loggedInUsers,
+      activeElections,
       { averageRequestTime, averageResponseTime },
     ] = await Promise.all([
-      db
-        .select({ count: countDistinct(session.userId) })
-        .from(session)
-        .where(gt(session.expiresAt, new Date())),
-      db
-        .select({ count: count() })
-        .from(election)
-        .where(
-          and(
-            lte(election.startDate, new Date().toString()),
-            gte(election.endDate, new Date().toString()),
-          ),
-        ),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from loggedInUsersFunction()`),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from activeElectionsFunction()`),
       calculate(),
     ]);
 
     return {
-      loggedInUsers: loggedInUsers?.count || 0,
-      activeElections: activeElections?.count || 0,
+      loggedInUsers: loggedInUsers.count,
+      activeElections: activeElections.count,
       averageRequestTime,
       averageResponseTime,
     };
