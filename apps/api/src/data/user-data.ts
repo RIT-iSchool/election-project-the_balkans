@@ -119,23 +119,22 @@ export const login = async ({ email, password }: Login) => {
       throw new AuthenticationError('Wrong email or password');
     }
 
-    console.log(userData);
-
-    const [societyData] = await db
+    let [societyData] = await db
       .select({
         id: societyMember.societyId,
       })
       .from(societyMember)
       .where(eq(societyMember.userId, userData.id));
-    console.log(societyData);
 
-    if (!societyData) {
+    if (!societyData && !userData.admin) {
       throw new BadRequestError('Not a member of any societies');
     }
 
+    [societyData] = await db.select({ id: society.id }).from(society).limit(1);
+
     return {
       user: userData,
-      societyId: societyData.id,
+      societyId: societyData!.id,
     };
   } catch (err) {
     throw err;
