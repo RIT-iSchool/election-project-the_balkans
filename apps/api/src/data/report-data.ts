@@ -96,8 +96,8 @@ export const societyReport = async ({ societyId }: Society) => {
 export const systemReport = async () => {
   try {
     const [
-      loggedInUsers,
-      activeElections,
+      [loggedInUsers],
+      [activeElections],
       { averageRequestTime, averageResponseTime },
     ] = await Promise.all([
       db.execute<{
@@ -110,8 +110,8 @@ export const systemReport = async () => {
     ]);
 
     return {
-      loggedInUsers: loggedInUsers.count,
-      activeElections: activeElections.count,
+      loggedInUsers: loggedInUsers?.count || 0,
+      activeElections: activeElections?.count || 0,
       averageRequestTime,
       averageResponseTime,
     };
@@ -212,7 +212,7 @@ export const resultsReport = async ({ electionId }: Results) => {
       db.refreshMaterializedView(initiativeResultsView),
     ]);
 
-    const [officeResults, initiativeResults] = await Promise.all([
+    const [[officeResults], [initiativeResults]] = await Promise.all([
       db.execute<{
         candidate: {
           name: string;
