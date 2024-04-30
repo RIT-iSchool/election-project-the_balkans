@@ -26,7 +26,7 @@ export const useMutation = <T extends (...args: any) => Promise<any>>({
       setIsLoading(true);
 
       try {
-        const result = (await mutationFn(...args)) as (typeof args)[0];
+        const result = (await mutationFn(...args)) as Awaited<ReturnType<T>>;
         onSuccess?.(result);
         return result;
       } catch (err) {

@@ -51,7 +51,7 @@ export async function employeeLogin() {
   return loginResponse.headers['set-cookie']?.[0];
 }
 describe('POST /auth/login', () => {
-  it('allows a user to login with valid credentials', async () => {
+  it('allows admin to login with valid credentials', async () => {
     const loginResponse = await request(server)
       .post('/auth/login')
       .send({
@@ -89,11 +89,19 @@ describe('POST /auth/logout', () => {
     const response = await request(server)
       .post('/auth/login')
       .send({
-        email: 'shpend.ismaili1@gmail.com',
-        password: 'shpend123',
+        email: 'grapefruitsnowstorm10@gmail.com',
+        password: '123456789',
       })
       .set('Accept', 'application/json')
       .expect(200);
+
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        token: expect.any(String),
+        user: expect.any(Object),
+        societyId: expect.any(Number),
+      }),
+    );
 
     await request(server)
       .post('/auth/logout')
@@ -102,7 +110,7 @@ describe('POST /auth/logout', () => {
   });
 
   it('fails to log out in an unauthenticated state', async () => {
-    await request(server).post('/auth/logout').expect(400);
+    await request(server).post('/auth/logout').expect(401);
   });
 });
 

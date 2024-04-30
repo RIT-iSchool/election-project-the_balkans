@@ -29,6 +29,10 @@ export const retrieve: Handler = async (req, res, next) => {
 
 export const remove: Handler = async (req, res, next) => {
   try {
+    if (!req.cookies.session) {
+      throw new UnauthorizedError("User isn't logged in");
+    }
+
     await session.remove({
       sessionToken: req.cookies.session,
     });

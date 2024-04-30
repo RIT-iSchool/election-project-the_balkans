@@ -3,7 +3,6 @@ import {
   type SocietyMemberData,
 } from '@/hooks/mutations/use-create-society-member';
 import { useCreateUser } from '@/hooks/mutations/use-create-user';
-import { useDebounce } from '@/hooks/use-debounce';
 import { Plus16 } from '@frosted-ui/icons';
 import { useFormik } from 'formik';
 import {
@@ -18,6 +17,7 @@ import {
   TextFieldInput,
   TextFieldRoot,
 } from 'frosted-ui';
+import { useState } from 'react';
 import * as yup from 'yup';
 
 const initialValues = {
@@ -31,34 +31,40 @@ const initialValues = {
 
 export const NewUser = () => {
   const societyId = parseInt(localStorage.getItem('society_id') || '');
-  // const [dialogOpen, setDialogOpen] = useState(false); // Manage dialog state
+  const [open, setOpen] = useState(false);
 
   const { mutateAsync: createUser } = useCreateUser({
-    onSuccess: async (data) => {
-      const userId = (data as { id: number }).id;
-      console.log('before socmember', values.role);
-      await createSocietyMember({
-        societyId: societyId,
-        userId: userId,
-        role: values.role as SocietyMemberData['role'],
-      });
-    },
+    onSuccess: async () => {},
   });
 
   const { mutateAsync: createSocietyMember, isLoading } =
     useCreateSocietyMember({
-      onSuccess: (data) => {},
+      onSuccess: () => {
+        setOpen(false);
+      },
     });
 
   const { getFieldProps, submitForm, errors, isValid, values, setFieldValue } =
     useFormik({
       initialValues: initialValues,
       onSubmit: async (values) => {
-        createUser({
+        console.log('before creating user:', values.role);
+
+        const user = await createUser({
           email: values.email,
           password: values.password,
           firstName: values.firstName,
           lastName: values.lastName,
+        });
+
+        if (!user) {
+          return;
+        }
+
+        await createSocietyMember({
+          societyId: societyId,
+          userId: user.id,
+          role: values.role as SocietyMemberData['role'],
         });
       },
       validationSchema: yup.object().shape({
@@ -68,12 +74,10 @@ export const NewUser = () => {
         lastName: yup.string().required('Please enter last name'),
         role: yup.string().required('Please pick Role'),
       }),
-      validateOnChange: false,
-      validateOnBlur: false,
     });
 
   return (
-    <DialogRoot>
+    <DialogRoot open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <Button size="3" variant="classic" color="iris">
           <Plus16 />
@@ -139,6 +143,7 @@ export const NewUser = () => {
             <TextFieldInput
               placeholder="deanbestprofessor"
               className="w-full"
+              type="password"
               size="3"
               {...getFieldProps('password')}
             />
@@ -154,7 +159,7 @@ export const NewUser = () => {
           <select
             className="w-full rounded-md border border-gray-300 p-3"
             style={{ borderColor: 'rgba(209, 213, 219, 0.5)' }}
-            {...getFieldProps('role')}
+            onChange={(e) => setFieldValue('role', e.target.value)}
           >
             <option value="member">Member</option>
             <option value="officer">Officer</option>

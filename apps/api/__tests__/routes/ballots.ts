@@ -23,7 +23,7 @@ describe('GET /v1/elections/:election_id/ballot', () => {
       startDate: expect.any(String),
       endDate: expect.any(String),
       societyId: expect.any(Number),
-      photoURL: null, // or null
+      photoUrl: null,
       offices: expect.arrayContaining([
         expect.objectContaining({
           id: expect.any(Number),
@@ -34,7 +34,7 @@ describe('GET /v1/elections/:election_id/ballot', () => {
           candidates: expect.arrayContaining([expect.any(Object)]),
         }),
       ]),
-      initiatives: expect.arrayContaining([expect.any(Object)]),
+      initiatives: [],
     };
     expect(response.body).toEqual(expectedResponseStructure);
   });
