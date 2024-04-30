@@ -30,14 +30,22 @@ export const create: Handler = async (req, res, next) => {
   }
 };
 
+const ListSocietyMembersSchema = z.object({
+  page: z.coerce.number().default(1),
+});
+
 export const list: Handler = async (req, res, next) => {
   try {
     if (!req.society) {
       throw new BadRequestError('Society ID missing from headers');
     }
 
+    console.log(req.query, 'QUERY');
+    const { page } = ListSocietyMembersSchema.parse(req.query);
+
     const listSocietyMember = await societyMember.list({
       societyId: req.society.id,
+      page,
     });
 
     res.send(listSocietyMember);

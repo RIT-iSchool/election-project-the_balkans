@@ -24,6 +24,8 @@ import {
 import { useMemo } from 'react';
 import { useSocietyReport } from '@/hooks/use-society-report';
 import { NewUser } from './new-user';
+import { Pagination } from '@/components/shared/pagination';
+import { useSearchParams } from 'next/navigation';
 
 type PageProps = {
   params: {
@@ -47,15 +49,22 @@ const RoleBadge = ({ role }: { role: 'member' | 'officer' | 'employee' }) => {
 };
 
 export default function Page({ params }: PageProps) {
+  const searchParams = useSearchParams();
+
   const { data: society } = useSociety(params);
-  const { data: societyMembers } = useSocietyMembers();
+  const { data: societyMembers, totalCount } = useSocietyMembers({
+    page: searchParams.get('page') || '1',
+  });
   const { data: societyReport } = useSocietyReport();
 
   if (!society) return null;
 
   return (
     <div className="flex min-h-screen flex-col gap-5 p-8 py-6">
-      <PageTitle title={society.name} description="Placeholder." />
+      <div className="flex items-center justify-between">
+        <PageTitle title={society.name} description="Placeholder." />
+        <NewUser />
+      </div>
 
       <pre>{JSON.stringify(society, null, 2)}</pre>
       <pre>{JSON.stringify(societyReport, null, 2)}</pre>
@@ -64,7 +73,6 @@ export default function Page({ params }: PageProps) {
         <Text size="5" weight="medium">
           Society Members
         </Text>
-        <NewUser />
         <Card className="inset-0">
           <Inset>
             <Table>
@@ -102,6 +110,7 @@ export default function Page({ params }: PageProps) {
                 ))}
               </TableBody>
             </Table>
+            <Pagination resource="Society Member" totalCount={totalCount} />
           </Inset>
         </Card>
       </div>

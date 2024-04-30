@@ -35,14 +35,14 @@ const Pagination = ({ totalCount = 0, resource }: PaginationProps) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', (page - 1).toString());
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, searchParams, router, page]);
 
   const goToNext = useCallback(() => {
     const params = new URLSearchParams(searchParams);
     params.set('page', (page + 1).toString());
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [pathname, searchParams, router, page]);
 
   return (

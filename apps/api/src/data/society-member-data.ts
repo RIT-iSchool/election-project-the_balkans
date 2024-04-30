@@ -1,5 +1,5 @@
 import { CreateSocietyMember, societyMember, user } from '../db/schema';
-import { db } from '../db';
+import { db, withPagination } from '../db';
 import { eq, getTableColumns } from 'drizzle-orm';
 
 export type Create = {
@@ -27,23 +27,27 @@ export const create = async ({ societyMemberData, societyId }: Create) => {
 
 export type List = {
   societyId: number;
+  page: number;
 };
 
 /**
  * Lists a society's members
  */
-export const list = async ({ societyId }: List) => {
+export const list = async ({ societyId, page }: List) => {
   try {
-    const societyMemberData = await db
+    const societyMembersQuery = db
       .select({
         ...getTableColumns(societyMember),
         user: getTableColumns(user),
       })
       .from(societyMember)
       .leftJoin(user, eq(user.id, societyMember.userId))
-      .where(eq(societyMember.societyId, societyId));
+      .where(eq(societyMember.societyId, societyId))
+      .$dynamic();
 
-    return societyMemberData;
+    const societyMembersData = await withPagination(societyMembersQuery, page);
+
+    return societyMembersData;
   } catch (err) {
     throw new Error('Something went wrong listing society members.');
   }

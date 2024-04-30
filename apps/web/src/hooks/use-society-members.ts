@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+import { Paginated } from './types';
 
 export type SocietyMember = {
   id: number;
@@ -15,13 +16,17 @@ export type SocietyMember = {
   } | null;
 };
 
-export const useSocietyMembers = () => {
-  const { data, error, isLoading } = useSWR<SocietyMember[]>(
-    `/api/v1/society_members`,
+type UseSocietyMembersOptions = {
+  page?: string;
+};
+
+export const useSocietyMembers = ({ page }: UseSocietyMembersOptions) => {
+  const { data, error, isLoading } = useSWR<Paginated<SocietyMember>>(
+    `/api/v1/society_members${page ? `?page=${page}` : ''}`,
   );
 
   return {
-    data,
+    ...data,
     error,
     isLoading,
   };
