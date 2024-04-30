@@ -14,6 +14,7 @@ import {
   loggedInUsersView,
   activeBallotsView,
   inactiveBallotsView,
+  societyUsersView,
 } from '../db/schema';
 import { calculate } from '../helpers/log-helper';
 
@@ -29,6 +30,7 @@ export const societyReport = async ({ societyId }: Society) => {
     await Promise.all([
       db.refreshMaterializedView(activeBallotsView),
       db.refreshMaterializedView(inactiveBallotsView),
+      db.refreshMaterializedView(societyUsersView),
     ]);
 
     const [
@@ -43,10 +45,9 @@ export const societyReport = async ({ societyId }: Society) => {
       db.execute<{
         count: number;
       }>(sql`SELECT count from inactiveBallotsFunction(${societyId})`),
-      db
-        .select({ count: count() })
-        .from(societyMember)
-        .where(eq(societyMember.societyId, societyId)),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from societyUsersFunction(${societyId})`),
       db
         .select({ count: countDistinct(candidateVote.memberId) })
         .from(candidateVote)

@@ -499,3 +499,7 @@ export const activeBallotsView = pgMaterializedView('activeBallotsView', {
 export const inactiveBallotsView = pgMaterializedView('inactiveBallotsView', {
   count: integer('count'),
 }).existing();
+
+export const societyUsersView = pgMaterializedView('societyUsersView', {
+  count: integer('count'),
+}).existing();
