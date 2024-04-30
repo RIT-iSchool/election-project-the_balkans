@@ -12,7 +12,6 @@ import {
 } from 'drizzle-orm';
 import { db } from '../db';
 import {
-  session,
   election,
   candidateVote,
   societyMember,
@@ -22,6 +21,8 @@ import {
   user,
   officeResultsView,
   initiativeResultsView,
+  activeElectionsView,
+  loggedInUsersView,
 } from '../db/schema';
 import { calculate } from '../helpers/log-helper';
 
@@ -95,6 +96,11 @@ export const societyReport = async ({ societyId }: Society) => {
  */
 export const systemReport = async () => {
   try {
+    await Promise.all([
+      db.refreshMaterializedView(loggedInUsersView),
+      db.refreshMaterializedView(activeElectionsView),
+    ]);
+
     const [
       [loggedInUsers],
       [activeElections],
