@@ -18,7 +18,6 @@ import {
   TextFieldInput,
   TextFieldRoot,
 } from 'frosted-ui';
-import { useEffect, useState } from 'react';
 import * as yup from 'yup';
 
 const initialValues = {
@@ -27,17 +26,18 @@ const initialValues = {
   firstName: '',
   lastName: '',
   societyId: '',
-  role: '',
+  role: 'member',
 };
+
 export const NewUser = () => {
   const societyId = parseInt(localStorage.getItem('society_id') || '');
   // const [dialogOpen, setDialogOpen] = useState(false); // Manage dialog state
 
-  const { mutateAsync: createUser, isLoading: isLoadingUser } = useCreateUser({
-    onSuccess: (data) => {
+  const { mutateAsync: createUser } = useCreateUser({
+    onSuccess: async (data) => {
       const userId = (data as { id: number }).id;
       console.log('before socmember', values.role);
-      createSocietyMember({
+      await createSocietyMember({
         societyId: societyId,
         userId: userId,
         role: values.role as SocietyMemberData['role'],
@@ -150,18 +150,12 @@ export const NewUser = () => {
           )}
         </div>
         <div>
-          <label className="text-sm font-medium" {...getFieldProps('role')}>
-            Select Role
-          </label>
+          <label className="text-sm font-medium">Select Role</label>
           <select
             className="w-full rounded-md border border-gray-300 p-3"
             style={{ borderColor: 'rgba(209, 213, 219, 0.5)' }}
-            value={values.role} // Set the select value to the current role
-            onChange={(e) => {
-              setFieldValue('role', e.target.value);
-            }}
+            {...getFieldProps('role')}
           >
-            <option value=""></option>
             <option value="member">Member</option>
             <option value="officer">Officer</option>
             <option value="employee">Employee</option>
