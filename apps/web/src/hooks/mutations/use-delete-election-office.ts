@@ -1,10 +1,19 @@
 import axios from 'axios';
 import { ProxiedUseMutationOptions, useMutation } from './use-mutation';
 
-const deleteElectionOffice = async (electionOfficeId: number) => {
+type DeleteElectionOfficeOptions = {
+  electionId: number;
+  officeId: number;
+};
+
+const deleteElectionOffice = async ({
+  electionId,
+  officeId,
+}: DeleteElectionOfficeOptions) => {
   const response = await axios.delete(
-    `/api/v1/elections/election_offices/${electionOfficeId}`,
+    `/api/v1/elections/${electionId}/election_offices/${officeId}`,
   );
+
   return response.data;
 };
 

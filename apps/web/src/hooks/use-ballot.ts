@@ -47,8 +47,9 @@ type UseBallotOptions = {
 };
 
 export const useBallot = ({ electionId }: UseBallotOptions) => {
-  const { data, error, isLoading } = useSWR<Ballot>(
+  const { data, error, isLoading, mutate } = useSWR<Ballot>(
     `/api/v1/elections/${electionId}/ballot`,
   );
-  return { data, error, isLoading };
+
+  return { data, error, isLoading, mutate };
 };

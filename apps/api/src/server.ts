@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import { UnauthorizedError } from './errors/UnauthorizedError';
 import { BadRequestError } from './errors/BadRequestError';
 import { audit } from './middleware/audit';
+import { ZodError } from 'zod';
 
 const PORT = process.env.port || 3001;
 
@@ -63,6 +64,23 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     return res.status(401).json({
       error: true,
       message: err.message,
+    });
+  }
+
+  if (err instanceof ZodError) {
+    const errors: { path: string; message: string }[] = [];
+
+    err.issues.forEach((issue) => {
+      errors.push({
+        path: issue.path.join('.'),
+        message: issue.message,
+      });
+    });
+
+    return res.status(400).json({
+      error: true,
+      message: 'Invalid parameters. Please check your URL and JSON payload.',
+      errors,
     });
   }
 
