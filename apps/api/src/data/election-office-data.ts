@@ -54,19 +54,24 @@ export const list = async ({ electionId, societyId }: List) => {
   }
 };
 
-export type Retrieve = { electionOfficeId: number };
+export type Retrieve = { electionId: number; electionOfficeId: number };
 
 /**
  * Retrieves a society's election office.
  */
-export const retrieve = async ({ electionOfficeId }: Retrieve) => {
+export const retrieve = async ({ electionId, electionOfficeId }: Retrieve) => {
   try {
     const [electionOfficeData] = await db
       .select({
         ...getTableColumns(electionOffice),
       })
       .from(electionOffice)
-      .where(eq(electionOffice.id, electionOfficeId));
+      .where(
+        and(
+          eq(electionOffice.id, electionOfficeId),
+          eq(electionOffice.electionId, electionId),
+        ),
+      );
 
     if (!electionOfficeData) throw new Error('Election office not found');
 
@@ -77,6 +82,7 @@ export const retrieve = async ({ electionOfficeId }: Retrieve) => {
 };
 
 export type Update = {
+  electionId: number;
   electionOfficeId: number;
   electionOfficeData: UpdateElectionOffice;
 };
@@ -85,6 +91,7 @@ export type Update = {
  * Updates an election office by ID
  */
 export const update = async ({
+  electionId,
   electionOfficeId,
   electionOfficeData,
 }: Update) => {
@@ -94,7 +101,12 @@ export const update = async ({
         await dbClient
           .update(electionOffice)
           .set(electionOfficeData)
-          .where(eq(electionOffice.id, electionOfficeId))
+          .where(
+            and(
+              eq(electionOffice.id, electionOfficeId),
+              eq(electionOffice.electionId, electionId),
+            ),
+          )
           .returning(),
     );
 
@@ -106,18 +118,23 @@ export const update = async ({
   }
 };
 
-export type Remove = { electionOfficeId: number };
+export type Remove = { electionId: number; electionOfficeId: number };
 
 /**
  * Removes an election office by ID
  */
-export const remove = async ({ electionOfficeId }: Remove) => {
+export const remove = async ({ electionId, electionOfficeId }: Remove) => {
   try {
     await db.transaction(
       async (dbClient) =>
         await dbClient
           .delete(electionOffice)
-          .where(eq(electionOffice.id, electionOfficeId)),
+          .where(
+            and(
+              eq(electionOffice.id, electionOfficeId),
+              eq(electionOffice.electionId, electionId),
+            ),
+          ),
     );
   } catch (err) {
     throw new Error('Something went wrong removing election office.');

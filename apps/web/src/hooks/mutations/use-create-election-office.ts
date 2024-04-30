@@ -5,15 +5,11 @@ type ElectionOfficeData = {
   electionId: number;
   officeName: string;
   maxVotes: number;
-  societyId: number;
 };
 
-const createElectionOffice = async (
-  electionOfficeData: ElectionOfficeData,
-  electionId: string,
-) => {
+const createElectionOffice = async (electionOfficeData: ElectionOfficeData) => {
   const response = await axios.post(
-    `/api/v1/elections/${electionId}/election_offices`,
+    `/api/v1/elections/${electionOfficeData.electionId}/election_offices`,
     electionOfficeData,
   );
 

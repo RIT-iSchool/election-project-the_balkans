@@ -38,9 +38,9 @@ router.post('/v1/elections/:election_id/ballot', auth('submit_ballot'), ballot.s
 // Offices
 router.get('/v1/elections/:election_id/election_offices', auth('list_offices'), electionOffice.list);
 router.post('/v1/elections/:election_id/election_offices', auth('create_office'), electionOffice.create);
-router.put('/v1/elections/election_offices/:office_id', auth('update_office'), electionOffice.update);
-router.get('/v1/elections/election_offices/:office_id', auth('retrieve_office'), electionOffice.retrieve);
-router.delete('/v1/elections/election_offices/:office_id', auth('remove_office'), electionOffice.remove);
+router.put('/v1/elections/:election_id/election_offices/:office_id', auth('update_office'), electionOffice.update);
+router.get('/v1/elections/:election_id/election_offices/:office_id', auth('retrieve_office'), electionOffice.retrieve);
+router.delete('/v1/elections/:election_id/election_offices/:office_id', auth('remove_office'), electionOffice.remove);
 
 // Candidates
 router.get('/v1/elections/:election_id/election_candidates', auth('list_candidates'), electionCandidate.list);

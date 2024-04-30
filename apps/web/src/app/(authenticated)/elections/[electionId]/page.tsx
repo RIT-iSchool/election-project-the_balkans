@@ -279,7 +279,7 @@ const OptionRow = ({
 
 export default function Page({ params }: PageProps) {
   const { data: election } = useElection(params);
-  const { data: ballot } = useBallot(params);
+  const { data: ballot, mutate: refetchBallot } = useBallot(params);
   const { data: status } = useStatusReport(params);
   const { data: results } = useResultsReport(params);
 
@@ -293,7 +293,7 @@ export default function Page({ params }: PageProps) {
         <PageTitle title={election.name} description={description} />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard label="Total Votes" count={status?.totalVotes} />
 
         <StatsCard
@@ -316,14 +316,17 @@ export default function Page({ params }: PageProps) {
       <div className="w-screen space-y-4 overflow-auto pb-6 md:w-full">
         {Boolean(ballot) && (
           <>
-            <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-1 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-1 lg:grid-cols-2">
               <Card>
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                     <Text size="4" weight="medium">
                       Offices
                     </Text>
-                    <NewOffice electionId={params.electionId} />
+                    <NewOffice
+                      electionId={params.electionId}
+                      refetch={refetchBallot}
+                    />
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -367,7 +370,7 @@ export default function Page({ params }: PageProps) {
               </Card>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
               <Card>
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
@@ -424,7 +427,7 @@ export default function Page({ params }: PageProps) {
           </>
         )}
 
-        <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
           <Card>
             <Inset pb="0" side="top">
               <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
@@ -481,7 +484,7 @@ export default function Page({ params }: PageProps) {
           </Card>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
           <Card>
             <Inset pb="0" side="top">
               <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
