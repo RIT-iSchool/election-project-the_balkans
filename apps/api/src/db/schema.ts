@@ -8,8 +8,6 @@ import { varchar } from 'drizzle-orm/pg-core';
 import { serial } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 
-//#region user
-
 export const user = pgTable(
   'user',
   {
@@ -36,9 +34,6 @@ export type CreateUser = InferInsertModel<typeof user>;
 export type User = InferSelectModel<typeof user>;
 export type UpdateUser = Partial<CreateUser>;
 
-//#endregion
-
-//#region session
 export const session = pgTable(
   'session',
   {
@@ -70,9 +65,6 @@ export type CreateSession = InferInsertModel<typeof session>;
 export type Session = InferSelectModel<typeof session>;
 export type UpdateSession = Partial<CreateSession>;
 
-//#endregion
-
-//#region society
 export const society = pgTable(
   'society',
   {
@@ -102,10 +94,6 @@ export const societyRelations = relations(society, ({ one }) => ({
 export type CreateSociety = InferInsertModel<typeof society>;
 export type Society = InferSelectModel<typeof society>;
 export type UpdateSociety = Partial<CreateSociety>;
-
-//#endregion
-
-//#region societyMember
 
 export const role = pgEnum('role', ['member', 'officer', 'employee']);
 export type Role = (typeof role)['enumValues'][number];
@@ -152,10 +140,6 @@ export type CreateSocietyMember = InferInsertModel<typeof societyMember>;
 export type SocietyMember = InferSelectModel<typeof societyMember>;
 export type UpdateSocietyMember = Partial<CreateSocietyMember>;
 
-//#endregion
-
-//#region election
-
 export const election = pgTable(
   'election',
   {
@@ -192,10 +176,6 @@ export const electionRelations = relations(election, ({ one, many }) => ({
 export type CreateElection = InferInsertModel<typeof election>;
 export type Election = InferSelectModel<typeof election>;
 export type UpdateElection = Partial<CreateElection>;
-
-//#endregion
-
-//#region electionOffice
 
 export const electionOffice = pgTable(
   'electionOffice',
@@ -243,10 +223,6 @@ export const electionOfficeRelations = relations(
 export type CreateElectionOffice = InferInsertModel<typeof electionOffice>;
 export type ElectionOffice = InferSelectModel<typeof electionOffice>;
 export type UpdateElectionOffice = Partial<CreateElectionOffice>;
-
-//#endregion
-
-//#region electionCandidate
 
 export const electionCandidate = pgTable(
   'electionCandidate',
@@ -301,10 +277,6 @@ export type CreateElectionCandidate = InferInsertModel<
 export type ElectionCandidate = InferSelectModel<typeof electionCandidate>;
 export type UpdateElectionCandidate = Partial<CreateElectionCandidate>;
 
-//#endregion
-
-//#region candidateVote
-
 export const candidateVote = pgTable(
   'candidateVote',
   {
@@ -346,10 +318,6 @@ export const candidateVoteRelations = relations(candidateVote, ({ one }) => ({
 export type CreateCandidateVote = InferInsertModel<typeof candidateVote>;
 export type CandidateVote = InferSelectModel<typeof candidateVote>;
 export type UpdateCandidateVote = Partial<CreateCandidateVote>;
-
-//#endregion
-
-//#region electionInitiative
 
 export const electionInitiative = pgTable(
   'electionInitiative',
@@ -401,10 +369,6 @@ export type CreateElectionInitiative = InferInsertModel<
 export type ElectionInitiative = InferSelectModel<typeof electionInitiative>;
 export type UpdateElectionInitiative = Partial<CreateElectionInitiative>;
 
-//#endregion
-
-//#region initiativeOption
-
 export const initiativeOption = pgTable(
   'initiativeOption',
   {
@@ -449,10 +413,6 @@ export const initiativeOptionRelations = relations(
 export type CreateInitiativeOption = InferInsertModel<typeof initiativeOption>;
 export type InitiativeOption = InferSelectModel<typeof initiativeOption>;
 export type UpdateInitiativeOption = Partial<CreateInitiativeOption>;
-
-//#endregion
-
-//#region initiativeVote
 
 export const initiativeVote = pgTable(
   'initiativeVote',
@@ -504,5 +464,3 @@ export const initiativeVoteRelations = relations(initiativeVote, ({ one }) => ({
 export type CreateInitiativeVote = InferInsertModel<typeof initiativeVote>;
 export type InitiativeVote = InferSelectModel<typeof initiativeVote>;
 export type UpdateInitiativeVote = Partial<CreateInitiativeVote>;
-
-//#endregion
