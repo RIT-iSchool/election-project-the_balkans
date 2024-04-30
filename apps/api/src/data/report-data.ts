@@ -23,6 +23,8 @@ import {
   initiativeResultsView,
   activeElectionsView,
   loggedInUsersView,
+  activeBallotsView,
+  inactiveBallotsView,
 } from '../db/schema';
 import { calculate } from '../helpers/log-helper';
 
@@ -35,34 +37,23 @@ export type Society = {
  */
 export const societyReport = async ({ societyId }: Society) => {
   try {
+    await Promise.all([
+      db.refreshMaterializedView(activeBallotsView),
+      db.refreshMaterializedView(inactiveBallotsView),
+    ]);
+
     const [
       [activeBallots],
       [inActiveBallots],
       [societyUsers],
       [votingMembers],
     ] = await Promise.all([
-      db
-        .select({ count: count() })
-        .from(election)
-        .where(
-          and(
-            eq(election.societyId, societyId),
-            lte(election.startDate, new Date().toString()),
-            gte(election.endDate, new Date().toString()),
-          ),
-        ),
-      db
-        .select({ count: count() })
-        .from(election)
-        .where(
-          and(
-            eq(election.societyId, societyId),
-            or(
-              gt(election.startDate, new Date().toString()),
-              lt(election.endDate, new Date().toString()),
-            ),
-          ),
-        ),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from activeBallotsFunction()`),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from inactiveBallotsFunction()`),
       db
         .select({ count: count() })
         .from(societyMember)

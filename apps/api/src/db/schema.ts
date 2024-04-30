@@ -491,3 +491,11 @@ export const loggedInUsersView = pgMaterializedView('loggedInUsersView', {
 export const activeElectionsView = pgMaterializedView('activeElectionsView', {
   count: integer('count'),
 }).existing();
+
+export const activeBallotsView = pgMaterializedView('activeBallotsView', {
+  count: integer('count'),
+}).existing();
+
+export const inactiveBallotsView = pgMaterializedView('inactiveBallotsView', {
+  count: integer('count'),
+}).existing();

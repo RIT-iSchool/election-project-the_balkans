@@ -7,8 +7,8 @@ BEGIN
   SELECT 
     candidate
   FROM 
-      officeResultsView
+    officeResultsView
   WHERE 
-      electionId = election_id_param;
+    electionId = election_id_param;
 END; $$
 LANGUAGE plpgsql;
