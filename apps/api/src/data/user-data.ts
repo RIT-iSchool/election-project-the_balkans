@@ -119,15 +119,12 @@ export const login = async ({ email, password }: Login) => {
       throw new AuthenticationError('Wrong email or password');
     }
 
-    console.log(userData);
-
     const [societyData] = await db
       .select({
         id: societyMember.societyId,
       })
       .from(societyMember)
       .where(eq(societyMember.userId, userData.id));
-    console.log(societyData);
 
     if (!societyData) {
       throw new BadRequestError('Not a member of any societies');

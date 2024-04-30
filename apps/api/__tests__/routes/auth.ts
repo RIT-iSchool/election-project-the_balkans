@@ -9,7 +9,7 @@ export async function userLogin() {
       password: '123456789',
     })
     .set('Accept', 'application/json')
-    .expect(204);
+    .expect(200);
 
   return loginResponse.headers['set-cookie']?.[0];
 }
@@ -21,7 +21,7 @@ export async function adminLogin() {
       password: 'connor123',
     })
     .set('Accept', 'application/json')
-    .expect(204);
+    .expect(200);
 
   return loginResponse.headers['set-cookie']?.[0];
 }
@@ -29,11 +29,11 @@ export async function officerLogin() {
   const loginResponse = await request(server)
     .post('/auth/login')
     .send({
-      email: 'cashewraccoon5@gmail.com',
+      email: 'lemonsleet6@gmail.com',
       password: '123456789',
     })
     .set('Accept', 'application/json')
-    .expect(204);
+    .expect(200);
 
   return loginResponse.headers['set-cookie']?.[0];
 }
@@ -46,7 +46,7 @@ export async function employeeLogin() {
       password: 'dean123',
     })
     .set('Accept', 'application/json')
-    .expect(204);
+    .expect(200);
 
   return loginResponse.headers['set-cookie']?.[0];
 }
@@ -59,7 +59,15 @@ describe('POST /auth/login', () => {
         password: 'connor123',
       })
       .set('Accept', 'application/json')
-      .expect(204);
+      .expect(200);
+
+    expect(loginResponse.body).toEqual(
+      expect.objectContaining({
+        token: expect.any(String),
+        user: expect.any(Object),
+        societyId: expect.any(Number),
+      }),
+    );
 
     const authToken = loginResponse.headers['set-cookie']?.[0];
   });
@@ -85,7 +93,7 @@ describe('POST /auth/logout', () => {
         password: 'shpend123',
       })
       .set('Accept', 'application/json')
-      .expect(204);
+      .expect(200);
 
     await request(server)
       .post('/auth/logout')
