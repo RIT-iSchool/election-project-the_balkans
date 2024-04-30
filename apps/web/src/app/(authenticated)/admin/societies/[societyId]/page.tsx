@@ -24,6 +24,8 @@ import {
 import { useMemo } from 'react';
 import { useSocietyReport } from '@/hooks/use-society-report';
 import { NewUser } from './new-user';
+import { Pagination } from '@/components/shared/pagination';
+import { useSearchParams } from 'next/navigation';
 
 type PageProps = {
   params: {
@@ -47,8 +49,12 @@ const RoleBadge = ({ role }: { role: 'member' | 'officer' | 'employee' }) => {
 };
 
 export default function Page({ params }: PageProps) {
+  const searchParams = useSearchParams();
+
   const { data: society } = useSociety(params);
-  const { data: societyMembers } = useSocietyMembers();
+  const { data: societyMembers, totalCount } = useSocietyMembers({
+    page: searchParams.get('page') || '1',
+  });
   const { data: societyReport } = useSocietyReport();
 
   if (!society) return null;
@@ -104,6 +110,7 @@ export default function Page({ params }: PageProps) {
                 ))}
               </TableBody>
             </Table>
+            <Pagination resource="Society Member" totalCount={totalCount} />
           </Inset>
         </Card>
       </div>

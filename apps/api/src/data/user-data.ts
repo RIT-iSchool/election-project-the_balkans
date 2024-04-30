@@ -1,8 +1,9 @@
-import { CreateUser } from '../db/schema';
+import { CreateUser, society, societyMember } from '../db/schema';
 import { db, withPagination } from '../db';
 import { user } from '../db/schema';
 import { eq, and, getTableColumns, sql } from 'drizzle-orm';
 import { AuthenticationError } from '../errors/AuthenticationError';
+import { BadRequestError } from '../errors/BadRequestError';
 
 export type Create = {
   userData: CreateUser;
@@ -54,18 +55,15 @@ export type Retrieve = {
   userId: number;
 };
 
-const retrieveUser = db
-  .select({ ...getTableColumns(user) })
-  .from(user)
-  .where(eq(user.id, sql.placeholder('id')))
-  .prepare('retrieve_user');
-
 /**
  * Retrieves a user by ID.
  */
 export const retrieve = async ({ userId }: Retrieve) => {
   try {
-    const [userData] = await retrieveUser.execute({ id: userId });
+    const [userData] = await db
+      .select({ ...getTableColumns(user) })
+      .from(user)
+      .where(eq(user.id, sql.placeholder('id')));
 
     if (!userData) throw new Error('User not found');
 
@@ -105,30 +103,41 @@ export type Login = {
   password: string;
 };
 
-const loginUser = db
-  .select({
-    ...getTableColumns(user),
-  })
-  .from(user)
-  .where(
-    and(
-      eq(user.email, sql.placeholder('email')),
-      eq(user.password, sql.placeholder('password')),
-    ),
-  )
-  .prepare('login_user');
-
 /**
  * Login a user.
  */
 export const login = async ({ email, password }: Login) => {
   try {
-    const [user] = await loginUser.execute({ email, password });
+    const [userData] = await db
+      .select({
+        ...getTableColumns(user),
+      })
+      .from(user)
+      .where(and(eq(user.email, email), eq(user.password, password)));
 
-    if (!user) throw new AuthenticationError('Wrong email or password');
+    if (!userData) {
+      throw new AuthenticationError('Wrong email or password');
+    }
 
-    return user;
+    console.log(userData);
+
+    const [societyData] = await db
+      .select({
+        id: societyMember.societyId,
+      })
+      .from(societyMember)
+      .where(eq(societyMember.userId, userData.id));
+    console.log(societyData);
+
+    if (!societyData) {
+      throw new BadRequestError('Not a member of any societies');
+    }
+
+    return {
+      user: userData,
+      societyId: societyData.id,
+    };
   } catch (err) {
-    throw new AuthenticationError('Wrong email or password');
+    throw err;
   }
 };

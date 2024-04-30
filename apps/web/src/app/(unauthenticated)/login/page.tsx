@@ -30,6 +30,9 @@ export default function Home() {
         return;
       }
 
+      const responseData = (await response.json()) as { societyId: number };
+
+      localStorage.setItem('society_id', responseData.societyId.toString());
       router.push('/home');
     },
     validationSchema: yup.object().shape({
@@ -65,7 +68,9 @@ export default function Home() {
                   />
                 </TextFieldRoot>
                 {errors.email && (
-                  <div className="text-sm text-red-500">{errors.email}</div>
+                  <Text size="2" color="red">
+                    {errors.email}
+                  </Text>
                 )}
               </div>
 
@@ -80,7 +85,9 @@ export default function Home() {
                   />
                 </TextFieldRoot>
                 {errors.password && (
-                  <div className="text-sm text-red-500">{errors.password}</div>
+                  <Text size="2" color="red">
+                    {errors.password}
+                  </Text>
                 )}
               </div>
             </div>

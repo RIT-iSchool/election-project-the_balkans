@@ -43,10 +43,13 @@ export const list = async (userListParams: User.List) => {
 export const login = async (userLoginParams: User.Login) => {
   const loginUser = await User.login(userLoginParams);
   const token = await Session.create({
-    userId: loginUser.id,
+    userId: loginUser.user.id,
     token: uuid(),
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) /** 1 week */,
   });
 
-  return token;
+  return {
+    ...loginUser,
+    token: token.token,
+  };
 };
