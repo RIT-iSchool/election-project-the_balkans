@@ -511,3 +511,8 @@ export const votingMembersView = pgMaterializedView('votingMembersView', {
   societyId: integer('societyId'),
   count: integer('count'),
 }).existing();
+
+export const totalVotesView = pgMaterializedView('totalVotesView', {
+  electionId: integer('electionId'),
+  count: integer('count'),
+}).existing();

@@ -1,4 +1,4 @@
-import { countDistinct, count, eq, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '../db';
 import {
   election,
@@ -15,6 +15,7 @@ import {
   activeBallotsView,
   inactiveBallotsView,
   societyUsersView,
+  totalVotesView,
 } from '../db/schema';
 import { calculate } from '../helpers/log-helper';
 
@@ -115,19 +116,12 @@ export type Status = {
  */
 export const statusReport = async ({ electionId }: Status) => {
   try {
+    await Promise.all([db.refreshMaterializedView(totalVotesView)]);
+
     const [[totalVotes], votingMembers, members] = await Promise.all([
-      db
-        .select({ count: count() })
-        .from(candidateVote)
-        .innerJoin(
-          electionCandidate,
-          eq(electionCandidate.id, candidateVote.electionCandidateId),
-        )
-        .innerJoin(
-          electionOffice,
-          eq(electionOffice.id, electionCandidate.electionOfficeId),
-        )
-        .where(eq(electionOffice.electionId, electionId)),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from totalVotesFunction(${electionId})`),
       db
         .selectDistinctOn([user.id], {
           id: user.id,
