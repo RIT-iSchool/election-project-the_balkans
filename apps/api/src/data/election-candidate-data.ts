@@ -21,19 +21,20 @@ export const create = async ({ electionCandidateData }: Create) => {
     );
     return newElectionCandidate!;
   } catch (err) {
-    throw new Error('Something went wrong creating an election ');
+    throw new Error('Something went wrong creating an election candidate');
   }
 };
 
 export type List = {
   electionId: number;
+  officeId: number;
   societyId: number;
 };
 
 /**
  * Lists a society's election's candidates.
  */
-export const list = async ({ electionId, societyId }: List) => {
+export const list = async ({ electionId, officeId, societyId }: List) => {
   try {
     const electionCandidateData = await db
       .select({
@@ -46,7 +47,11 @@ export const list = async ({ electionId, societyId }: List) => {
       )
       .innerJoin(election, eq(electionOffice.electionId, election.id))
       .where(
-        and(eq(election.id, electionId), eq(election.societyId, societyId)),
+        and(
+          eq(election.id, electionId),
+          eq(election.societyId, societyId),
+          eq(electionOffice.id, officeId),
+        ),
       );
 
     return electionCandidateData;
@@ -75,19 +80,32 @@ export const lookup = async ({ name }: Lookup) => {
 
 export type Retrieve = {
   electionCandidateId: number;
+  electionId: number;
+  officeId: number;
+  societyId: number;
 };
 
 /**
  * Retrieves an election candidate by ID
  */
-export const retrieve = async ({ electionCandidateId }: Retrieve) => {
+export const retrieve = async ({
+  officeId,
+  electionCandidateId,
+  societyId,
+}: Retrieve) => {
   try {
     const [electionCandidateData] = await db
       .select({
         ...getTableColumns(electionCandidate),
       })
       .from(electionCandidate)
-      .where(eq(electionCandidate.id, electionCandidateId));
+      .where(
+        and(
+          eq(electionCandidate.id, electionCandidateId),
+          eq(electionCandidate.electionOfficeId, officeId),
+          eq(electionCandidate.societyId, societyId),
+        ),
+      );
     return electionCandidateData;
   } catch (err) {
     throw new Error('Something went wrong retrieving election candidate.');
@@ -97,6 +115,8 @@ export const retrieve = async ({ electionCandidateId }: Retrieve) => {
 export type Update = {
   electionCandidateId: number;
   electionCandidateData: UpdateElectionCandidate;
+  societyId: number;
+  officeId: number;
 };
 
 /**
@@ -105,6 +125,8 @@ export type Update = {
 export const update = async ({
   electionCandidateId,
   electionCandidateData,
+  societyId,
+  officeId,
 }: Update) => {
   try {
     const [updatedElectionCandidate] = await db.transaction(
@@ -112,7 +134,13 @@ export const update = async ({
         await dbClient
           .update(electionCandidate)
           .set(electionCandidateData)
-          .where(eq(electionCandidate.id, electionCandidateId))
+          .where(
+            and(
+              eq(electionCandidate.id, electionCandidateId),
+              eq(electionCandidate.societyId, societyId),
+              eq(electionCandidate.electionOfficeId, officeId),
+            ),
+          )
           .returning(),
     );
     return updatedElectionCandidate!;
@@ -122,19 +150,27 @@ export const update = async ({
 };
 
 export type Remove = {
-  electionCandidateId: number;
+  candidateId: number;
+  officeId: number;
+  societyId: number;
 };
 
 /**
  * Removes an election candidate by ID
  */
-export const remove = async ({ electionCandidateId }: Remove) => {
+export const remove = async ({ candidateId, officeId, societyId }: Remove) => {
   try {
     await db.transaction(
       async (dbClient) =>
         await dbClient
           .delete(electionCandidate)
-          .where(eq(electionCandidate.id, electionCandidateId)),
+          .where(
+            and(
+              eq(electionCandidate.id, candidateId),
+              eq(electionCandidate.electionOfficeId, officeId),
+              eq(electionCandidate.societyId, societyId),
+            ),
+          ),
     );
   } catch (err) {
     throw new Error('Something went wrong removing election candidate.');

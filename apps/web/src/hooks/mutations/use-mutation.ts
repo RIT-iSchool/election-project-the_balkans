@@ -22,20 +22,24 @@ export const useMutation = <T extends (...args: any) => Promise<any>>({
   const [isLoading, setIsLoading] = useState(false);
 
   const callback = useCallback(
-    async (...args: FunctionArguments<T>) => {
+    async (...args: FunctionArguments<T>): Promise<Awaited<ReturnType<T>>> => {
       setIsLoading(true);
-
       try {
-        const result = (await mutationFn(...args)) as Awaited<ReturnType<T>>;
-        onSuccess?.(result);
+        const result = await mutationFn(...args);
+        if (onSuccess) {
+          onSuccess(result);
+        }
         return result;
       } catch (err) {
-        onError?.(err as Error);
+        if (onError) {
+          onError(err as Error);
+        }
+        throw err;
       } finally {
         setIsLoading(false);
       }
     },
-    [mutationFn],
+    [mutationFn, onSuccess, onError],
   );
 
   return {

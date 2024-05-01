@@ -3,18 +3,17 @@ import { ProxiedUseMutationOptions, useMutation } from './use-mutation';
 
 type electionCandidateData = {
   name: string;
-  societyId: number;
   description: string;
-  electionOfficeId: number;
+  officeId: string;
   photoURL?: string | null | undefined;
+  electionId: string;
 };
 
 const createElectionCandidate = async (
   electionCandidateData: electionCandidateData,
-  electionId: string,
 ) => {
   const response = await axios.post(
-    `/api/v1/elections/${electionId}/election_candidates`,
+    `/api/v1/elections/${electionCandidateData.electionId}/election_offices/${electionCandidateData.officeId}/election_candidates`,
     electionCandidateData,
   );
 

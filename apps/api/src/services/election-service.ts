@@ -98,7 +98,6 @@ export const update: Handler = async (req, res, next) => {
 
     res.send(updateElection);
   } catch (err) {
-    // console.log(err);
     next(err);
   }
 };

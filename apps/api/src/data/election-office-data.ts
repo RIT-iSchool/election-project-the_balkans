@@ -21,7 +21,6 @@ export const create = async ({ electionOfficeData }: Create) => {
     );
     return newElectionOffice!;
   } catch (err) {
-    console.log(err);
     throw new Error('Something went wrong creating an election office.');
   }
 };

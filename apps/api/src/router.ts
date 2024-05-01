@@ -43,11 +43,11 @@ router.get('/v1/elections/:election_id/election_offices/:office_id', auth('retri
 router.delete('/v1/elections/:election_id/election_offices/:office_id', auth('remove_office'), electionOffice.remove);
 
 // Candidates
-router.get('/v1/elections/:election_id/election_candidates', auth('list_candidates'), electionCandidate.list);
-router.post('/v1/elections/:election_id/election_candidates', auth('create_candidate'), electionCandidate.create);
-router.put('/v1/elections/election_candidates/:candidate_id', auth('update_candidate'), electionCandidate.update);
-router.get('/v1/elections/election_candidates/:candidate_id', auth('retrieve_candidate'), electionCandidate.retrieve);
-router.delete('/v1/elections/election_candidates/:candidate_id', auth('remove_candidate'), electionCandidate.remove);
+router.get('/v1/elections/:election_id/election_offices/:office_id/election_candidates', auth('list_candidates'), electionCandidate.list);
+router.post('/v1/elections/:election_id/election_offices/:office_id/election_candidates', auth('create_candidate'), electionCandidate.create);
+router.put('/v1/elections/:election_id/election_offices/:office_id/election_candidates/:candidate_id', auth('update_candidate'), electionCandidate.update);
+router.get('/v1/elections/:election_id/election_offices/:office_id/election_candidates/:candidate_id', auth('retrieve_candidate'), electionCandidate.retrieve);
+router.delete('/v1/elections/:election_id/election_offices/:office_id/election_candidates/:candidate_id', auth('remove_candidate'), electionCandidate.remove);
 
 // Election Initiatives
 router.get('/v1/elections/:election_id/election_initiatives', auth('list_initiatives'), electionInitiative.list);

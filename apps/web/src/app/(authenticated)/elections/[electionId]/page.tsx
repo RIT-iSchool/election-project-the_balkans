@@ -26,9 +26,6 @@ import { NewOffice } from './new-office';
 import { useCallback, useState } from 'react';
 import { DeleteOffice } from './delete-office';
 import { EditOffice } from './edit-office';
-import { NewCandidate } from './new-candidate';
-import { EditCandidate } from './edit-candidate';
-import { DeleteCandidate } from './delete-candidate';
 import { EditInitiative } from './edit-initiative';
 import { DeleteInitiative } from './delete-initiative';
 import { NewInitiative } from './new-initiative';
@@ -37,6 +34,7 @@ import { StatsCard } from '@/components/shared/stats-card';
 import { EditOption } from './edit-option';
 import { DeleteOption } from './delete-option';
 import { useResultsReport } from '@/hooks/use-results-report';
+import { useRouter } from 'next/navigation';
 
 type PageProps = {
   params: {
@@ -45,15 +43,21 @@ type PageProps = {
 };
 
 const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
+  const router = useRouter();
+
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const handleOpenEdit = useCallback(() => setEditOpen(true), []);
   const handleOpenDelete = useCallback(() => setDeleteOpen(true), []);
 
+  const handleNavigate = useCallback(() => {
+    router.push(`/elections/${office.electionId}/offices/${office.id}`);
+  }, [office]);
+
   return (
     <>
-      <TableRow>
+      <TableRow onClick={handleNavigate}>
         <TableCell>
           <Text color="gray">{office.officeName}</Text>
         </TableCell>
@@ -91,68 +95,6 @@ const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
         setOpen={setDeleteOpen}
         electionId={office.electionId}
         officeId={office.id}
-      />
-    </>
-  );
-};
-
-const CandidateRow = ({
-  candidate,
-  office,
-}: {
-  candidate: Ballot['offices'][number]['candidates'][number];
-  office: Ballot['offices'][number];
-}) => {
-  const [editOpen, setEditOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-
-  const handleOpenEdit = useCallback(() => setEditOpen(true), []);
-  const handleOpenDelete = useCallback(() => setDeleteOpen(true), []);
-
-  return (
-    <>
-      <TableRow>
-        <TableCell>
-          <Text color="gray">{candidate.name}</Text>
-        </TableCell>
-        <TableCell>
-          <Text color="gray">{office.officeName}</Text>
-        </TableCell>
-        <TableCell>
-          <DropdownMenuRoot>
-            <DropdownMenuTrigger>
-              <IconButton>
-                <ThreeDotsHorizontal20 />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
-                <Pencil16 />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="w-32"
-                color="red"
-                onClick={handleOpenDelete}
-              >
-                <Trash16 />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuRoot>
-        </TableCell>
-      </TableRow>
-
-      <EditCandidate
-        open={editOpen}
-        setOpen={setEditOpen}
-        candidate={candidate}
-      />
-      <DeleteCandidate
-        open={deleteOpen}
-        setOpen={setDeleteOpen}
-        electionId={office.electionId}
-        candidateId={candidate.id}
       />
     </>
   );
@@ -375,35 +317,8 @@ export default function Page({ params }: PageProps) {
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                     <Text size="4" weight="medium">
-                      Candidates
-                    </Text>
-                    <NewCandidate electionId={params.electionId} />
-                  </div>
-                </Inset>
-                <Inset clip="border-box" side="bottom">
-                  <Table>
-                    <TableHeader className="bg-white">
-                      <TableHead className="!border-t-0">Name</TableHead>
-                      <TableHead className="!border-t-0">Position</TableHead>
-                      <TableHead className="!border-t-0">Actions</TableHead>
-                    </TableHeader>
-                    <TableBody>
-                      {ballot?.offices.map((o) =>
-                        o.candidates.map((c) => (
-                          <CandidateRow key={c.id} candidate={c} office={o} />
-                        )),
-                      )}
-                    </TableBody>
-                  </Table>
-                </Inset>
-              </Card>
-              <Card>
-                <Inset pb="0" side="top">
-                  <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
-                    <Text size="4" weight="medium">
                       Options
                     </Text>
-                    <NewCandidate electionId={params.electionId} />
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
