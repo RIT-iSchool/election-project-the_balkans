@@ -23,37 +23,31 @@ import {
 } from '@/components/shared/table';
 import { useElectionCandidates } from '@/hooks/use-election-candidates';
 import { useCallback, useState } from 'react';
-import { Ballot } from '@/hooks/use-ballot';
+import { Ballot, useBallot } from '@/hooks/use-ballot';
 import { Pencil16, ThreeDotsHorizontal20, Trash16 } from '@frosted-ui/icons';
 import { useElectionOffice } from '@/hooks/use-election-office';
-import { NewCandidate } from './new-candidate';
-import { EditCandidate } from './edit-candidate';
-import { DeleteCandidate } from './delete-candidate';
+import { NewOption } from './new-option';
+import { EditOption } from './edit-option';
+import { DeleteOption } from './delete-option';
 import { useElection } from '@/hooks/use-election';
+import { useElectionInitiatives } from '@/hooks/use-election-initiatives';
+import { useInitiativeOptions } from '@/hooks/use-initiative-options';
+import { useElectionInitiative } from '@/hooks/use-election-initiative';
 
 type PageProps = {
   params: {
     electionId: string;
-    officeId: string;
+    initiativeId: string;
   };
 };
 
-const CandidateRow = ({
-  electionId,
-  candidate,
+const OptionRow = ({
+  option,
+  initiative,
 }: {
-  electionId: string;
-  candidate: Ballot['offices'][number]['candidates'][number];
+  option: Ballot['initiatives'][number]['options'][number];
+  initiative: Ballot['initiatives'][number];
 }) => {
-  const { mutate: refetch } = useElectionCandidates({
-    electionId,
-    officeId: candidate.electionOfficeId,
-  });
-  const { data: office } = useElectionOffice({
-    electionId,
-    officeId: candidate.electionOfficeId,
-  });
-
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -64,7 +58,7 @@ const CandidateRow = ({
     <>
       <TableRow>
         <TableCell>
-          <Text color="gray">{candidate.name}</Text>
+          <Text color="gray">{option.title}</Text>
         </TableCell>
         <TableCell>
           <DropdownMenuRoot>
@@ -91,34 +85,25 @@ const CandidateRow = ({
         </TableCell>
       </TableRow>
 
-      {office && editOpen && (
-        <EditCandidate
-          open={editOpen}
-          setOpen={setEditOpen}
-          electionId={office.electionId}
-          officeId={office.id}
-          candidateId={candidate.id}
-        />
-      )}
-      {office && deleteOpen && (
-        <DeleteCandidate
-          open={deleteOpen}
-          setOpen={setDeleteOpen}
-          electionId={office.electionId}
-          officeId={office.id}
-          candidateId={candidate.id}
-        />
-      )}
+      <EditOption open={editOpen} setOpen={setEditOpen} option={option} />
+
+      <DeleteOption
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        electionId={initiative.electionId}
+        initiativeId={initiative.id}
+        optionId={option.id}
+      />
     </>
   );
 };
 
 export default function Page({ params }: PageProps) {
-  const { data: candidates, mutate } = useElectionCandidates(params);
-  const { data: office } = useElectionOffice(params);
+  const { data: initiative } = useElectionInitiative(params);
   const { data: election } = useElection(params);
+  const { data: options, mutate: refetch } = useInitiativeOptions(params);
 
-  if (!office) return null;
+  if (!initiative) return null;
 
   return (
     <div className="flex min-h-screen grid-cols-1 flex-col gap-5 pt-4">
@@ -132,9 +117,9 @@ export default function Page({ params }: PageProps) {
           </BreadcrumbsItem>
           <BreadcrumbsItem>
             <a
-              href={`/elections/${params.electionId}/offices/${params.officeId}`}
+              href={`/elections/${params.electionId}/initiatives/${params.initiativeId}`}
             >
-              {office?.officeName}
+              {initiative?.initiativeName}
             </a>
           </BreadcrumbsItem>
         </BreadcrumbsRoot>
@@ -142,8 +127,8 @@ export default function Page({ params }: PageProps) {
 
       <div className="flex justify-between space-y-5 px-6">
         <PageTitle
-          title={office?.officeName}
-          description="Candidates for this office."
+          title={initiative?.initiativeName}
+          description="Options for this initiative."
         />
       </div>
 
@@ -152,12 +137,12 @@ export default function Page({ params }: PageProps) {
           <Inset pb="0" side="top">
             <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
               <Text size="4" weight="medium">
-                Candidates
+                Options
               </Text>
-              <NewCandidate
+              <NewOption
                 electionId={params.electionId}
-                officeId={params.officeId}
-                refetch={mutate}
+                initiativeId={params.initiativeId}
+                refetch={refetch}
               />
             </div>
           </Inset>
@@ -168,13 +153,10 @@ export default function Page({ params }: PageProps) {
                 <TableHead className="!border-t-0">Actions</TableHead>
               </TableHeader>
               <TableBody>
-                {candidates?.map((candidate) => (
-                  <CandidateRow
-                    candidate={candidate}
-                    electionId={params.electionId}
-                    key={candidate.id}
-                  />
-                ))}
+                {initiative &&
+                  options?.map((option) => (
+                    <OptionRow option={option} initiative={initiative} />
+                  ))}
               </TableBody>
             </Table>
           </Inset>

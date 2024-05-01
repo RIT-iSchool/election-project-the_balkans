@@ -28,12 +28,13 @@ export const create = async ({ initiativeOptionData }: Create) => {
 export type List = {
   electionId: number;
   societyId: number;
+  initiativeId: number;
 };
 
 /**
  * Lists a society's election's initiative options.
  */
-export const list = async ({ electionId, societyId }: List) => {
+export const list = async ({ electionId, initiativeId, societyId }: List) => {
   try {
     const initiativeOptionData = await db
       .select({
@@ -48,6 +49,7 @@ export const list = async ({ electionId, societyId }: List) => {
         and(
           eq(electionInitiative.electionId, electionId),
           eq(electionInitiative.societyId, societyId),
+          eq(electionInitiative.id, initiativeId),
         ),
       );
 
@@ -59,19 +61,31 @@ export const list = async ({ electionId, societyId }: List) => {
 
 export type Retrieve = {
   initiativeOptionId: number;
+  initiativeId: number;
+  societyId: number;
 };
 
 /**
  * Retrieves a society's election initiative option.
  */
-export const retrieve = async ({ initiativeOptionId }: Retrieve) => {
+export const retrieve = async ({
+  initiativeOptionId,
+  initiativeId,
+  societyId,
+}: Retrieve) => {
   try {
     const [initiativeOptionData] = await db
       .select({
         ...getTableColumns(initiativeOption),
       })
       .from(initiativeOption)
-      .where(eq(initiativeOption.id, initiativeOptionId));
+      .where(
+        and(
+          eq(initiativeOption.id, initiativeOptionId),
+          eq(initiativeOption.electionInitiativeId, initiativeId),
+          eq(initiativeOption.societyId, societyId),
+        ),
+      );
 
     return initiativeOptionData;
   } catch (err) {
@@ -82,6 +96,8 @@ export const retrieve = async ({ initiativeOptionId }: Retrieve) => {
 export type Update = {
   initiativeOptionId: number;
   initiativeOptionData: UpdateInitiativeOption;
+  initiativeId: number;
+  societyId: number;
 };
 
 /**
@@ -90,6 +106,8 @@ export type Update = {
 export const update = async ({
   initiativeOptionId,
   initiativeOptionData,
+  initiativeId,
+  societyId,
 }: Update) => {
   try {
     const [updatedInitiativeOption] = await db.transaction(
@@ -97,7 +115,13 @@ export const update = async ({
         await dbClient
           .update(initiativeOption)
           .set(initiativeOptionData)
-          .where(eq(initiativeOption.id, initiativeOptionId))
+          .where(
+            and(
+              eq(initiativeOption.id, initiativeOptionId),
+              eq(initiativeOption.electionInitiativeId, initiativeId),
+              eq(initiativeOption.societyId, societyId),
+            ),
+          )
           .returning(),
     );
     return updatedInitiativeOption!;
@@ -108,20 +132,33 @@ export const update = async ({
 
 export type Remove = {
   initiativeOptionId: number;
+  initiativeId: number;
+  societyId: number;
 };
 
 /**
  * Removes an initiative option by ID
  */
-export const remove = async ({ initiativeOptionId }: Remove) => {
+export const remove = async ({
+  initiativeOptionId,
+  initiativeId,
+  societyId,
+}: Remove) => {
   try {
     await db.transaction(
       async (dbClient) =>
         await dbClient
           .delete(initiativeOption)
-          .where(eq(initiativeOption.id, initiativeOptionId)),
+          .where(
+            and(
+              eq(initiativeOption.id, initiativeOptionId),
+              eq(initiativeOption.electionInitiativeId, initiativeId),
+              eq(initiativeOption.societyId, societyId),
+            ),
+          ),
     );
   } catch (err) {
+    console.log(err);
     throw new Error('Something went wrong deleting an initiative option.');
   }
 };

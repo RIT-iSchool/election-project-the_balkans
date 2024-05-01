@@ -77,7 +77,9 @@ export const EditCandidate = ({
     <DialogRoot open={open} onOpenChange={setOpen}>
       <DialogContent className="w-[500px]">
         <div className="flex flex-col">
-          <DialogTitle className="mb-0">Edit candidate</DialogTitle>
+          <DialogTitle weight="medium" className="mb-0">
+            Edit candidate
+          </DialogTitle>
           <DialogDescription color="gray">
             Update properties of this candidate
           </DialogDescription>

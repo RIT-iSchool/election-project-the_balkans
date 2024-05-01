@@ -74,7 +74,9 @@ export const NewCandidate = ({
       </DialogTrigger>
       <DialogContent className="w-[500px]">
         <div className="flex flex-col">
-          <DialogTitle className="mb-0">New candidate</DialogTitle>
+          <DialogTitle weight="medium" className="mb-0">
+            New candidate
+          </DialogTitle>
           <DialogDescription color="gray">
             Create a new candidate for this election
           </DialogDescription>

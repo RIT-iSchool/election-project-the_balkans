@@ -39,13 +39,14 @@ export const NewElection = () => {
 
   const { getFieldProps, submitForm, errors, isValid } = useFormik({
     initialValues: initialValues,
-    onSubmit: async (values) => {
-      createElection({
+    onSubmit: async (values, actions) => {
+      await createElection({
         ...values,
         startDate: values.startDate.toString(),
         endDate: values.endDate.toString(),
         photoUrl: fileName,
       });
+      actions.resetForm();
     },
     validationSchema: yup.object().shape({
       name: yup.string().required('Please enter a title'),

@@ -15,7 +15,7 @@ export const EditOption = ({ option, open, setOpen }: EditOptionProps) => {
   return (
     <DialogRoot open={open} onOpenChange={setOpen}>
       <DialogContent>
-        <DialogTitle>Edit option</DialogTitle>
+        <DialogTitle weight="medium">Edit option</DialogTitle>
         <DialogDescription>
           Update details for this election option
         </DialogDescription>

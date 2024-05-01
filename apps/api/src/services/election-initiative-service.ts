@@ -55,7 +55,7 @@ export const list: Handler = async (req, res, next) => {
 };
 
 const RetrieveElectionInitiativeParamsSchema = z.object({
-  election_initiative_id: z.string().transform((id) => parseInt(id)),
+  initiative_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const retrieve: Handler = async (req, res, next) => {
@@ -64,7 +64,7 @@ export const retrieve: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { election_initiative_id: electionInitiativeId } =
+    const { initiative_id: electionInitiativeId } =
       RetrieveElectionInitiativeParamsSchema.parse(req.params);
 
     const retrieveElectionInitiative = await electionInitiative.retrieve({
@@ -78,7 +78,7 @@ export const retrieve: Handler = async (req, res, next) => {
 };
 
 const UpdateElectionInitiativeParamsSchema = z.object({
-  election_initiative_id: z.string().transform((id) => parseInt(id)),
+  initiative_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const update: Handler = async (req, res, next) => {
@@ -87,7 +87,7 @@ export const update: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { election_initiative_id: electionInitiativeId } =
+    const { initiative_id: electionInitiativeId } =
       UpdateElectionInitiativeParamsSchema.parse(req.params);
 
     const electionInitiativeData = ElectionInitiativeSchema.parse(req.body);
@@ -104,7 +104,7 @@ export const update: Handler = async (req, res, next) => {
 };
 
 const RemoveElectionInitiativeParamsSchema = z.object({
-  election_initiative_id: z.string().transform((id) => parseInt(id)),
+  initiative_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const remove: Handler = async (req, res, next) => {
@@ -113,7 +113,7 @@ export const remove: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { election_initiative_id: electionInitiativeId } =
+    const { initiative_id: electionInitiativeId } =
       RemoveElectionInitiativeParamsSchema.parse(req.params);
 
     await electionInitiative.remove({
