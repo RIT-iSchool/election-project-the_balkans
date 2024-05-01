@@ -53,7 +53,9 @@ export const retrieve = async ({ electionId, societyId }: Retrieve) => {
       with: {
         offices: {
           with: {
-            candidates: true,
+            candidates: {
+              where: eq(electionCandidate.writeIn, false),
+            },
           },
         },
         initiatives: {

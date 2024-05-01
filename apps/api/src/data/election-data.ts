@@ -1,7 +1,7 @@
-import { CreateElection, Role, UpdateElection } from '../db/schema';
+import { CreateElection, UpdateElection } from '../db/schema';
 import { db } from '../db';
 import { election } from '../db/schema';
-import { and, asc, eq, getTableColumns, gt, lt, or } from 'drizzle-orm';
+import { and, asc, eq, getTableColumns, gt } from 'drizzle-orm';
 
 export type Create = {
   electionData: CreateElection;
@@ -34,17 +34,18 @@ export const list = async ({ societyId, admin }: List) => {
         ...getTableColumns(election),
       })
       .from(election)
-      .where(and(eq(election.societyId, societyId)))
       .orderBy(asc(election.startDate))
       .$dynamic();
 
     if (!admin) {
       electionsQuery.where(
-        or(
-          gt(election.startDate, new Date().toString()),
-          lt(election.endDate, new Date().toString()),
+        and(
+          gt(election.endDate, new Date().toString()),
+          eq(election.societyId, societyId),
         ),
       );
+    } else {
+      electionsQuery.where(eq(election.societyId, societyId));
     }
 
     return await electionsQuery;
