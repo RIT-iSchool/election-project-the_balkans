@@ -124,9 +124,6 @@ export const submit = async (
     })
     .flat();
 
-  console.log('We made it to the promise land');
-  console.log(candidateVotes, initiativeVotes);
-
   await Ballot.submit({
     ballotSubmitData: {
       initiativeVotesData: initiativeVotes,

@@ -78,7 +78,6 @@ export const update = async ({ memberId, role }: Update) => {
 
     return updatedSocietyMember!;
   } catch (err) {
-    console.log('data', err);
     throw new Error('Something went wrong updating a societyMember');
   }
 };

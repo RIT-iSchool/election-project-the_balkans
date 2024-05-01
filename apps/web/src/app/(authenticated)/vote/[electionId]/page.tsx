@@ -13,6 +13,7 @@ import {
   TextFieldInput,
   TextFieldRoot,
 } from 'frosted-ui';
+import { useRouter } from 'next/navigation';
 import {
   ChangeEventHandler,
   Dispatch,
@@ -223,6 +224,7 @@ const Office = ({
 
 export default function Page({ params }: PageProps) {
   const { data: ballot } = useBallot(params);
+  const router = useRouter();
 
   const [ballotData, setBallotData] = useState<BallotState>({
     officeVotes: {},
@@ -243,9 +245,8 @@ export default function Page({ params }: PageProps) {
   );
 
   const { mutateAsync: submitBallot } = useSubmitBallot({
-    onSuccess: (data) => {
-      console.log(data);
-      console.log('Submitted');
+    onSuccess: () => {
+      router.push('/home');
     },
   });
 
