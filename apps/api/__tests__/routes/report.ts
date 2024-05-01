@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { server } from '../../src/server';
 import { adminLogin, userLogin } from './auth';
+import { decimal } from 'drizzle-orm/mysql-core';
 
 describe('GET /v1/report/society', () => {
   let adminToken: string | undefined;
@@ -23,13 +24,12 @@ describe('GET /v1/report/society', () => {
       expect.objectContaining({
         activeBallots: expect.any(Number),
         inActiveBallots: expect.any(Number),
-        societyUsers: expect.any(Number),
+        societyUsers: expect.any(String),
         averageVotingMembers: null,
       }),
     );
   });
 });
-
 afterAll(() => {
   server.close();
 });
