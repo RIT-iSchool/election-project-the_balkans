@@ -47,7 +47,13 @@ type PageProps = {
   };
 };
 
-const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
+const OfficeRow = ({
+  office,
+  hasntStarted,
+}: {
+  office: Ballot['offices'][number];
+  hasntStarted: boolean | undefined;
+}) => {
   const router = useRouter();
 
   const [editOpen, setEditOpen] = useState(false);
@@ -80,29 +86,31 @@ const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
         <TableCell>
           <Text color="gray">{office.candidates.length}</Text>
         </TableCell>
-        <TableCell>
-          <DropdownMenuRoot>
-            <DropdownMenuTrigger>
-              <IconButton>
-                <ThreeDotsHorizontal20 />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
-                <Pencil16 />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="w-32"
-                color="red"
-                onClick={handleOpenDelete}
-              >
-                <Trash16 />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuRoot>
-        </TableCell>
+        {!hasntStarted && (
+          <TableCell>
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger>
+                <IconButton>
+                  <ThreeDotsHorizontal20 />
+                </IconButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                  <Pencil16 />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="w-32"
+                  color="red"
+                  onClick={handleOpenDelete}
+                >
+                  <Trash16 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuRoot>
+          </TableCell>
+        )}
       </TableRow>
 
       <EditOffice open={editOpen} setOpen={setEditOpen} office={office} />
@@ -118,8 +126,10 @@ const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
 
 const InitiativeRow = ({
   initiative,
+  hasntStarted,
 }: {
   initiative: Ballot['initiatives'][number];
+  hasntStarted: boolean | undefined;
 }) => {
   const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
@@ -153,29 +163,31 @@ const InitiativeRow = ({
         <TableCell>
           <Text color="gray">{initiative.options.length}</Text>
         </TableCell>
-        <TableCell>
-          <DropdownMenuRoot>
-            <DropdownMenuTrigger>
-              <IconButton>
-                <ThreeDotsHorizontal20 />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
-                <Pencil16 />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="w-32"
-                color="red"
-                onClick={handleOpenDelete}
-              >
-                <Trash16 />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuRoot>
-        </TableCell>
+        {!hasntStarted && (
+          <TableCell>
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger>
+                <IconButton>
+                  <ThreeDotsHorizontal20 />
+                </IconButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                  <Pencil16 />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="w-32"
+                  color="red"
+                  onClick={handleOpenDelete}
+                >
+                  <Trash16 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuRoot>
+          </TableCell>
+        )}
       </TableRow>
 
       {editOpen && (
@@ -247,10 +259,12 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Offices
                     </Text>
-                    <NewOffice
-                      electionId={params.electionId}
-                      refetch={refetchBallot}
-                    />
+                    {!electionStarted && (
+                      <NewOffice
+                        electionId={params.electionId}
+                        refetch={refetchBallot}
+                      />
+                    )}
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -258,11 +272,17 @@ export default function Page({ params }: PageProps) {
                     <TableHeader className="bg-white">
                       <TableHead className="!border-t-0">Position</TableHead>
                       <TableHead className="!border-t-0">Candidates</TableHead>
-                      <TableHead className="!border-t-0">Actions</TableHead>
+                      {!electionStarted && (
+                        <TableHead className="!border-t-0">Actions</TableHead>
+                      )}
                     </TableHeader>
                     <TableBody>
                       {ballot?.offices?.map((office) => (
-                        <OfficeRow office={office} key={office.id} />
+                        <OfficeRow
+                          office={office}
+                          key={office.id}
+                          hasntStarted={electionStarted}
+                        />
                       ))}
                     </TableBody>
                   </Table>
@@ -274,10 +294,12 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Initiatives
                     </Text>
-                    <NewInitiative
-                      electionId={params.electionId}
-                      refetch={refetchBallot}
-                    />
+                    {!electionStarted && (
+                      <NewInitiative
+                        electionId={params.electionId}
+                        refetch={refetchBallot}
+                      />
+                    )}
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -285,11 +307,17 @@ export default function Page({ params }: PageProps) {
                     <TableHeader className="bg-white">
                       <TableHead className="!border-t-0">Title</TableHead>
                       <TableHead className="!border-t-0">Options</TableHead>
-                      <TableHead className="!border-t-0">Actions</TableHead>
+                      {!electionStarted && (
+                        <TableHead className="!border-t-0">Actions</TableHead>
+                      )}
                     </TableHeader>
                     <TableBody>
                       {ballot?.initiatives.map((i) => (
-                        <InitiativeRow key={i.id} initiative={i} />
+                        <InitiativeRow
+                          key={i.id}
+                          initiative={i}
+                          hasntStarted={electionStarted}
+                        />
                       ))}
                     </TableBody>
                   </Table>

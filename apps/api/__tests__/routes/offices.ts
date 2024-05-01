@@ -67,3 +67,7 @@ describe('POST /v1/elections/:election_id/election_offices', () => {
     );
   });
 });
+
+afterAll(() => {
+  server.close();
+});

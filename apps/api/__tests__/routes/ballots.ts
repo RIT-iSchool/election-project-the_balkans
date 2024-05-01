@@ -39,3 +39,7 @@ describe('GET /v1/elections/:election_id/ballot', () => {
     expect(response.body).toEqual(expectedResponseStructure);
   });
 });
+
+afterAll(() => {
+  server.close();
+});
