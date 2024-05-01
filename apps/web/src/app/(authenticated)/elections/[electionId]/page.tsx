@@ -196,6 +196,9 @@ export default function Page({ params }: PageProps) {
   const { data: status } = useStatusReport(params);
   const { data: results } = useResultsReport(params);
 
+  const hasntStarted =
+    ballot?.startDate && new Date(ballot?.startDate) < new Date();
+
   if (!election || !status) return null;
 
   const description = `${dayjs(election.startDate).format('MMMM DD, YYYY')} - ${dayjs(election.endDate).format('MMMM DD, YYYY')}`;
@@ -205,27 +208,27 @@ export default function Page({ params }: PageProps) {
       <div className="flex justify-between space-y-5 px-6">
         <PageTitle title={election.name} description={description} />
       </div>
+      {hasntStarted && (
+        <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-4">
+          <StatsCard label="Total Votes" count={status?.totalVotes} />
 
-      <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-4">
-        <StatsCard label="Total Votes" count={status?.totalVotes} />
+          <StatsCard
+            label="Voting Member Percentage"
+            count={status?.votingMemberPercentage || '0'}
+            unit="%"
+          />
 
-        <StatsCard
-          label="Voting Member Percentage"
-          count={status?.votingMemberPercentage || '0'}
-          unit="%"
-        />
+          <StatsCard
+            label="Voting Members"
+            count={status?.votingMembers.length}
+          />
 
-        <StatsCard
-          label="Voting Members"
-          count={status?.votingMembers.length}
-        />
-
-        <StatsCard
-          label="Non-Voting Members"
-          count={status?.nonVotingMembers.length}
-        />
-      </div>
-
+          <StatsCard
+            label="Non-Voting Members"
+            count={status?.nonVotingMembers.length}
+          />
+        </div>
+      )}
       <div className="w-screen space-y-4 overflow-auto pb-6 md:w-full">
         {Boolean(ballot) && (
           <>
@@ -287,87 +290,91 @@ export default function Page({ params }: PageProps) {
             </div>
           </>
         )}
+        {/* election hasnt started */}
+        {hasntStarted && (
+          <>
+            <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+              <Card>
+                <Inset pb="0" side="top">
+                  <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                    <Text size="4" weight="medium">
+                      Voting Members
+                    </Text>
+                  </div>
+                </Inset>
+                <Inset clip="border-box" side="bottom">
+                  <Table>
+                    <TableHeader className="bg-white">
+                      <TableHead className="!border-t-0">Name</TableHead>
+                    </TableHeader>
+                    <TableBody>
+                      {status?.votingMembers.map((member, idx) => (
+                        <TableRow key={idx}>
+                          <TableCell>
+                            <Text color="gray">
+                              {member.votingUser.firstName}{' '}
+                              {member.votingUser.lastName}
+                            </Text>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Inset>
+              </Card>
+              <Card>
+                <Inset pb="0" side="top">
+                  <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                    <Text size="4" weight="medium">
+                      Non-Voting Members
+                    </Text>
+                  </div>
+                </Inset>
+                <Inset clip="border-box" side="bottom">
+                  <Table>
+                    <TableHeader className="bg-white">
+                      <TableHead className="!border-t-0">Name</TableHead>
+                    </TableHeader>
+                    <TableBody>
+                      {status?.nonVotingMembers.map((member, idx) => (
+                        <TableRow key={idx}>
+                          <TableCell>
+                            <Text color="gray">
+                              {member.nonVotingUser.firstName}{' '}
+                              {member.nonVotingUser.lastName}
+                            </Text>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Inset>
+              </Card>
+            </div>
 
-        <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
-          <Card>
-            <Inset pb="0" side="top">
-              <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
-                <Text size="4" weight="medium">
-                  Voting Members
-                </Text>
-              </div>
-            </Inset>
-            <Inset clip="border-box" side="bottom">
-              <Table>
-                <TableHeader className="bg-white">
-                  <TableHead className="!border-t-0">Name</TableHead>
-                </TableHeader>
-                <TableBody>
-                  {status?.votingMembers.map((member, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell>
-                        <Text color="gray">
-                          {member.votingUser.firstName}{' '}
-                          {member.votingUser.lastName}
-                        </Text>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Inset>
-          </Card>
-          <Card>
-            <Inset pb="0" side="top">
-              <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
-                <Text size="4" weight="medium">
-                  Non-Voting Members
-                </Text>
-              </div>
-            </Inset>
-            <Inset clip="border-box" side="bottom">
-              <Table>
-                <TableHeader className="bg-white">
-                  <TableHead className="!border-t-0">Name</TableHead>
-                </TableHeader>
-                <TableBody>
-                  {status?.nonVotingMembers.map((member, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell>
-                        <Text color="gray">
-                          {member.nonVotingUser.firstName}{' '}
-                          {member.nonVotingUser.lastName}
-                        </Text>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Inset>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
-          <Card>
-            <Inset pb="0" side="top">
-              <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
-                <Text size="4" weight="medium">
-                  Office Results
-                </Text>
-              </div>
-            </Inset>
-            <Inset clip="border-box" side="bottom">
-              <Table>
-                <TableHeader className="bg-white">
-                  <TableHead className="!border-t-0">Name</TableHead>
-                  <TableHead className="!border-t-0">Office</TableHead>
-                  <TableHead className="!border-t-0">Votes</TableHead>
-                </TableHeader>
-                <TableBody></TableBody>
-              </Table>
-            </Inset>
-          </Card>
-        </div>
+            <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+              <Card>
+                <Inset pb="0" side="top">
+                  <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                    <Text size="4" weight="medium">
+                      Office Results
+                    </Text>
+                  </div>
+                </Inset>
+                <Inset clip="border-box" side="bottom">
+                  <Table>
+                    <TableHeader className="bg-white">
+                      <TableHead className="!border-t-0">Name</TableHead>
+                      <TableHead className="!border-t-0">Office</TableHead>
+                      <TableHead className="!border-t-0">Votes</TableHead>
+                    </TableHeader>
+                    <TableBody></TableBody>
+                  </Table>
+                </Inset>
+              </Card>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
