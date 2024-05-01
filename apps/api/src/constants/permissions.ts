@@ -174,6 +174,7 @@ export const permissions = {
     Permissions.list_candidates,
     Permissions.retrieve_candidate,
     Permissions.update_candidate,
+    Permissions.remove_candidate,
 
     // Initiatives
     Permissions.create_initiative,
