@@ -32,6 +32,7 @@ import { useStatusReport } from '@/hooks/use-status-report';
 import { StatsCard } from '@/components/shared/stats-card';
 import { useResultsReport } from '@/hooks/use-results-report';
 import { useRouter } from 'next/navigation';
+import { EditOffice } from './edit-office';
 
 type PageProps = {
   params: {
@@ -97,7 +98,7 @@ const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
         </TableCell>
       </TableRow>
 
-      {/* <EditOffice open={editOpen} setOpen={setEditOpen} office={office.id} /> */}
+      <EditOffice open={editOpen} setOpen={setEditOpen} office={office} />
       <DeleteOffice
         open={deleteOpen}
         setOpen={setDeleteOpen}
