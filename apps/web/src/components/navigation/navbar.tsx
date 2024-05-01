@@ -14,10 +14,6 @@ export const routes: Route[] = [
     href: '/home',
   },
   // TODO: only show for admins
-  {
-    title: 'Members',
-    href: '/members',
-  },
 ] as const;
 
 export const adminRoutes = [
