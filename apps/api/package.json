@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --config nodemon-server.json",
-    "start": "npx typedoc && ts-node src/server.ts",
+    "start": "npx typedoc && npx tsx src/server.ts",
     "db:generate": "drizzle-kit generate:pg --config=./src/db/drizzle.config.ts",
     "test": "cross-env TEST=1 PORT=3005 jest ---detectOpenHandles --forceExit",
     "dev:docs": "nodemon --config nodemon-docs.json",
