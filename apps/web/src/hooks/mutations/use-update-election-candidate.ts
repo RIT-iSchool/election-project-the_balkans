@@ -1,21 +1,24 @@
 import axios from 'axios';
 import { ProxiedUseMutationOptions, useMutation } from './use-mutation';
 
-type ElectionCandidateData = {
+type ElectionCandidateData = Partial<{
   id: number;
   name: string;
-  societyId: number;
   description: string;
-  electionOfficeId: number;
   photoURL: string | null;
+}> & {
+  candidateId: string | number;
+  electionId: string | number;
+  officeId: string | number;
 };
 
 const updateElectionCandidate = async (
-  candidateId: number,
   electionCandidateData: ElectionCandidateData,
 ) => {
+  const { electionId, candidateId, officeId } = electionCandidateData;
+
   const response = await axios.put(
-    `/api/v1/elections/election_candidates/${candidateId}`,
+    `/api/v1/elections/${electionId}/election_offices/${officeId}/election_candidates/${candidateId}`,
     electionCandidateData,
   );
   return response.data;

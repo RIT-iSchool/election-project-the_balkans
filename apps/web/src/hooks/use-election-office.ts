@@ -8,12 +8,16 @@ export type ElectionOffice = {
 };
 
 type UseElectionOfficeOptions = {
-  officeId: number;
+  electionId: string;
+  officeId: number | string;
 };
 
-export const useElectionOffice = ({ officeId }: UseElectionOfficeOptions) => {
+export const useElectionOffice = ({
+  electionId,
+  officeId,
+}: UseElectionOfficeOptions) => {
   const { data, error, isLoading } = useSWR<ElectionOffice>(
-    `/api/v1/elections/election_offices/${officeId}`,
+    `/api/v1/elections/${electionId}/election_offices/${officeId}`,
   );
 
   return {

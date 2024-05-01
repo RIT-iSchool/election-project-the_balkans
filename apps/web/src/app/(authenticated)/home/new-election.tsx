@@ -111,6 +111,7 @@ export const NewElection = () => {
               </div>
             </div>
           </div>
+
           <div className="flex flex-row">
             <div className="flex w-1/2 flex-col">
               <label className="text-sm font-medium">Start date</label>

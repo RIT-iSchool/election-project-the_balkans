@@ -36,7 +36,6 @@ export const NewUser = () => {
   const { mutateAsync: createUser } = useCreateUser({
     onSuccess: async (data) => {
       const userId = (data as { id: number }).id;
-      console.log('before socmember', values.role);
       await createSocietyMember({
         societyId: societyId,
         userId: userId,

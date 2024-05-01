@@ -68,7 +68,6 @@ export const retrieve = async ({ electionId, societyId }: Retrieve) => {
 
     return ballotData;
   } catch (err) {
-    console.log(err);
     throw new Error('Something went wrong retrieving a ballot');
   }
 };

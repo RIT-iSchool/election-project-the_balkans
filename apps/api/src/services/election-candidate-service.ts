@@ -4,10 +4,13 @@ import * as electionCandidate from '../controllers/election-candidate-controller
 import { BadRequestError } from '../errors/BadRequestError';
 
 const ElectionCandidateSchema = z.object({
-  electionOfficeId: z.number(),
   name: z.string(),
   photoURL: z.string().optional(),
   description: z.string(),
+});
+
+const CreateElectionCandidateSchema = z.object({
+  office_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const create: Handler = async (req, res, next) => {
@@ -16,11 +19,15 @@ export const create: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
+    const { office_id: officeId } = CreateElectionCandidateSchema.parse(
+      req.params,
+    );
     const electionCandidateData = ElectionCandidateSchema.parse(req.body);
 
     const newElectionCandidate = await electionCandidate.create({
       electionCandidateData: {
         ...electionCandidateData,
+        electionOfficeId: officeId,
         societyId: req.society.id,
       },
     });
@@ -33,6 +40,7 @@ export const create: Handler = async (req, res, next) => {
 
 const ListElectionCandidateParamsSchema = z.object({
   election_id: z.string().transform((id) => parseInt(id)),
+  office_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const list: Handler = async (req, res, next) => {
@@ -41,12 +49,12 @@ export const list: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { election_id: electionId } = ListElectionCandidateParamsSchema.parse(
-      req.params,
-    );
+    const { election_id: electionId, office_id: officeId } =
+      ListElectionCandidateParamsSchema.parse(req.params);
 
     const listElectionCandidates = await electionCandidate.list({
       electionId,
+      officeId,
       societyId: req.society.id,
     });
 
@@ -57,7 +65,9 @@ export const list: Handler = async (req, res, next) => {
 };
 
 const RetrieveElectionCandidateParamsSchema = z.object({
-  electionCandidateId: z.string().transform((id) => parseInt(id)),
+  election_id: z.string().transform((id) => parseInt(id)),
+  office_id: z.string().transform((id) => parseInt(id)),
+  candidate_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const retrieve: Handler = async (req, res, next) => {
@@ -66,11 +76,17 @@ export const retrieve: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { electionCandidateId: electionCandidateId } =
-      RetrieveElectionCandidateParamsSchema.parse(req.params);
+    const {
+      candidate_id: electionCandidateId,
+      election_id: electionId,
+      office_id: officeId,
+    } = RetrieveElectionCandidateParamsSchema.parse(req.params);
 
     const retrieveElectionCandidate = await electionCandidate.retrieve({
       electionCandidateId,
+      officeId,
+      electionId,
+      societyId: req.society.id,
     });
 
     res.send(retrieveElectionCandidate);
@@ -80,7 +96,8 @@ export const retrieve: Handler = async (req, res, next) => {
 };
 
 const UpdateElectionCandidateParamsSchema = z.object({
-  electionCandidateId: z.string().transform((id) => parseInt(id)),
+  office_id: z.string().transform((id) => parseInt(id)),
+  candidate_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const update: Handler = async (req, res, next) => {
@@ -89,16 +106,17 @@ export const update: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { electionCandidateId: electionCandidateId } =
+    const { candidate_id: electionCandidateId, office_id: officeId } =
       UpdateElectionCandidateParamsSchema.parse(req.params);
 
     const electionCandidateData = ElectionCandidateSchema.parse(req.body);
 
     const updatedElectionCandidate = await electionCandidate.update({
       electionCandidateId,
+      officeId,
+      societyId: req.society.id,
       electionCandidateData: {
         ...electionCandidateData,
-        societyId: req.society.id,
       },
     });
 
@@ -109,7 +127,8 @@ export const update: Handler = async (req, res, next) => {
 };
 
 const RemoveElectionCandidateParamsSchema = z.object({
-  electionCandidateId: z.string().transform((id) => parseInt(id)),
+  office_id: z.string().transform((id) => parseInt(id)),
+  candidate_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const remove: Handler = async (req, res, next) => {
@@ -118,11 +137,13 @@ export const remove: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { electionCandidateId: electionCandidateId } =
+    const { office_id: officeId, candidate_id: candidateId } =
       RemoveElectionCandidateParamsSchema.parse(req.params);
 
     await electionCandidate.remove({
-      electionCandidateId,
+      officeId,
+      candidateId,
+      societyId: req.society.id,
     });
 
     res.status(204).send();

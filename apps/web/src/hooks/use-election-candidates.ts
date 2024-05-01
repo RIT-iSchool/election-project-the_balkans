@@ -9,19 +9,22 @@ export type ElectionCandidate = {
 };
 
 type UseElectionCandidatesOptions = {
-  electionId: string;
+  electionId: string | number;
+  officeId: string | number;
 };
 
 export const useElectionCandidates = ({
   electionId,
+  officeId,
 }: UseElectionCandidatesOptions) => {
-  const { data, error, isLoading } = useSWR<ElectionCandidate[]>(
-    `/api/v1/elections/${electionId}/election_candidates`,
+  const { data, error, isLoading, mutate } = useSWR<ElectionCandidate[]>(
+    `/api/v1/elections/${electionId}/election_offices/${officeId}/election_candidates`,
   );
 
   return {
     data,
     error,
     isLoading,
+    mutate,
   };
 };

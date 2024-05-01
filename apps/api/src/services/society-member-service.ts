@@ -40,7 +40,6 @@ export const list: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    console.log(req.query, 'QUERY');
     const { page } = ListSocietyMembersSchema.parse(req.query);
 
     const listSocietyMember = await societyMember.list({
