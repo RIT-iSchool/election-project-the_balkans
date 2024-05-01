@@ -63,3 +63,7 @@ describe('GET /v1/societies/:society_id', () => {
     );
   });
 });
+
+afterAll(() => {
+  server.close();
+});

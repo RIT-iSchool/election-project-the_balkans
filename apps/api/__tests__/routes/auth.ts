@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { server } from '../../src/server';
-
 export async function userLogin() {
   const loginResponse = await request(server)
     .post('/auth/login')
@@ -50,6 +49,7 @@ export async function employeeLogin() {
 
   return loginResponse.headers['set-cookie']?.[0];
 }
+
 describe('POST /auth/login', () => {
   it('allows admin to login with valid credentials', async () => {
     const loginResponse = await request(server)

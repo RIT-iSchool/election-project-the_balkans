@@ -1,9 +1,8 @@
 import request from 'supertest';
 import { server } from '../../src/server';
-import { adminLogin } from './auth';
-import { set } from 'zod';
+import { adminLogin, userLogin } from './auth';
 
-describe('PUT /v1/society_members/:member_id', () => {
+describe('GET /v1/report/society', () => {
   let adminToken: string | undefined;
   let societyId: number;
 
@@ -12,23 +11,20 @@ describe('PUT /v1/society_members/:member_id', () => {
     societyId = 1;
   });
 
-  it("Admin is able to update society member's role", async () => {
+  it('Admin gets report data for society', async () => {
     const response = await request(server)
-      .put('/v1/society_members/5496')
+      .get('/v1/report/society')
       .set('Cookie', adminToken || '')
       .set('x-society-id', societyId.toString())
       .set('Accept', 'application/json')
-      .send({
-        role: 'member',
-      })
       .expect(200);
 
     expect(response.body).toEqual(
       expect.objectContaining({
-        id: expect.any(Number),
-        userId: expect.any(Number),
-        societyId: expect.any(Number),
-        role: expect.any(String),
+        activeBallots: expect.any(Number),
+        inActiveBallots: expect.any(Number),
+        societyUsers: expect.any(Number),
+        averageVotingMembers: null,
       }),
     );
   });
