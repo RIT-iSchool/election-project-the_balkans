@@ -6,6 +6,7 @@ import {
   CreateElectionCandidate,
   CreateInitiativeVote,
   election,
+  electionCandidate,
   initiativeVote,
 } from '../db/schema';
 
@@ -13,9 +14,6 @@ export type Submit = {
   ballotSubmitData: {
     candidateVotesData: CreateCandidateVote[];
     initiativeVotesData: CreateInitiativeVote[];
-    electionId: number;
-    societyId: number;
-    writeIn?: CreateElectionCandidate;
   };
 };
 

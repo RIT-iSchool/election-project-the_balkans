@@ -2,62 +2,92 @@ import * as Ballot from '../data/ballot-data';
 import * as ElectionOffice from '../data/election-office-data';
 import * as ElectionCandidate from '../data/election-candidate-data';
 import * as CandidateVote from '../data/candidate-vote-data';
+import { BadRequestError } from '../errors/BadRequestError';
+
+type WriteIn = {
+  officeId: number;
+  name: string;
+};
+
+type Office = {
+  candidates: number[];
+  writeIn?: WriteIn;
+};
+
+type OfficeVotes = {
+  [key: string]: Office;
+};
+
+type InitiativeVotes = {
+  [key: string]: number;
+};
+
+type BallotSubmit = {
+  officeVotes: OfficeVotes;
+  initiativeVotes: InitiativeVotes;
+  electionId: number;
+};
 
 /**
  * Submits a ballot.
  */
-export const submit = async (ballotSubmitParams: Ballot.Submit) => {
-  //candidate vote is required
-  if (!ballotSubmitParams.ballotSubmitData.candidateVotesData)
-    throw new Error();
-
-  const memberId =
-    ballotSubmitParams.ballotSubmitData.candidateVotesData.pop()?.memberId;
-
-  if (!memberId) throw new Error();
+export const submit = async (
+  ballot: BallotSubmit,
+  memberId: number,
+  societyId: number,
+) => {
+  if (!ballot.officeVotes) {
+    throw new BadRequestError('Missing office votes');
+  }
 
   //search for user's existing vote
   const existingVote = await CandidateVote.retrieve({
-    electionId: ballotSubmitParams.ballotSubmitData.electionId,
+    electionId: ballot.electionId,
     memberId: memberId,
   });
 
   //user has already submitted a ballot
-  if (existingVote) throw new Error();
+  if (existingVote)
+    throw new BadRequestError('You have already voted in this election');
 
-  //write in logic
-  if (ballotSubmitParams.ballotSubmitData.writeIn) {
-    const memberId =
-      ballotSubmitParams.ballotSubmitData.candidateVotesData.pop()?.memberId;
+  const writeIns = Object.keys(ballot.officeVotes).filter(
+    (k) => !!ballot.officeVotes[k]?.writeIn,
+  );
 
-    const electionCandidateData = await ElectionCandidate.lookup({
-      name: ballotSubmitParams.ballotSubmitData.writeIn.name,
-    });
+  // Handle write-ins
+  await Promise.all(
+    writeIns.map(async (o) => {
+      const candidateName = ballot.officeVotes[o]?.writeIn?.name;
+      if (!candidateName) return null;
 
-    //candidate exists
-    if (electionCandidateData) {
-      ballotSubmitParams.ballotSubmitData.candidateVotesData.push({
-        memberId: memberId!,
-        electionCandidateId: electionCandidateData.id,
+      const electionCandidateData = await ElectionCandidate.lookup({
+        name: candidateName,
+        officeId: parseInt(o, 10),
       });
-      //candidate doesn't exist
-    } else {
-      const newElectionCandidate = await ElectionCandidate.create({
-        electionCandidateData: ballotSubmitParams.ballotSubmitData.writeIn,
-      });
-      ballotSubmitParams.ballotSubmitData.candidateVotesData.push({
-        memberId: memberId!,
-        electionCandidateId: newElectionCandidate.id,
-      });
-    }
-  }
 
-  //max votes check
-  const electionId = ballotSubmitParams.ballotSubmitData.electionId;
-  const societyId = ballotSubmitParams.ballotSubmitData.societyId;
-  const electionOffices = await ElectionOffice.list({ electionId, societyId });
-  const electionCandidates = await ElectionCandidate.list({
-    electionId,
+      if (!electionCandidateData) {
+        const newElectionCandidate = await ElectionCandidate.create({
+          electionCandidateData: {
+            name: candidateName,
+            description: 'Created automatically by write-in',
+            societyId,
+            electionOfficeId: parseInt(o, 10),
+            writeIn: true,
+          },
+        });
+
+        ballot.officeVotes[o]?.candidates.push(newElectionCandidate.id);
+      }
+
+      if (electionCandidateData) {
+        ballot.officeVotes[o]?.candidates.push(electionCandidateData.id);
+      }
+    }),
+  );
+
+  // max votes check
+  const electionOffices = await ElectionOffice.list({
+    electionId: ballot.electionId,
     societyId,
   });
 
@@ -66,26 +96,43 @@ export const submit = async (ballotSubmitParams: Ballot.Submit) => {
     officeMaxVotes.set(electionOffice.id, electionOffice.maxVotes);
   });
 
-  const officeActualVotes = new Map<number, number>();
-  ballotSubmitParams.ballotSubmitData.candidateVotesData.forEach(
-    (candidateVote) => {
-      const candidate = electionCandidates.find(
-        (candidate) => candidate.id === candidateVote.electionCandidateId,
-      );
-      if (candidate) {
-        const officeId = candidate.electionOfficeId;
-        const currentVotes = officeActualVotes.get(officeId) || 0;
-        officeActualVotes.set(officeId, currentVotes + 1);
-      }
-    },
-  );
+  Object.keys(ballot.officeVotes).forEach((k) => {
+    const maxVotes = officeMaxVotes.get(parseInt(k, 10)) || 0;
+    const votes = ballot.officeVotes[k]?.candidates.length || 0;
 
-  officeActualVotes.forEach((officeId, currentVotes) => {
-    const maxVotes = officeMaxVotes.get(officeId) || 0;
-    if (currentVotes > maxVotes) throw new Error();
+    if (votes > maxVotes) {
+      throw new BadRequestError('Invalid number of votes for office');
+    }
   });
 
-  await Ballot.submit(ballotSubmitParams);
+  const candidateVotes = Object.keys(ballot.officeVotes)
+    .map((k) => {
+      return ballot.officeVotes[k]!.candidates.map((c) => ({
+        memberId,
+        electionCandidateId: c,
+      }));
+    })
+    .flat();
+
+  const initiativeVotes = Object.keys(ballot.initiativeVotes)
+    .map((k) => {
+      return {
+        memberId,
+        electionInitiativeId: parseInt(k, 10),
+        electionInitiativeOptionId: ballot.initiativeVotes[k]!,
+      };
+    })
+    .flat();
+
+  console.log('We made it to the promise land');
+  console.log(candidateVotes, initiativeVotes);
+
+  await Ballot.submit({
+    ballotSubmitData: {
+      initiativeVotesData: initiativeVotes,
+      candidateVotesData: candidateVotes,
+    },
+  });
 };
 
 /**

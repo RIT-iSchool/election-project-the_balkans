@@ -41,7 +41,6 @@ BEGIN
 END; $$
 LANGUAGE plpgsql;
 
-DROP FUNCTION initiativeResultsFunction(election_id_param INT);
 CREATE OR REPLACE FUNCTION initiativeResultsFunction(election_id_param INT)
 RETURNS TABLE (
   optionData JSON
