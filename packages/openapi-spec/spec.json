@@ -772,13 +772,28 @@
         ]
       }
     },
-    "/v1/elections/{election_id}/election_candidates": {
+    "/v1/elections/{election_id}/election_offices/{office_id}/election_candidates": {
       "parameters": [
         {
           "in": "path",
           "name": "election_id",
           "required": true,
-          "description": "The ID of the election this office should belong to",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "path",
+          "name": "office_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "path",
+          "name": "candidate_id",
+          "required": true,
           "schema": {
             "type": "string"
           }
@@ -874,8 +889,24 @@
         ]
       }
     },
-    "/v1/elections/election_candidates/{candidate_id}": {
+    "/v1/elections/{election_id}/election_offices/{office_id}/election_candidates/{candidate_id}": {
       "parameters": [
+        {
+          "in": "path",
+          "name": "election_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "in": "path",
+          "name": "office_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
         {
           "in": "path",
           "name": "candidate_id",
