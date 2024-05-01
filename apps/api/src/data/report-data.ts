@@ -48,10 +48,9 @@ export const societyReport = async ({ societyId }: Society) => {
       db.execute<{
         count: number;
       }>(sql`SELECT count from societyUsersFunction(${societyId})`),
-      db
-        .select({ count: countDistinct(candidateVote.memberId) })
-        .from(candidateVote)
-        .innerJoin(societyMember, eq(societyMember.societyId, societyId)),
+      db.execute<{
+        count: number;
+      }>(sql`SELECT count from votingMembersFunction(${societyId})`),
     ]);
 
     const elections =

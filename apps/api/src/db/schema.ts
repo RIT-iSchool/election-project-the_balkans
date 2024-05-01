@@ -493,13 +493,21 @@ export const activeElectionsView = pgMaterializedView('activeElectionsView', {
 }).existing();
 
 export const activeBallotsView = pgMaterializedView('activeBallotsView', {
+  societyId: integer('societyId'),
   count: integer('count'),
 }).existing();
 
 export const inactiveBallotsView = pgMaterializedView('inactiveBallotsView', {
+  societyId: integer('societyId'),
   count: integer('count'),
 }).existing();
 
 export const societyUsersView = pgMaterializedView('societyUsersView', {
+  societyId: integer('societyId'),
+  count: integer('count'),
+}).existing();
+
+export const votingMembersView = pgMaterializedView('votingMembersView', {
+  societyId: integer('societyId'),
   count: integer('count'),
 }).existing();
