@@ -314,7 +314,6 @@ export default function Page({ params }: PageProps) {
             </div>
           </>
         )}
-        {/* election hasnt started */}
         {hasntStarted && (
           <>
             <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
