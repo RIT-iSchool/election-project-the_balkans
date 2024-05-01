@@ -3,14 +3,18 @@ import useSWR from 'swr';
 export type StatusReport = {
   totalVotes: number;
   votingMembers: {
-    firstName: string;
-    lastName: string;
+    votingUser: {
+      firstName: string;
+      lastName: string;
+    };
   }[];
   nonVotingMembers: {
-    firstName: string;
-    lastName: string;
+    nonVotingUser: {
+      firstName: string;
+      lastName: string;
+    };
   }[];
-  votingMemberPercentage: number;
+  votingMemberPercentage: number | null;
 };
 
 type UseStatusReportOptions = {

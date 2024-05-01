@@ -1,7 +1,7 @@
 CREATE MATERIALIZED VIEW "totalVotesView" AS
 SELECT
-  "electionOffice".election_id,
-  COUNT(*) AS "count"
+  "electionOffice".election_id as electionId,
+  COUNT(*) AS count
 FROM
   "candidateVote"
 INNER JOIN "electionCandidate" ON "electionCandidate"."id" = "candidateVote"."election_candidate_id"

@@ -6,6 +6,7 @@ import {
   CreateElectionCandidate,
   CreateInitiativeVote,
   election,
+  electionCandidate,
   initiativeVote,
 } from '../db/schema';
 

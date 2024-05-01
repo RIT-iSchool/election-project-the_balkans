@@ -38,6 +38,7 @@ export enum Permissions {
   // Society members
   list_society_members = 'list_society_members',
   create_society_member = 'create_society_member',
+  update_society_member = 'update_society_member',
 
   // Ballots
   submit_ballot = 'submit_ballot',
@@ -82,6 +83,7 @@ export const permissions = {
     // Offices
     Permissions.list_offices,
     Permissions.retrieve_office,
+
     // Candidates
     Permissions.list_candidates,
     Permissions.retrieve_candidate,
@@ -193,6 +195,7 @@ export const permissions = {
     // Society Members
     Permissions.create_society_member,
     Permissions.list_society_members,
+    Permissions.update_society_member,
 
     //Ballot
     Permissions.retrieve_ballot,

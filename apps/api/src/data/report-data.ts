@@ -1,13 +1,6 @@
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { db } from '../db';
 import {
-  election,
-  candidateVote,
-  societyMember,
-  electionOffice,
-  electionCandidate,
-  society,
-  user,
   officeResultsView,
   initiativeResultsView,
   activeElectionsView,
@@ -16,6 +9,8 @@ import {
   inactiveBallotsView,
   societyUsersView,
   totalVotesView,
+  votingView,
+  nonVotingView,
 } from '../db/schema';
 import { calculate } from '../helpers/log-helper';
 
@@ -32,6 +27,7 @@ export const societyReport = async ({ societyId }: Society) => {
       db.refreshMaterializedView(activeBallotsView),
       db.refreshMaterializedView(inactiveBallotsView),
       db.refreshMaterializedView(societyUsersView),
+      db.refreshMaterializedView(votingView),
     ]);
 
     const [
@@ -42,16 +38,24 @@ export const societyReport = async ({ societyId }: Society) => {
     ] = await Promise.all([
       db.execute<{
         count: number;
-      }>(sql`SELECT count from activeBallotsFunction(${societyId})`),
+      }>(
+        sql`SELECT totalCount as count from activeBallotsFunction(${societyId})`,
+      ),
       db.execute<{
         count: number;
-      }>(sql`SELECT count from inactiveBallotsFunction(${societyId})`),
+      }>(
+        sql`SELECT totalCount as count from inactiveBallotsFunction(${societyId})`,
+      ),
       db.execute<{
         count: number;
-      }>(sql`SELECT count from societyUsersFunction(${societyId})`),
+      }>(
+        sql`SELECT totalCount as count from societyUsersFunction(${societyId})`,
+      ),
       db.execute<{
         count: number;
-      }>(sql`SELECT count from votingMembersFunction(${societyId})`),
+      }>(
+        sql`SELECT totalCount as count from votingMembersFunction(${societyId})`,
+      ),
     ]);
 
     const elections =
@@ -89,10 +93,10 @@ export const systemReport = async () => {
     ] = await Promise.all([
       db.execute<{
         count: number;
-      }>(sql`SELECT count from loggedInUsersFunction()`),
+      }>(sql`SELECT totalCount as count from loggedInUsersFunction()`),
       db.execute<{
         count: number;
-      }>(sql`SELECT count from activeElectionsFunction()`),
+      }>(sql`SELECT totalCount as count from activeElectionsFunction()`),
       calculate(),
     ]);
 
@@ -116,49 +120,31 @@ export type Status = {
  */
 export const statusReport = async ({ electionId }: Status) => {
   try {
-    await Promise.all([db.refreshMaterializedView(totalVotesView)]);
-
-    const [[totalVotes], votingMembers, members] = await Promise.all([
-      db.execute<{
-        count: number;
-      }>(sql`SELECT count from totalVotesFunction(${electionId})`),
-      db
-        .selectDistinctOn([user.id], {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        })
-        .from(user)
-        .innerJoin(societyMember, eq(societyMember.userId, user.id))
-        .innerJoin(society, eq(society.id, societyMember.societyId))
-        .innerJoin(election, eq(election.societyId, society.id))
-        .innerJoin(electionOffice, eq(electionOffice.electionId, election.id))
-        .innerJoin(
-          electionCandidate,
-          eq(electionCandidate.electionOfficeId, electionOffice.id),
-        )
-        .innerJoin(
-          candidateVote,
-          eq(candidateVote.electionCandidateId, electionCandidate.id),
-        )
-        .where(eq(election.id, electionId)),
-      db
-        .selectDistinctOn([user.id], {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        })
-        .from(user)
-        .innerJoin(societyMember, eq(societyMember.userId, user.id))
-        .innerJoin(society, eq(society.id, societyMember.societyId))
-        .innerJoin(election, eq(election.societyId, society.id))
-        .where(eq(election.id, electionId)),
+    await Promise.all([
+      db.refreshMaterializedView(totalVotesView),
+      db.refreshMaterializedView(votingView),
+      db.refreshMaterializedView(nonVotingView),
     ]);
 
-    const nonVotingMembers = members.filter(
-      (member) =>
-        !votingMembers.some((votingMember) => votingMember.id === member.id),
-    );
+    const [[totalVotes], votingMembers, nonVotingMembers] = await Promise.all([
+      db.execute<{
+        count: number;
+      }>(
+        sql`SELECT totalCount as count from totalVotesFunction(${electionId})`,
+      ),
+      db.execute<{
+        votingUser: {
+          firstName: string;
+          lastName: string;
+        }[];
+      }>(sql`SELECT "votingUser" from votingFunction(${electionId})`),
+      db.execute<{
+        nonVotingUser: {
+          firstName: string;
+          lastName: string;
+        }[];
+      }>(sql`SELECT "nonVotingUser" from nonVotingFunction(${electionId})`),
+    ]);
 
     const totalMembers =
       (votingMembers?.length ?? 0) + (nonVotingMembers?.length ?? 0);
@@ -169,8 +155,8 @@ export const statusReport = async ({ electionId }: Status) => {
 
     return {
       totalVotes: totalVotes?.count || 0,
-      votingMembers,
-      nonVotingMembers,
+      votingMembers: votingMembers || [],
+      nonVotingMembers: nonVotingMembers || [],
       votingMemberPercentage,
     };
   } catch (err) {
@@ -198,15 +184,19 @@ export const resultsReport = async ({ electionId }: Results) => {
           name: string;
           office: string;
           voteCount: number;
-        };
-      }>(sql`SELECT candidate from officeResultsFunction(${electionId})`),
+        }[];
+      }>(
+        sql`SELECT candidatedata as candidate from officeResultsFunction(${electionId})`,
+      ),
       db.execute<{
         option: {
           title: string;
           initiative: string;
           voteCount: number;
-        };
-      }>(sql`SELECT option from initiativeResultsFunction(${electionId})`),
+        }[];
+      }>(
+        sql`SELECT optiondata as option from initiativeResultsFunction(${electionId})`,
+      ),
     ]);
 
     return {
@@ -214,7 +204,6 @@ export const resultsReport = async ({ electionId }: Results) => {
       initiativeResults,
     };
   } catch (err) {
-    console.error(err);
     throw new Error('Something went wrong with the report.');
   }
 };

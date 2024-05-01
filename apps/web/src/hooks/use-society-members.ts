@@ -21,7 +21,7 @@ type UseSocietyMembersOptions = {
 };
 
 export const useSocietyMembers = ({ page }: UseSocietyMembersOptions) => {
-  const { data, error, isLoading } = useSWR<Paginated<SocietyMember>>(
+  const { data, error, isLoading, mutate } = useSWR<Paginated<SocietyMember>>(
     `/api/v1/society_members${page ? `?page=${page}` : ''}`,
   );
 
@@ -29,5 +29,6 @@ export const useSocietyMembers = ({ page }: UseSocietyMembersOptions) => {
     ...data,
     error,
     isLoading,
+    mutate,
   };
 };

@@ -196,7 +196,7 @@ export default function Page({ params }: PageProps) {
   const { data: status } = useStatusReport(params);
   const { data: results } = useResultsReport(params);
 
-  if (!election) return null;
+  if (!election || !status) return null;
 
   const description = `${dayjs(election.startDate).format('MMMM DD, YYYY')} - ${dayjs(election.endDate).format('MMMM DD, YYYY')}`;
 
@@ -211,7 +211,7 @@ export default function Page({ params }: PageProps) {
 
         <StatsCard
           label="Voting Member Percentage"
-          count={status?.votingMemberPercentage}
+          count={status?.votingMemberPercentage || '0'}
           unit="%"
         />
 
@@ -285,34 +285,6 @@ export default function Page({ params }: PageProps) {
                 </Inset>
               </Card>
             </div>
-
-            {/* <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
-              <Card>
-                <Inset pb="0" side="top">
-                  <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
-                    <Text size="4" weight="medium">
-                      Options
-                    </Text>
-                  </div>
-                </Inset>
-                <Inset clip="border-box" side="bottom">
-                  <Table>
-                    <TableHeader className="bg-white">
-                      <TableHead className="!border-t-0">Title</TableHead>
-                      <TableHead className="!border-t-0">Initiative</TableHead>
-                      <TableHead className="!border-t-0">Actions</TableHead>
-                    </TableHeader>
-                    <TableBody>
-                      {ballot?.initiatives.map((i) =>
-                        i.options.map((o) => (
-                          <OptionRow key={o.id} option={o} initiative={i} />
-                        )),
-                      )}
-                    </TableBody>
-                  </Table>
-                </Inset>
-              </Card>
-            </div> */}
           </>
         )}
 
@@ -335,7 +307,8 @@ export default function Page({ params }: PageProps) {
                     <TableRow key={idx}>
                       <TableCell>
                         <Text color="gray">
-                          {member.firstName} {member.lastName}
+                          {member.votingUser.firstName}{' '}
+                          {member.votingUser.lastName}
                         </Text>
                       </TableCell>
                     </TableRow>
@@ -362,7 +335,8 @@ export default function Page({ params }: PageProps) {
                     <TableRow key={idx}>
                       <TableCell>
                         <Text color="gray">
-                          {member.firstName} {member.lastName}
+                          {member.nonVotingUser.firstName}{' '}
+                          {member.nonVotingUser.lastName}
                         </Text>
                       </TableCell>
                     </TableRow>
@@ -389,21 +363,7 @@ export default function Page({ params }: PageProps) {
                   <TableHead className="!border-t-0">Office</TableHead>
                   <TableHead className="!border-t-0">Votes</TableHead>
                 </TableHeader>
-                <TableBody>
-                  {results?.officeResults.map((oR, idx) => (
-                    <TableRow key={idx}>
-                      <TableCell>
-                        <Text color="gray">{oR.candidate.name}</Text>
-                      </TableCell>
-                      <TableCell>
-                        <Text color="gray">{oR.candidate.office}</Text>
-                      </TableCell>
-                      <TableCell>
-                        <Text color="gray">{oR.candidate.voteCount}</Text>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                <TableBody></TableBody>
               </Table>
             </Inset>
           </Card> */}

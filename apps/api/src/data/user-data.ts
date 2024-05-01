@@ -47,6 +47,7 @@ export const update = async ({ userId, userData }: Update) => {
 
     return updatedUser!;
   } catch (err) {
+    console.log('data', err);
     throw new Error('Something went wrong updating a user');
   }
 };

@@ -51,8 +51,8 @@ export const list = async ({ electionId, officeId, societyId }: List) => {
     if (officeId) {
       electionCandidateQuery.where(
         and(
-          eq(election.id, electionId),
           eq(election.societyId, societyId),
+          eq(election.id, electionId),
           eq(electionOffice.id, officeId),
           eq(electionCandidate.writeIn, false),
         ),

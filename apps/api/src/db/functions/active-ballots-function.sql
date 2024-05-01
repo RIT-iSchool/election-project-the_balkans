@@ -1,13 +1,13 @@
 CREATE OR REPLACE FUNCTION activeBallotsFunction(society_id_param INT)
 RETURNS TABLE (
-  count INT
+  totalCount BIGINT
 ) AS $$
 BEGIN
   RETURN QUERY 
   SELECT 
     count
   FROM 
-    activeBallotsView
+    "activeBallotsView"
   WHERE 
     societyId = society_id_param;
 END; $$

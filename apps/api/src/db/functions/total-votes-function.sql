@@ -1,13 +1,13 @@
 CREATE OR REPLACE FUNCTION totalVotesFunction(election_id_param INT)
 RETURNS TABLE (
-  option JSON
+  totalCount BIGINT
 ) AS $$
 BEGIN
   RETURN QUERY 
   SELECT 
     count
   FROM 
-      totalVotesView
+      "totalVotesView"
   WHERE 
       electionId = election_id_param;
 END; $$
