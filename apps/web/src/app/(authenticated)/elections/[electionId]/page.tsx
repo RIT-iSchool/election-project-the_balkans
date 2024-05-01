@@ -211,7 +211,7 @@ export default function Page({ params }: PageProps) {
 
         <StatsCard
           label="Voting Member Percentage"
-          count={status?.votingMemberPercentage || ''}
+          count={status?.votingMemberPercentage || '0'}
           unit="%"
         />
 
