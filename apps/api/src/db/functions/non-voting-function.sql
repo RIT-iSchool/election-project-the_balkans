@@ -1,13 +1,13 @@
-CREATE OR REPLACE FUNCTION initiativeResultsFunction(election_id_param INT)
+CREATE OR REPLACE FUNCTION nonVotingFunction(election_id_param INT)
 RETURNS TABLE (
-  optionData JSON
+  "nonVotingUser" json
 ) AS $$
 BEGIN
   RETURN QUERY 
   SELECT 
-    option
+    "user"
   FROM 
-      "initiativeResultsView"
+      "nonVotingView"
   WHERE 
       electionId = election_id_param;
 END; $$

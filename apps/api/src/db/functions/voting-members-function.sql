@@ -1,6 +1,6 @@
 CREATE OR REPLACE FUNCTION votingMembersFunction(society_id_param INT)
 RETURNS TABLE (
-  count INT
+  totalCount BIGINT
 ) AS $$
 BEGIN
   RETURN QUERY 

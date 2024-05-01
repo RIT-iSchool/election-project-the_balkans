@@ -1,6 +1,6 @@
 CREATE MATERIALIZED VIEW "votingMembersView" AS
 SELECT
-  "societyMember"."society_id",
+  "societyMember"."society_id" AS societyId,
   COUNT(DISTINCT "candidateVote"."member_id") AS "count"
 FROM
   "candidateVote"

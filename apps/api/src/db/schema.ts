@@ -516,3 +516,13 @@ export const totalVotesView = pgMaterializedView('totalVotesView', {
   electionId: integer('electionId'),
   count: integer('count'),
 }).existing();
+
+export const votingView = pgMaterializedView('votingView', {
+  electionId: integer('electionId'),
+  user: json('user'),
+}).existing();
+
+export const nonVotingView = pgMaterializedView('nonVotingView', {
+  electionId: integer('electionId'),
+  user: json('user'),
+}).existing();

@@ -196,7 +196,7 @@ export default function Page({ params }: PageProps) {
   const { data: status } = useStatusReport(params);
   const { data: results } = useResultsReport(params);
 
-  if (!election) return null;
+  if (!election || !status) return null;
 
   const description = `${dayjs(election.startDate).format('MMMM DD, YYYY')} - ${dayjs(election.endDate).format('MMMM DD, YYYY')}`;
 
@@ -211,7 +211,7 @@ export default function Page({ params }: PageProps) {
 
         <StatsCard
           label="Voting Member Percentage"
-          count={status?.votingMemberPercentage}
+          count={status?.votingMemberPercentage || ''}
           unit="%"
         />
 
@@ -335,7 +335,8 @@ export default function Page({ params }: PageProps) {
                     <TableRow key={idx}>
                       <TableCell>
                         <Text color="gray">
-                          {member.firstName} {member.lastName}
+                          {member.votingUser.firstName}{' '}
+                          {member.votingUser.lastName}
                         </Text>
                       </TableCell>
                     </TableRow>
@@ -362,7 +363,8 @@ export default function Page({ params }: PageProps) {
                     <TableRow key={idx}>
                       <TableCell>
                         <Text color="gray">
-                          {member.firstName} {member.lastName}
+                          {member.nonVotingUser.firstName}{' '}
+                          {member.nonVotingUser.lastName}
                         </Text>
                       </TableCell>
                     </TableRow>
@@ -390,7 +392,7 @@ export default function Page({ params }: PageProps) {
                   <TableHead className="!border-t-0">Votes</TableHead>
                 </TableHeader>
                 <TableBody>
-                  {results?.officeResults.map((oR, idx) => (
+                  {/* {results?.officeResults.map((oR, idx) => (
                     <TableRow key={idx}>
                       <TableCell>
                         <Text color="gray">{oR.candidate.name}</Text>
@@ -402,7 +404,7 @@ export default function Page({ params }: PageProps) {
                         <Text color="gray">{oR.candidate.voteCount}</Text>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ))} */}
                 </TableBody>
               </Table>
             </Inset>

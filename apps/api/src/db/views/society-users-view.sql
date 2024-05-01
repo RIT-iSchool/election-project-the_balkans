@@ -1,7 +1,7 @@
 CREATE MATERIALIZED VIEW "societyUsersView" AS
 SELECT
-  "societyMember".society_id AS "societyId",
-  COUNT(*) AS "count"
+  "societyMember".society_id AS societyId,
+  COUNT(*) AS count
 FROM
   "societyMember"
 GROUP BY

@@ -1,12 +1,12 @@
 CREATE OR REPLACE FUNCTION loggedInUsersFunction()
 RETURNS TABLE (
-  count INT
+  totalCount BIGINT
 ) AS $$
 BEGIN
   RETURN QUERY 
   SELECT 
     count
   FROM 
-    loggedInUsersView
+    "loggedInUsersView";
 END; $$
 LANGUAGE plpgsql;

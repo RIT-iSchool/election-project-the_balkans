@@ -1,11 +1,11 @@
 CREATE MATERIALIZED VIEW "initiativeResultsView" AS
 SELECT
-  "election"."id" AS "electionId",
+  "election"."id" AS electionId,
   json_build_object(
     'title', "initiativeOption"."title",
     'initiative', "electionInitiative"."initiative_name",
     'voteCount', COUNT("initiativeVote"."election_initiative_id")
-  ) AS "option"
+  ) AS option
 FROM
   "election"
 INNER JOIN

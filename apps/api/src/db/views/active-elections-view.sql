@@ -1,6 +1,6 @@
 CREATE MATERIALIZED VIEW "activeElectionsView" AS
 SELECT 
-  COUNT(*) AS "count"
+  COUNT(*) AS count
 FROM
   election
 WHERE

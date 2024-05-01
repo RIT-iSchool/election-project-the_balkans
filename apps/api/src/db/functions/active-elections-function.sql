@@ -1,12 +1,12 @@
 CREATE OR REPLACE FUNCTION activeElectionsFunction()
 RETURNS TABLE (
-  count INT
+  totalCount BIGINT
 ) AS $$
 BEGIN
   RETURN QUERY 
   SELECT 
     count
   FROM 
-    activeElectionsView
+    "activeElectionsView";
 END; $$
 LANGUAGE plpgsql;
