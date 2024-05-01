@@ -170,6 +170,7 @@ export const permissions = {
     Permissions.retrieve_office,
     Permissions.update_election,
     Permissions.remove_office,
+    Permissions.update_office,
 
     // Candidates
     Permissions.create_candidate,

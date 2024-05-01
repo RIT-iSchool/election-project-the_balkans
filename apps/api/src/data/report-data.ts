@@ -178,7 +178,7 @@ export const resultsReport = async ({ electionId }: Results) => {
       db.refreshMaterializedView(initiativeResultsView),
     ]);
 
-    const [[officeResults], [initiativeResults]] = await Promise.all([
+    const [officeResults, initiativeResults] = await Promise.all([
       db.execute<{
         candidate: {
           name: string;
@@ -200,8 +200,8 @@ export const resultsReport = async ({ electionId }: Results) => {
     ]);
 
     return {
-      officeResults,
-      initiativeResults,
+      officeResults: officeResults || [],
+      initiativeResults: initiativeResults || [],
     };
   } catch (err) {
     throw new Error('Something went wrong with the report.');

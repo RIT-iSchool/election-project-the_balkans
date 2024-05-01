@@ -32,6 +32,7 @@ import { useStatusReport } from '@/hooks/use-status-report';
 import { StatsCard } from '@/components/shared/stats-card';
 import { useResultsReport } from '@/hooks/use-results-report';
 import { useRouter } from 'next/navigation';
+import { EditOffice } from './edit-office';
 
 type PageProps = {
   params: {
@@ -39,7 +40,13 @@ type PageProps = {
   };
 };
 
-const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
+const OfficeRow = ({
+  office,
+  hasntStarted,
+}: {
+  office: Ballot['offices'][number];
+  hasntStarted: boolean | undefined;
+}) => {
   const router = useRouter();
 
   const [editOpen, setEditOpen] = useState(false);
@@ -72,32 +79,34 @@ const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
         <TableCell>
           <Text color="gray">{office.candidates.length}</Text>
         </TableCell>
-        <TableCell>
-          <DropdownMenuRoot>
-            <DropdownMenuTrigger>
-              <IconButton>
-                <ThreeDotsHorizontal20 />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
-                <Pencil16 />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="w-32"
-                color="red"
-                onClick={handleOpenDelete}
-              >
-                <Trash16 />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuRoot>
-        </TableCell>
+        {!hasntStarted && (
+          <TableCell>
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger>
+                <IconButton>
+                  <ThreeDotsHorizontal20 />
+                </IconButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                  <Pencil16 />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="w-32"
+                  color="red"
+                  onClick={handleOpenDelete}
+                >
+                  <Trash16 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuRoot>
+          </TableCell>
+        )}
       </TableRow>
 
-      {/* <EditOffice open={editOpen} setOpen={setEditOpen} office={office.id} /> */}
+      <EditOffice open={editOpen} setOpen={setEditOpen} office={office} />
       <DeleteOffice
         open={deleteOpen}
         setOpen={setDeleteOpen}
@@ -110,8 +119,10 @@ const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
 
 const InitiativeRow = ({
   initiative,
+  hasntStarted,
 }: {
   initiative: Ballot['initiatives'][number];
+  hasntStarted: boolean | undefined;
 }) => {
   const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
@@ -145,29 +156,31 @@ const InitiativeRow = ({
         <TableCell>
           <Text color="gray">{initiative.options.length}</Text>
         </TableCell>
-        <TableCell>
-          <DropdownMenuRoot>
-            <DropdownMenuTrigger>
-              <IconButton>
-                <ThreeDotsHorizontal20 />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
-                <Pencil16 />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="w-32"
-                color="red"
-                onClick={handleOpenDelete}
-              >
-                <Trash16 />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuRoot>
-        </TableCell>
+        {!hasntStarted && (
+          <TableCell>
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger>
+                <IconButton>
+                  <ThreeDotsHorizontal20 />
+                </IconButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                  <Pencil16 />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="w-32"
+                  color="red"
+                  onClick={handleOpenDelete}
+                >
+                  <Trash16 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuRoot>
+          </TableCell>
+        )}
       </TableRow>
 
       {editOpen && (
@@ -196,7 +209,7 @@ export default function Page({ params }: PageProps) {
   const { data: results } = useResultsReport(params);
 
   const hasntStarted =
-    ballot?.startDate && new Date(ballot?.startDate) < new Date();
+    election?.startDate && new Date(election?.startDate) < new Date();
 
   if (!election || !status) return null;
 
@@ -238,10 +251,12 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Offices
                     </Text>
-                    <NewOffice
-                      electionId={params.electionId}
-                      refetch={refetchBallot}
-                    />
+                    {!hasntStarted && (
+                      <NewOffice
+                        electionId={params.electionId}
+                        refetch={refetchBallot}
+                      />
+                    )}
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -249,11 +264,17 @@ export default function Page({ params }: PageProps) {
                     <TableHeader className="bg-white">
                       <TableHead className="!border-t-0">Position</TableHead>
                       <TableHead className="!border-t-0">Candidates</TableHead>
-                      <TableHead className="!border-t-0">Actions</TableHead>
+                      {!hasntStarted && (
+                        <TableHead className="!border-t-0">Actions</TableHead>
+                      )}
                     </TableHeader>
                     <TableBody>
                       {ballot?.offices?.map((office) => (
-                        <OfficeRow office={office} key={office.id} />
+                        <OfficeRow
+                          office={office}
+                          key={office.id}
+                          hasntStarted={hasntStarted}
+                        />
                       ))}
                     </TableBody>
                   </Table>
@@ -265,10 +286,12 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Initiatives
                     </Text>
-                    <NewInitiative
-                      electionId={params.electionId}
-                      refetch={refetchBallot}
-                    />
+                    {!hasntStarted && (
+                      <NewInitiative
+                        electionId={params.electionId}
+                        refetch={refetchBallot}
+                      />
+                    )}
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -276,11 +299,17 @@ export default function Page({ params }: PageProps) {
                     <TableHeader className="bg-white">
                       <TableHead className="!border-t-0">Title</TableHead>
                       <TableHead className="!border-t-0">Options</TableHead>
-                      <TableHead className="!border-t-0">Actions</TableHead>
+                      {!hasntStarted && (
+                        <TableHead className="!border-t-0">Actions</TableHead>
+                      )}
                     </TableHeader>
                     <TableBody>
                       {ballot?.initiatives.map((i) => (
-                        <InitiativeRow key={i.id} initiative={i} />
+                        <InitiativeRow
+                          key={i.id}
+                          initiative={i}
+                          hasntStarted={hasntStarted}
+                        />
                       ))}
                     </TableBody>
                   </Table>
@@ -289,7 +318,6 @@ export default function Page({ params }: PageProps) {
             </div>
           </>
         )}
-        {/* election hasnt started */}
         {hasntStarted && (
           <>
             <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
@@ -351,7 +379,7 @@ export default function Page({ params }: PageProps) {
               </Card>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+            <div className="grid grid-cols-2 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
               <Card>
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
@@ -367,7 +395,56 @@ export default function Page({ params }: PageProps) {
                       <TableHead className="!border-t-0">Office</TableHead>
                       <TableHead className="!border-t-0">Votes</TableHead>
                     </TableHeader>
-                    <TableBody></TableBody>
+                    <TableBody>
+                      {results &&
+                        results.officeResults.map((oR, idx) => (
+                          <TableRow key={idx}>
+                            <TableCell>
+                              <Text color="gray">{oR.candidate.name}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text color="gray">{oR.candidate.office}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text color="gray">{oR.candidate.voteCount}</Text>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </Inset>
+              </Card>
+              <Card>
+                <Inset pb="0" side="top">
+                  <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
+                    <Text size="4" weight="medium">
+                      Initiative Results
+                    </Text>
+                  </div>
+                </Inset>
+                <Inset clip="border-box" side="bottom">
+                  <Table>
+                    <TableHeader className="bg-white">
+                      <TableHead className="!border-t-0">Title</TableHead>
+                      <TableHead className="!border-t-0">Initiative</TableHead>
+                      <TableHead className="!border-t-0">Vote Count</TableHead>
+                    </TableHeader>
+                    <TableBody>
+                      {results &&
+                        results.initiativeResults?.map((iR, idx) => (
+                          <TableRow key={idx}>
+                            <TableCell>
+                              <Text color="gray">{iR.option.title}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text color="gray">{iR.option.initiative}</Text>
+                            </TableCell>
+                            <TableCell>
+                              <Text color="gray">{iR.option.voteCount}</Text>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
                   </Table>
                 </Inset>
               </Card>
