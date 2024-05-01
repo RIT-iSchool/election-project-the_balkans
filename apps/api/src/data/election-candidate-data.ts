@@ -54,11 +54,16 @@ export const list = async ({ electionId, officeId, societyId }: List) => {
           eq(election.societyId, societyId),
           eq(election.id, electionId),
           eq(electionOffice.id, officeId),
+          eq(electionCandidate.writeIn, false),
         ),
       );
     } else {
       electionCandidateQuery.where(
-        and(eq(election.societyId, societyId), eq(election.id, electionId)),
+        and(
+          eq(election.id, electionId),
+          eq(election.societyId, societyId),
+          eq(electionCandidate.writeIn, false),
+        ),
       );
     }
 
@@ -70,15 +75,19 @@ export const list = async ({ electionId, officeId, societyId }: List) => {
 
 export type Lookup = {
   name: string;
+  officeId: number;
 };
 
 /**
  * Lookup a candidate.
  */
-export const lookup = async ({ name }: Lookup) => {
+export const lookup = async ({ name, officeId }: Lookup) => {
   try {
     const electionCandidateData = await db.query.electionCandidate.findFirst({
-      where: and(ilike(electionCandidate.name, name)),
+      where: and(
+        ilike(electionCandidate.name, name),
+        eq(electionCandidate.electionOfficeId, officeId),
+      ),
     });
     return electionCandidateData;
   } catch (err) {

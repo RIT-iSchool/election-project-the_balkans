@@ -1,0 +1,1 @@
+ALTER TABLE "electionCandidate" ADD COLUMN "write_in" boolean DEFAULT false;

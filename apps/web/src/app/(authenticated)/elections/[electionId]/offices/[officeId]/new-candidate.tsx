@@ -116,7 +116,7 @@ export const NewCandidate = ({
                 >
                   {!values.photoURL && (
                     <FileUploader
-                      type="election"
+                      type="candidate"
                       onUploadComplete={(fileName) =>
                         setFieldValue('photoURL', fileName)
                       }
@@ -126,7 +126,7 @@ export const NewCandidate = ({
                   )}
                   {values.photoURL && (
                     <img
-                      src={`/ajax/uploads/election/${values.photoURL}`}
+                      src={`/ajax/uploads/candidate/${values.photoURL}`}
                       className="size-full object-cover"
                     />
                   )}
