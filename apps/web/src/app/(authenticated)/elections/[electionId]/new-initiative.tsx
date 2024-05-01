@@ -17,7 +17,7 @@ import {
 import { useState } from 'react';
 import * as yup from 'yup';
 
-type NewOfficeProps = {
+type NewInitiativeProps = {
   electionId: string;
   refetch: () => void;
 };
@@ -27,7 +27,7 @@ const initialValues = {
   description: '',
 };
 
-export const NewInitiative = ({ electionId, refetch }: NewOfficeProps) => {
+export const NewInitiative = ({ electionId, refetch }: NewInitiativeProps) => {
   const [open, setOpen] = useState(false);
 
   const { mutateAsync: createElectionInitiative, isLoading } =

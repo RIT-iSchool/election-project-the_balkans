@@ -1,7 +1,6 @@
 import { useUpdateElectionOffice } from '@/hooks/mutations/use-update-election-office';
 import { useBallot } from '@/hooks/use-ballot';
 import { ElectionOffice } from '@/hooks/use-election-office';
-import { Plus16 } from '@frosted-ui/icons';
 import { useFormik } from 'formik';
 import {
   Button,
@@ -9,7 +8,6 @@ import {
   DialogDescription,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
   TextFieldRoot,
   TextFieldInput,

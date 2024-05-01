@@ -8,8 +8,8 @@ export type ElectionInitiative = {
 };
 
 type UseElectionInitiativeOptions = {
-  electionId: string;
-  initiativeId: string;
+  electionId: string | number;
+  initiativeId: string | number;
 };
 
 export const useElectionInitiative = ({

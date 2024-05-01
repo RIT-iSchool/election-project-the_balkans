@@ -2,21 +2,18 @@ import axios from 'axios';
 import { ProxiedUseMutationOptions, useMutation } from './use-mutation';
 
 type ElectionInitiativeData = {
-  id: number;
-  societyId: number;
+  initiativeId: number;
   description: string;
   electionId: number;
   initiativeName: string;
 };
 
-const updateElectionInitiative = async (
-  initiativeId: number,
-  electionInitiativeData: ElectionInitiativeData,
-) => {
+const updateElectionInitiative = async (options: ElectionInitiativeData) => {
   const response = await axios.put(
-    `/api/v1/elections/election_initiatives/${initiativeId}`,
-    electionInitiativeData,
+    `/api/v1/elections/${options.electionId}/election_initiatives/${options.initiativeId}`,
+    options,
   );
+
   return response.data;
 };
 

@@ -7,15 +7,25 @@ type EmptyProps = {
   icon: ForwardRefExoticComponent<IconProps>;
   title: string;
   subtitle: string;
+  ghost?: boolean;
   className?: string;
 };
 
-const Empty = ({ icon: Icon, title, subtitle, className }: EmptyProps) => {
+const Empty = ({
+  icon: Icon,
+  title,
+  subtitle,
+  ghost,
+  className,
+}: EmptyProps) => {
   return (
     <div className="w-full px-6">
       <div
         className={cn(
-          'border-gray-a5 flex h-72 flex-col items-center justify-center space-y-2 rounded-md border py-10',
+          'border-gray-a5 flex h-72 flex-col items-center justify-center space-y-2 rounded-md py-10',
+          {
+            border: !ghost,
+          },
           className,
         )}
       >

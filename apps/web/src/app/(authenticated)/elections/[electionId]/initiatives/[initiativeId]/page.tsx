@@ -21,16 +21,13 @@ import {
   TableRow,
   TableCell,
 } from '@/components/shared/table';
-import { useElectionCandidates } from '@/hooks/use-election-candidates';
 import { useCallback, useState } from 'react';
-import { Ballot, useBallot } from '@/hooks/use-ballot';
+import { Ballot } from '@/hooks/use-ballot';
 import { Pencil16, ThreeDotsHorizontal20, Trash16 } from '@frosted-ui/icons';
-import { useElectionOffice } from '@/hooks/use-election-office';
 import { NewOption } from './new-option';
 import { EditOption } from './edit-option';
 import { DeleteOption } from './delete-option';
 import { useElection } from '@/hooks/use-election';
-import { useElectionInitiatives } from '@/hooks/use-election-initiatives';
 import { useInitiativeOptions } from '@/hooks/use-initiative-options';
 import { useElectionInitiative } from '@/hooks/use-election-initiative';
 
@@ -85,15 +82,25 @@ const OptionRow = ({
         </TableCell>
       </TableRow>
 
-      <EditOption open={editOpen} setOpen={setEditOpen} option={option} />
+      {editOpen && (
+        <EditOption
+          open={editOpen}
+          setOpen={setEditOpen}
+          electionId={initiative.electionId}
+          initiativeId={initiative.id}
+          optionId={option.id}
+        />
+      )}
 
-      <DeleteOption
-        open={deleteOpen}
-        setOpen={setDeleteOpen}
-        electionId={initiative.electionId}
-        initiativeId={initiative.id}
-        optionId={option.id}
-      />
+      {deleteOpen && (
+        <DeleteOption
+          open={deleteOpen}
+          setOpen={setDeleteOpen}
+          electionId={initiative.electionId}
+          initiativeId={initiative.id}
+          optionId={option.id}
+        />
+      )}
     </>
   );
 };
