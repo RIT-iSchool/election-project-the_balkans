@@ -21,3 +21,9 @@ export const list = async (societyMemberListParams: SocietyMember.List) => {
   const societyMember = await SocietyMember.list(societyMemberListParams);
   return societyMember;
 };
+
+export const update = async (memberUpdateParams: SocietyMember.Update) => {
+  const { role, ..._rest } = memberUpdateParams;
+  const updatedMember = await SocietyMember.update(memberUpdateParams);
+  return updatedMember;
+};

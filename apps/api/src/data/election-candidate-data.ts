@@ -27,7 +27,7 @@ export const create = async ({ electionCandidateData }: Create) => {
 
 export type List = {
   electionId: number;
-  officeId: number;
+  officeId?: number;
   societyId: number;
 };
 
@@ -36,7 +36,7 @@ export type List = {
  */
 export const list = async ({ electionId, officeId, societyId }: List) => {
   try {
-    const electionCandidateData = await db
+    const electionCandidateQuery = db
       .select({
         ...getTableColumns(electionCandidate),
       })
@@ -46,15 +46,23 @@ export const list = async ({ electionId, officeId, societyId }: List) => {
         eq(electionCandidate.electionOfficeId, electionOffice.id),
       )
       .innerJoin(election, eq(electionOffice.electionId, election.id))
-      .where(
+      .$dynamic();
+
+    if (officeId) {
+      electionCandidateQuery.where(
         and(
-          eq(election.id, electionId),
           eq(election.societyId, societyId),
+          eq(election.id, electionId),
           eq(electionOffice.id, officeId),
         ),
       );
+    } else {
+      electionCandidateQuery.where(
+        and(eq(election.societyId, societyId), eq(election.id, electionId)),
+      );
+    }
 
-    return electionCandidateData;
+    return await electionCandidateQuery;
   } catch (err) {
     throw new Error('Something went wrong listing election candidates.');
   }

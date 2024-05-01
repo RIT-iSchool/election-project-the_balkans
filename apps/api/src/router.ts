@@ -66,6 +66,7 @@ router.delete('/v1/elections/initiative_options/:option_id', auth('remove_initia
 // Society Members
 router.get('/v1/society_members', auth('list_society_members'), societyMember.list);
 router.post('/v1/society_members', auth('create_society_member'), societyMember.create);
+router.put('/v1/society_members/:member_id', auth('update_society_member'), societyMember.update);
 
 // Society
 router.get('/v1/societies', auth('list_societies'), society.list);

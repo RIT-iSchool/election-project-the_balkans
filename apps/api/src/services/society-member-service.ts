@@ -52,3 +52,30 @@ export const list: Handler = async (req, res, next) => {
     next(err);
   }
 };
+
+const UpdateMemberParamsSchema = z.object({
+  member_id: z.string().transform((id) => parseInt(id)),
+});
+
+const UpdateSocietyMemberSchema = z.object({
+  role: z.enum(['member', 'officer', 'employee']),
+});
+
+export const update: Handler = async (req, res, next) => {
+  try {
+    if (!req.society) {
+      throw new BadRequestError('Society ID missing from headers');
+    }
+    const { member_id: memberId } = UpdateMemberParamsSchema.parse(req.params);
+    const { role } = UpdateSocietyMemberSchema.parse(req.body);
+
+    const updatedMember = await societyMember.update({
+      memberId: memberId,
+      role,
+    });
+
+    res.send(updatedMember);
+  } catch (err) {
+    next(err);
+  }
+};

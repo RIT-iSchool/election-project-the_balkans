@@ -1,4 +1,9 @@
-import { CreateSocietyMember, societyMember, user } from '../db/schema';
+import {
+  CreateSocietyMember,
+  UpdateSocietyMember,
+  societyMember,
+  user,
+} from '../db/schema';
 import { db, withPagination } from '../db';
 import { eq, getTableColumns } from 'drizzle-orm';
 
@@ -50,5 +55,30 @@ export const list = async ({ societyId, page }: List) => {
     return societyMembersData;
   } catch (err) {
     throw new Error('Something went wrong listing society members.');
+  }
+};
+
+export type Update = {
+  memberId: number;
+  role: UpdateSocietyMember['role'];
+};
+
+export const update = async ({ memberId, role }: Update) => {
+  try {
+    const [updatedSocietyMember] = await db.transaction(
+      async (dbClient) =>
+        await dbClient
+          .update(societyMember)
+          .set({ role })
+          .where(eq(societyMember.id, memberId))
+          .returning(),
+    );
+
+    if (!updatedSocietyMember) throw new Error('Member not found');
+
+    return updatedSocietyMember!;
+  } catch (err) {
+    console.log('data', err);
+    throw new Error('Something went wrong updating a societyMember');
   }
 };
