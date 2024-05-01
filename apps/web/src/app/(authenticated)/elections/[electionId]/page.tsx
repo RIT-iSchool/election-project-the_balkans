@@ -25,7 +25,6 @@ import { Pencil16, ThreeDotsHorizontal20, Trash16 } from '@frosted-ui/icons';
 import { NewOffice } from './new-office';
 import { MouseEventHandler, useCallback, useState } from 'react';
 import { DeleteOffice } from './delete-office';
-import { EditOffice } from './edit-office';
 import { EditInitiative } from './edit-initiative';
 import { DeleteInitiative } from './delete-initiative';
 import { NewInitiative } from './new-initiative';
@@ -98,7 +97,7 @@ const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
         </TableCell>
       </TableRow>
 
-      <EditOffice open={editOpen} setOpen={setEditOpen} office={office} />
+      {/* <EditOffice open={editOpen} setOpen={setEditOpen} office={office.id} /> */}
       <DeleteOffice
         open={deleteOpen}
         setOpen={setDeleteOpen}

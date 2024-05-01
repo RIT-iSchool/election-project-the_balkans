@@ -3,6 +3,7 @@ import { SearchIcon } from '@/components/icons/search';
 import { PageTitle } from '@/components/shared/page-title';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useSocieties, type Society } from '@/hooks/use-societies';
+import Layout from '../../layout';
 import {
   TextFieldInput,
   TextFieldRoot,
@@ -32,9 +33,6 @@ const SocietyRow = ({ society }: { society: Society }) => {
     localStorage.setItem('society_id', society.id.toString());
     router.push('/home');
   }, []);
-  const handleManage = useCallback(() => {
-    localStorage.setItem('society_id', society.id.toString());
-  }, []);
 
   return (
     <TableRow>
@@ -47,7 +45,7 @@ const SocietyRow = ({ society }: { society: Society }) => {
       <TableCell className="flex h-full w-full gap-x-2">
         <Button onClick={handleInvestigate}>Investigate Society</Button>
         <Link href={`/admin/societies/${society.id}`}>
-          <Button onClick={handleManage}>Manage Society</Button>
+          <Button>Manage Society</Button>
         </Link>
       </TableCell>
     </TableRow>
