@@ -24,8 +24,10 @@ import {
 import { useMemo } from 'react';
 import { useSocietyReport } from '@/hooks/use-society-report';
 import { NewUser } from './new-user';
+import { EditRole } from './edit-role';
 import { Pagination } from '@/components/shared/pagination';
 import { useSearchParams } from 'next/navigation';
+import { mutate } from 'swr';
 
 type PageProps = {
   params: {
@@ -52,7 +54,11 @@ export default function Page({ params }: PageProps) {
   const searchParams = useSearchParams();
 
   const { data: society } = useSociety(params);
-  const { data: societyMembers, totalCount } = useSocietyMembers({
+  const {
+    data: societyMembers,
+    totalCount,
+    mutate,
+  } = useSocietyMembers({
     page: searchParams.get('page') || '1',
   });
   const { data: societyReport } = useSocietyReport();
@@ -62,12 +68,9 @@ export default function Page({ params }: PageProps) {
   return (
     <div className="flex min-h-screen flex-col gap-5 p-8 py-6">
       <div className="flex items-center justify-between">
-        <PageTitle title={society.name} description="Placeholder." />
+        <PageTitle title={society.name} description="" />
         <NewUser />
       </div>
-
-      <pre>{JSON.stringify(society, null, 2)}</pre>
-      <pre>{JSON.stringify(societyReport, null, 2)}</pre>
 
       <div className="flex flex-col gap-2">
         <Text size="5" weight="medium">
@@ -97,14 +100,11 @@ export default function Page({ params }: PageProps) {
                       <RoleBadge role={m.role} />
                     </TableCell>
                     <TableCell className="flex w-full justify-end">
-                      <DropdownMenuRoot>
-                        <DropdownMenuTrigger>
-                          <IconButton>...</IconButton>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>yo</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenuRoot>
+                      <EditRole
+                        societyMemberId={m.id}
+                        refetch={mutate}
+                        role={m.role}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

@@ -83,6 +83,7 @@ export const permissions = {
     // Offices
     Permissions.list_offices,
     Permissions.retrieve_office,
+
     // Candidates
     Permissions.list_candidates,
     Permissions.retrieve_candidate,

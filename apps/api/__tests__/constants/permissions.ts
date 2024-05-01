@@ -28,6 +28,7 @@ describe('test officer permissions', () => {
     // Offices
     Permissions.list_offices,
     Permissions.retrieve_office,
+
     // Candidates
     Permissions.list_candidates,
     Permissions.retrieve_candidate,
@@ -150,22 +151,26 @@ describe('test admin permissions', () => {
     Permissions.list_candidates,
     Permissions.retrieve_candidate,
     Permissions.update_candidate,
+    Permissions.remove_candidate,
 
     // Initiatives
     Permissions.create_initiative,
     Permissions.list_initiatives,
     Permissions.retrieve_initiative,
     Permissions.update_initiative,
+    Permissions.remove_initiative,
 
     // Initiative Options
     Permissions.list_initiative_options,
     Permissions.create_initiative_option,
     Permissions.retrieve_initiative_option,
     Permissions.update_initiative_option,
+    Permissions.remove_initiative_option,
 
     // Society Members
     Permissions.create_society_member,
     Permissions.list_society_members,
+    Permissions.update_society_member,
 
     //Ballot
     Permissions.retrieve_ballot,

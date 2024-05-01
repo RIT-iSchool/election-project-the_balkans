@@ -9,12 +9,12 @@ describe('PUT /v1/society_members/:member_id', () => {
 
   beforeAll(async () => {
     adminToken = await adminLogin();
-    societyId = 12;
+    societyId = 1;
   });
 
   it("Admin is able to update society member's role", async () => {
     const response = await request(server)
-      .put('/v1/society_members/1')
+      .put('/v1/society_members/5496')
       .set('Cookie', adminToken || '')
       .set('x-society-id', societyId.toString())
       .set('Accept', 'application/json')
