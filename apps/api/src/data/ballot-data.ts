@@ -14,9 +14,6 @@ export type Submit = {
   ballotSubmitData: {
     candidateVotesData: CreateCandidateVote[];
     initiativeVotesData: CreateInitiativeVote[];
-    electionId: number;
-    societyId: number;
-    writeIn?: CreateElectionCandidate[];
   };
 };
 
@@ -32,12 +29,6 @@ export const submit = async ({ ballotSubmitData }: Submit) => {
       await dbClient
         .insert(initiativeVote)
         .values(ballotSubmitData.initiativeVotesData);
-
-      if (ballotSubmitData.writeIn !== undefined) {
-        await dbClient
-          .insert(electionCandidate)
-          .values(ballotSubmitData.writeIn);
-      }
     });
   } catch (err) {
     throw new Error('Something went wrong submitting a ballot');

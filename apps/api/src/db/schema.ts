@@ -249,6 +249,7 @@ export const electionCandidate = pgTable(
         onUpdate: 'cascade',
       })
       .notNull(),
+    writeIn: boolean('write_in').default(false),
   },
   (table) => {
     return {
