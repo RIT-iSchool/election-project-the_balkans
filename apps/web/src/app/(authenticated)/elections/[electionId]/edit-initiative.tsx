@@ -20,7 +20,7 @@ export const EditInitiative = ({
   return (
     <DialogRoot open={open} onOpenChange={setOpen}>
       <DialogContent>
-        <DialogTitle>Edit initiative</DialogTitle>
+        <DialogTitle weight="medium">Edit initiative</DialogTitle>
         <DialogDescription>
           Update details for this initiative
         </DialogDescription>

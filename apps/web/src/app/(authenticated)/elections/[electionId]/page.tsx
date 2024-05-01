@@ -23,7 +23,7 @@ import {
 import dayjs from 'dayjs';
 import { Pencil16, ThreeDotsHorizontal20, Trash16 } from '@frosted-ui/icons';
 import { NewOffice } from './new-office';
-import { useCallback, useState } from 'react';
+import { MouseEventHandler, useCallback, useState } from 'react';
 import { DeleteOffice } from './delete-office';
 import { EditOffice } from './edit-office';
 import { EditInitiative } from './edit-initiative';
@@ -31,8 +31,6 @@ import { DeleteInitiative } from './delete-initiative';
 import { NewInitiative } from './new-initiative';
 import { useStatusReport } from '@/hooks/use-status-report';
 import { StatsCard } from '@/components/shared/stats-card';
-import { EditOption } from './edit-option';
-import { DeleteOption } from './delete-option';
 import { useResultsReport } from '@/hooks/use-results-report';
 import { useRouter } from 'next/navigation';
 
@@ -48,8 +46,19 @@ const OfficeRow = ({ office }: { office: Ballot['offices'][number] }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const handleOpenEdit = useCallback(() => setEditOpen(true), []);
-  const handleOpenDelete = useCallback(() => setDeleteOpen(true), []);
+  const handleOpenEdit: MouseEventHandler = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setEditOpen(true);
+  }, []);
+
+  const handleOpenDelete: MouseEventHandler = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setDeleteOpen(true);
+  }, []);
 
   const handleNavigate = useCallback(() => {
     router.push(`/elections/${office.electionId}/offices/${office.id}`);
@@ -105,15 +114,32 @@ const InitiativeRow = ({
 }: {
   initiative: Ballot['initiatives'][number];
 }) => {
+  const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const handleOpenEdit = useCallback(() => setEditOpen(true), []);
-  const handleOpenDelete = useCallback(() => setDeleteOpen(true), []);
+  const handleOpenEdit: MouseEventHandler = useCallback((e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    setEditOpen(true);
+  }, []);
+  const handleOpenDelete: MouseEventHandler = useCallback((e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    setDeleteOpen(true);
+  }, []);
+
+  const handleNavigate = useCallback(() => {
+    router.push(
+      `/elections/${initiative.electionId}/initiatives/${initiative.id}`,
+    );
+  }, []);
 
   return (
     <>
-      <TableRow>
+      <TableRow onClick={handleNavigate}>
         <TableCell>
           <Text color="gray">{initiative.initiativeName}</Text>
         </TableCell>
@@ -145,76 +171,21 @@ const InitiativeRow = ({
         </TableCell>
       </TableRow>
 
-      <EditInitiative
-        open={editOpen}
-        setOpen={setEditOpen}
-        initiative={initiative}
-      />
-      <DeleteInitiative
-        open={deleteOpen}
-        setOpen={setDeleteOpen}
-        electionId={initiative.electionId}
-        initiativeId={initiative.id}
-      />
-    </>
-  );
-};
-
-const OptionRow = ({
-  option,
-  initiative,
-}: {
-  option: Ballot['initiatives'][number]['options'][number];
-  initiative: Ballot['initiatives'][number];
-}) => {
-  const [editOpen, setEditOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-
-  const handleOpenEdit = useCallback(() => setEditOpen(true), []);
-  const handleOpenDelete = useCallback(() => setDeleteOpen(true), []);
-
-  return (
-    <>
-      <TableRow>
-        <TableCell>
-          <Text color="gray">{option.title}</Text>
-        </TableCell>
-        <TableCell>
-          <Text color="gray">{initiative.initiativeName}</Text>
-        </TableCell>
-        <TableCell>
-          <DropdownMenuRoot>
-            <DropdownMenuTrigger>
-              <IconButton>
-                <ThreeDotsHorizontal20 />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
-                <Pencil16 />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="w-32"
-                color="red"
-                onClick={handleOpenDelete}
-              >
-                <Trash16 />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuRoot>
-        </TableCell>
-      </TableRow>
-
-      <EditOption open={editOpen} setOpen={setEditOpen} option={option} />
-
-      <DeleteOption
-        open={deleteOpen}
-        setOpen={setDeleteOpen}
-        electionId={initiative.electionId}
-        optionId={option.id}
-      />
+      {editOpen && (
+        <EditInitiative
+          open={editOpen}
+          setOpen={setEditOpen}
+          initiative={initiative}
+        />
+      )}
+      {deleteOpen && (
+        <DeleteInitiative
+          open={deleteOpen}
+          setOpen={setDeleteOpen}
+          electionId={initiative.electionId}
+          initiativeId={initiative.id}
+        />
+      )}
     </>
   );
 };
@@ -292,7 +263,10 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Initiatives
                     </Text>
-                    <NewInitiative electionId={params.electionId} />
+                    <NewInitiative
+                      electionId={params.electionId}
+                      refetch={refetchBallot}
+                    />
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -312,7 +286,7 @@ export default function Page({ params }: PageProps) {
               </Card>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
+            {/* <div className="grid grid-cols-1 gap-4 px-6 md:grid-cols-2 lg:grid-cols-2">
               <Card>
                 <Inset pb="0" side="top">
                   <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
@@ -338,7 +312,7 @@ export default function Page({ params }: PageProps) {
                   </Table>
                 </Inset>
               </Card>
-            </div>
+            </div> */}
           </>
         )}
 
@@ -433,7 +407,7 @@ export default function Page({ params }: PageProps) {
               </Table>
             </Inset>
           </Card>
-          <Card>
+          {/* <Card>
             <Inset pb="0" side="top">
               <div className="bg-gray-a2 border-gray-a5 flex h-12 items-center justify-between border-b pl-4 pr-2">
                 <Text size="4" weight="medium">
@@ -465,7 +439,7 @@ export default function Page({ params }: PageProps) {
                 </TableBody>
               </Table>
             </Inset>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
-import { useDeleteElectionCandidate } from '@/hooks/mutations/use-delete-election-candidate';
-import { useBallot } from '@/hooks/use-ballot';
-import { useElectionCandidates } from '@/hooks/use-election-candidates';
+import { useDeleteInitiativeOption } from '@/hooks/mutations/use-delete-initiative-option';
+import { useInitiativeOptions } from '@/hooks/use-initiative-options';
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -14,44 +13,40 @@ import { useCallback } from 'react';
 
 type DeleteCandidateProps = {
   electionId: number;
-  officeId: number;
-  candidateId: number;
+  initiativeId: number;
+  optionId: number;
   open: boolean;
   setOpen: (open: boolean) => void;
 };
 
-export const DeleteCandidate = ({
+export const DeleteOption = ({
   electionId,
-  officeId,
-  candidateId,
+  initiativeId,
+  optionId,
   open,
   setOpen,
 }: DeleteCandidateProps) => {
-  const { mutate: refetchCandidates } = useElectionCandidates({
+  const { mutate: refetch } = useInitiativeOptions({
     electionId,
-    officeId,
+    initiativeId,
   });
-  const { mutate: refetch } = useBallot({ electionId: electionId.toString() });
-
-  const { mutateAsync: deleteCandidate, isLoading } =
-    useDeleteElectionCandidate({
-      onSuccess: () => {
-        refetch();
-        refetchCandidates();
-        setOpen(false);
-      },
-    });
+  const { mutateAsync: deleteOption, isLoading } = useDeleteInitiativeOption({
+    onSuccess: () => {
+      refetch();
+      setOpen(false);
+    },
+  });
 
   const handleDelete = useCallback(() => {
-    deleteCandidate({ electionId, candidateId, officeId });
+    deleteOption({ electionId, initiativeId, optionId });
   }, []);
 
   return (
     <AlertDialogRoot open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
-        <AlertDialogTitle>Delete office</AlertDialogTitle>
+        <AlertDialogTitle>Delete option</AlertDialogTitle>
         <AlertDialogDescription>
-          Are you sure you want to delete this election office?
+          Are you sure you want to delete this initiative option?
         </AlertDialogDescription>
         <div className="flex justify-end gap-3">
           <AlertDialogCancel>

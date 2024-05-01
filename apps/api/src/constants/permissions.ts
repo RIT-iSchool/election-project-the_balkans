@@ -22,11 +22,11 @@ export enum Permissions {
   remove_candidate = 'remove_candidate',
 
   // Election initiatives
-  list_initiatives = 'list_election_initiatives',
-  create_initiative = 'create_election_initiative',
-  retrieve_initiative = 'retrieve_election_initiative',
-  update_initiative = 'update_election_initiative',
-  remove_initiative = 'remove_election_initiative',
+  list_initiatives = 'list_initiatives',
+  create_initiative = 'create_initiative',
+  retrieve_initiative = 'retrieve_initiative',
+  update_initiative = 'update_initiative',
+  remove_initiative = 'remove_initiative',
 
   // Initiative options
   list_initiative_options = 'list_initiative_options',
@@ -182,12 +182,14 @@ export const permissions = {
     Permissions.list_initiatives,
     Permissions.retrieve_initiative,
     Permissions.update_initiative,
+    Permissions.remove_initiative,
 
     // Initiative Options
     Permissions.list_initiative_options,
     Permissions.create_initiative_option,
     Permissions.retrieve_initiative_option,
     Permissions.update_initiative_option,
+    Permissions.remove_initiative_option,
 
     // Society Members
     Permissions.create_society_member,

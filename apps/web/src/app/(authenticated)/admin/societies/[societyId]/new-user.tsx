@@ -44,12 +44,10 @@ export const NewUser = () => {
       },
     });
 
-  const { getFieldProps, submitForm, errors, isValid, values, setFieldValue } =
+  const { getFieldProps, submitForm, errors, isValid, setFieldValue } =
     useFormik({
       initialValues: initialValues,
-      onSubmit: async (values) => {
-        console.log('before creating user:', values.role);
-
+      onSubmit: async (values, actions) => {
         const user = await createUser({
           email: values.email,
           password: values.password,
@@ -66,6 +64,8 @@ export const NewUser = () => {
           userId: user.id,
           role: values.role as SocietyMemberData['role'],
         });
+
+        actions.resetForm();
       },
       validationSchema: yup.object().shape({
         email: yup.string().required('Please enter a valid email'),
@@ -85,7 +85,7 @@ export const NewUser = () => {
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[500px]">
-        <DialogTitle>Add user</DialogTitle>
+        <DialogTitle weight="medium">Add user</DialogTitle>
         <DialogDescription>
           <Text color="gray">Create a new user for a society</Text>
         </DialogDescription>

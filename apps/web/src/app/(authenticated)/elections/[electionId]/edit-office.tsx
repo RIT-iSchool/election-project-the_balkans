@@ -16,7 +16,7 @@ export const EditOffice = ({ office, open, setOpen }: EditOfficeProps) => {
   return (
     <DialogRoot open={open} onOpenChange={setOpen}>
       <DialogContent>
-        <DialogTitle>Edit office</DialogTitle>
+        <DialogTitle weight="medium">Edit office</DialogTitle>
         <DialogDescription>Update details for this office</DialogDescription>
         edit for <pre>{JSON.stringify(office, null, 2)}</pre>
       </DialogContent>

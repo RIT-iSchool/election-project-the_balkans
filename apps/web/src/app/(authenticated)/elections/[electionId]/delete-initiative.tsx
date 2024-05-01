@@ -1,3 +1,5 @@
+import { useDeleteElectionInitiative } from '@/hooks/mutations/use-delete-election-initiative';
+import { useBallot } from '@/hooks/use-ballot';
 import {
   AlertDialogRoot,
   AlertDialogContent,
@@ -7,6 +9,7 @@ import {
   Button,
   AlertDialogAction,
 } from 'frosted-ui';
+import { useCallback } from 'react';
 
 type DeleteInitiativeProps = {
   electionId: number;
@@ -21,6 +24,22 @@ export const DeleteInitiative = ({
   open,
   setOpen,
 }: DeleteInitiativeProps) => {
+  const { mutate: refetch } = useBallot({ electionId: electionId.toString() });
+
+  const { mutateAsync: deleteInitiative } = useDeleteElectionInitiative({
+    onSuccess: () => {
+      refetch();
+      setOpen(false);
+    },
+  });
+
+  const handleDelete = useCallback(() => {
+    deleteInitiative({
+      initiativeId,
+      electionId,
+    });
+  }, []);
+
   return (
     <AlertDialogRoot open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
@@ -28,14 +47,13 @@ export const DeleteInitiative = ({
         <AlertDialogDescription>
           Are you sure you want to delete this election initiative?
         </AlertDialogDescription>
-        delete for {electionId} {initiativeId}
         <div className="flex justify-end gap-3">
           <AlertDialogCancel>
             <Button color="gray" variant="soft">
               Cancel
             </Button>
           </AlertDialogCancel>
-          <AlertDialogAction>
+          <AlertDialogAction onClick={handleDelete}>
             <Button color="red" variant="classic">
               Delete
             </Button>

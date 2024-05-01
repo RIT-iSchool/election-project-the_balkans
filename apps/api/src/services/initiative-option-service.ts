@@ -3,8 +3,11 @@ import { z } from 'zod';
 import * as initiativeOption from '../controllers/initiative-option-controller';
 import { BadRequestError } from '../errors/BadRequestError';
 
+const InitiativeOptionParamsSchema = z.object({
+  initiative_id: z.string().transform((id) => parseInt(id)),
+});
+
 const InitiativeOptionSchema = z.object({
-  electionInitiativeId: z.number(),
   title: z.string(),
 });
 
@@ -14,11 +17,15 @@ export const create: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const initiativeOptionData = InitiativeOptionSchema.parse(req.body);
+    const { initiative_id: initiativeId } = InitiativeOptionParamsSchema.parse(
+      req.params,
+    );
+    const { title } = InitiativeOptionSchema.parse(req.body);
 
     const newInitiativeOption = await initiativeOption.create({
       initiativeOptionData: {
-        ...initiativeOptionData,
+        title,
+        electionInitiativeId: initiativeId,
         societyId: req.society.id,
       },
     });
@@ -31,6 +38,7 @@ export const create: Handler = async (req, res, next) => {
 
 const ListInitiativeOptionsParamsSchema = z.object({
   election_id: z.string().transform((id) => parseInt(id)),
+  initiative_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const list: Handler = async (req, res, next) => {
@@ -39,12 +47,12 @@ export const list: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { election_id: electionId } = ListInitiativeOptionsParamsSchema.parse(
-      req.params,
-    );
+    const { election_id: electionId, initiative_id: initiativeId } =
+      ListInitiativeOptionsParamsSchema.parse(req.params);
 
     const listInitiativeOptions = await initiativeOption.list({
       electionId,
+      initiativeId,
       societyId: req.society.id,
     });
 
@@ -55,7 +63,8 @@ export const list: Handler = async (req, res, next) => {
 };
 
 const RetrieveInitiativeOptionParamsSchema = z.object({
-  initiative_option_id: z.string().transform((id) => parseInt(id)),
+  option_id: z.string().transform((id) => parseInt(id)),
+  initiative_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const retrieve: Handler = async (req, res, next) => {
@@ -64,11 +73,13 @@ export const retrieve: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { initiative_option_id: initiativeOptionId } =
+    const { option_id: initiativeOptionId, initiative_id: initiativeId } =
       RetrieveInitiativeOptionParamsSchema.parse(req.params);
 
     const retrieveInitiativeOption = await initiativeOption.retrieve({
       initiativeOptionId,
+      initiativeId,
+      societyId: req.society.id,
     });
 
     res.send(retrieveInitiativeOption);
@@ -78,7 +89,8 @@ export const retrieve: Handler = async (req, res, next) => {
 };
 
 const UpdateInitiativeOptionParamsSchema = z.object({
-  initiative_option_id: z.string().transform((id) => parseInt(id)),
+  option_id: z.string().transform((id) => parseInt(id)),
+  initiative_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const update: Handler = async (req, res, next) => {
@@ -87,13 +99,15 @@ export const update: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { initiative_option_id: initiativeOptionId } =
+    const { option_id: initiativeOptionId, initiative_id: initiativeId } =
       UpdateInitiativeOptionParamsSchema.parse(req.params);
 
     const initiativeOptionData = InitiativeOptionSchema.parse(req.body);
 
     const updatedInitiativeOption = await initiativeOption.update({
       initiativeOptionId,
+      initiativeId,
+      societyId: req.society.id,
       initiativeOptionData: {
         ...initiativeOptionData,
       },
@@ -106,7 +120,8 @@ export const update: Handler = async (req, res, next) => {
 };
 
 const RemoveInitiativeOptionParamsSchema = z.object({
-  initiative_option_id: z.string().transform((id) => parseInt(id)),
+  option_id: z.string().transform((id) => parseInt(id)),
+  initiative_id: z.string().transform((id) => parseInt(id)),
 });
 
 export const remove: Handler = async (req, res, next) => {
@@ -115,10 +130,14 @@ export const remove: Handler = async (req, res, next) => {
       throw new BadRequestError('Society ID missing from headers');
     }
 
-    const { initiative_option_id: initiativeOptionId } =
+    const { option_id: initiativeOptionId, initiative_id: initiativeId } =
       RemoveInitiativeOptionParamsSchema.parse(req.params);
 
-    await initiativeOption.remove({ initiativeOptionId });
+    await initiativeOption.remove({
+      initiativeOptionId,
+      initiativeId,
+      societyId: req.society.id,
+    });
 
     res.status(204).send();
   } catch (err) {
