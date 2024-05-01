@@ -61,7 +61,7 @@ describe('GET /v1/elections/:election_id/election_candidates', () => {
 
   it('Employee can list candidates for their own society', async () => {
     const response = await request(server)
-      .get('/v1/elections/25/election_candidates')
+      .get('/v1/elections/475/election_candidates')
       .set('Cookie', employeeToken || '')
       .set('x-society-id', societyId.toString())
       .set('Accept', 'application/json')
