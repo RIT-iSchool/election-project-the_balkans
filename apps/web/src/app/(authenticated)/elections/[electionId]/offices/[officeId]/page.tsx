@@ -41,9 +41,11 @@ type PageProps = {
 const CandidateRow = ({
   electionId,
   candidate,
+  hasntStarted,
 }: {
   electionId: string;
   candidate: Ballot['offices'][number]['candidates'][number];
+  hasntStarted: boolean | undefined;
 }) => {
   const { mutate: refetch } = useElectionCandidates({
     electionId,
@@ -66,29 +68,31 @@ const CandidateRow = ({
         <TableCell>
           <Text color="gray">{candidate.name}</Text>
         </TableCell>
-        <TableCell>
-          <DropdownMenuRoot>
-            <DropdownMenuTrigger>
-              <IconButton>
-                <ThreeDotsHorizontal20 />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
-                <Pencil16 />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="w-32"
-                color="red"
-                onClick={handleOpenDelete}
-              >
-                <Trash16 />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuRoot>
-        </TableCell>
+        {!hasntStarted && (
+          <TableCell>
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger>
+                <IconButton>
+                  <ThreeDotsHorizontal20 />
+                </IconButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                  <Pencil16 />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="w-32"
+                  color="red"
+                  onClick={handleOpenDelete}
+                >
+                  <Trash16 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuRoot>
+          </TableCell>
+        )}
       </TableRow>
 
       {office && editOpen && (
@@ -117,6 +121,9 @@ export default function Page({ params }: PageProps) {
   const { data: candidates, mutate } = useElectionCandidates(params);
   const { data: office } = useElectionOffice(params);
   const { data: election } = useElection(params);
+
+  const hasntStarted =
+    election?.startDate && new Date(election?.startDate) < new Date();
 
   if (!office) return null;
 
@@ -154,18 +161,22 @@ export default function Page({ params }: PageProps) {
               <Text size="4" weight="medium">
                 Candidates
               </Text>
-              <NewCandidate
-                electionId={params.electionId}
-                officeId={params.officeId}
-                refetch={mutate}
-              />
+              {!hasntStarted && (
+                <NewCandidate
+                  electionId={params.electionId}
+                  officeId={params.officeId}
+                  refetch={mutate}
+                />
+              )}
             </div>
           </Inset>
           <Inset clip="border-box" side="bottom">
             <Table>
               <TableHeader className="bg-white">
                 <TableHead className="!border-t-0">Name</TableHead>
-                <TableHead className="!border-t-0">Actions</TableHead>
+                {!hasntStarted && (
+                  <TableHead className="!border-t-0">Actions</TableHead>
+                )}
               </TableHeader>
               <TableBody>
                 {candidates?.map((candidate) => (
@@ -173,6 +184,7 @@ export default function Page({ params }: PageProps) {
                     candidate={candidate}
                     electionId={params.electionId}
                     key={candidate.id}
+                    hasntStarted={hasntStarted}
                   />
                 ))}
               </TableBody>

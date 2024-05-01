@@ -44,9 +44,11 @@ type PageProps = {
 const OptionRow = ({
   option,
   initiative,
+  hasntStarted,
 }: {
   option: Ballot['initiatives'][number]['options'][number];
   initiative: Ballot['initiatives'][number];
+  hasntStarted: boolean | undefined;
 }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -60,29 +62,31 @@ const OptionRow = ({
         <TableCell>
           <Text color="gray">{option.title}</Text>
         </TableCell>
-        <TableCell>
-          <DropdownMenuRoot>
-            <DropdownMenuTrigger>
-              <IconButton>
-                <ThreeDotsHorizontal20 />
-              </IconButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
-                <Pencil16 />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="w-32"
-                color="red"
-                onClick={handleOpenDelete}
-              >
-                <Trash16 />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenuRoot>
-        </TableCell>
+        {!hasntStarted && (
+          <TableCell>
+            <DropdownMenuRoot>
+              <DropdownMenuTrigger>
+                <IconButton>
+                  <ThreeDotsHorizontal20 />
+                </IconButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem className="w-32" onClick={handleOpenEdit}>
+                  <Pencil16 />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="w-32"
+                  color="red"
+                  onClick={handleOpenDelete}
+                >
+                  <Trash16 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuRoot>
+          </TableCell>
+        )}
       </TableRow>
 
       <EditOption open={editOpen} setOpen={setEditOpen} option={option} />
@@ -102,6 +106,9 @@ export default function Page({ params }: PageProps) {
   const { data: initiative } = useElectionInitiative(params);
   const { data: election } = useElection(params);
   const { data: options, mutate: refetch } = useInitiativeOptions(params);
+
+  const hasntStarted =
+    election?.startDate && new Date(election?.startDate) < new Date();
 
   if (!initiative) return null;
 
@@ -139,23 +146,31 @@ export default function Page({ params }: PageProps) {
               <Text size="4" weight="medium">
                 Options
               </Text>
-              <NewOption
-                electionId={params.electionId}
-                initiativeId={params.initiativeId}
-                refetch={refetch}
-              />
+              {!hasntStarted && (
+                <NewOption
+                  electionId={params.electionId}
+                  initiativeId={params.initiativeId}
+                  refetch={refetch}
+                />
+              )}
             </div>
           </Inset>
           <Inset clip="border-box" side="bottom">
             <Table>
               <TableHeader className="bg-white">
                 <TableHead className="!border-t-0">Name</TableHead>
-                <TableHead className="!border-t-0">Actions</TableHead>
+                {!hasntStarted && (
+                  <TableHead className="!border-t-0">Actions</TableHead>
+                )}
               </TableHeader>
               <TableBody>
                 {initiative &&
                   options?.map((option) => (
-                    <OptionRow option={option} initiative={initiative} />
+                    <OptionRow
+                      option={option}
+                      initiative={{ ...initiative, options: options }}
+                      hasntStarted={hasntStarted}
+                    />
                   ))}
               </TableBody>
             </Table>

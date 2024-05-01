@@ -209,7 +209,7 @@ export default function Page({ params }: PageProps) {
   const { data: results } = useResultsReport(params);
 
   const hasntStarted =
-    ballot?.startDate && new Date(ballot?.startDate) < new Date();
+    election?.startDate && new Date(election?.startDate) < new Date();
 
   if (!election || !status) return null;
 
@@ -251,10 +251,12 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Offices
                     </Text>
-                    <NewOffice
-                      electionId={params.electionId}
-                      refetch={refetchBallot}
-                    />
+                    {!hasntStarted && (
+                      <NewOffice
+                        electionId={params.electionId}
+                        refetch={refetchBallot}
+                      />
+                    )}
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
@@ -284,10 +286,12 @@ export default function Page({ params }: PageProps) {
                     <Text size="4" weight="medium">
                       Initiatives
                     </Text>
-                    <NewInitiative
-                      electionId={params.electionId}
-                      refetch={refetchBallot}
-                    />
+                    {!hasntStarted && (
+                      <NewInitiative
+                        electionId={params.electionId}
+                        refetch={refetchBallot}
+                      />
+                    )}
                   </div>
                 </Inset>
                 <Inset clip="border-box" side="bottom">
