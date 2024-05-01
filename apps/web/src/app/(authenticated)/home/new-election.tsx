@@ -18,6 +18,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import * as yup from 'yup';
+import { getLocalTimeZone } from '@internationalized/date';
 
 const initialValues = {
   name: '',
@@ -37,25 +38,26 @@ export const NewElection = () => {
     },
   });
 
-  const { getFieldProps, submitForm, errors, isValid } = useFormik({
-    initialValues: initialValues,
-    onSubmit: async (values, actions) => {
-      await createElection({
-        ...values,
-        startDate: values.startDate.toString(),
-        endDate: values.endDate.toString(),
-        photoUrl: fileName,
-      });
-      actions.resetForm();
-    },
-    validationSchema: yup.object().shape({
-      name: yup.string().required('Please enter a title'),
-      startDate: yup.date().required('Please enter a start date'),
-      endDate: yup.date().required('Please enter an end date'),
-    }),
-    validateOnChange: false,
-    isInitialValid: false,
-  });
+  const { getFieldProps, submitForm, errors, isValid, setFieldValue } =
+    useFormik({
+      initialValues: initialValues,
+      onSubmit: async (values, actions) => {
+        await createElection({
+          ...values,
+          startDate: values.startDate.toString(),
+          endDate: values.endDate.toString(),
+          photoUrl: fileName,
+        });
+        actions.resetForm();
+      },
+      validationSchema: yup.object().shape({
+        name: yup.string().required('Please enter a title'),
+        startDate: yup.date().required('Please enter a start date'),
+        endDate: yup.date().required('Please enter an end date'),
+      }),
+      validateOnChange: false,
+      isInitialValid: false,
+    });
 
   return (
     <DialogRoot>
@@ -116,11 +118,19 @@ export const NewElection = () => {
           <div className="flex flex-row">
             <div className="flex w-1/2 flex-col">
               <label className="text-sm font-medium">Start date</label>
-              <DateField />
+              <DateField
+                onChange={(v) => {
+                  setFieldValue('startDate', v?.toDate(getLocalTimeZone()));
+                }}
+              />
             </div>
             <div className="flex w-1/2 flex-col">
               <label className="text-sm font-medium">End date</label>
-              <DateField />
+              <DateField
+                onChange={(v) => {
+                  setFieldValue('endDate', v?.toDate(getLocalTimeZone()));
+                }}
+              />
             </div>
           </div>
 
