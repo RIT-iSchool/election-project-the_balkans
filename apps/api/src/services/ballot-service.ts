@@ -2,51 +2,54 @@ import { Handler } from 'express';
 import * as ballot from '../controllers/ballot-controller';
 import { z } from 'zod';
 import { AuthenticationError } from '../errors/AuthenticationError';
+import { db } from '../db';
+import { societyMember } from '../db/schema';
+import { and, eq } from 'drizzle-orm';
+import { UnauthorizedError } from '../errors/UnauthorizedError';
+
+const WriteInSchema = z.object({
+  officeId: z.number(),
+  name: z.string(),
+});
+
+const OfficeSchema = z.object({
+  candidates: z.array(z.number()),
+  writeIn: WriteInSchema.optional(),
+});
+
+const OfficeVotesSchema = z.record(OfficeSchema);
+
+const InitiativeVotesSchema = z.record(z.number());
 
 const BallotSchema = z.object({
-  candidateVotesData: z.array(
-    z.object({
-      memberId: z.number(),
-      electionCandidateId: z.number(),
-    }),
-  ),
-  initiativeVotesData: z.array(
-    z.object({
-      memberId: z.number(),
-      electionInitiativeId: z.number(),
-      electionInitiativeOptionId: z.number(),
-    }),
-  ),
-  electionId: z.number(),
-  writeIn: z
-    .object({
-      electionOfficeId: z.number(),
-      name: z.string(),
-      societyId: z.number(),
-      description: z.string(),
-    })
-    .optional(),
+  officeVotes: OfficeVotesSchema,
+  initiativeVotes: InitiativeVotesSchema,
+  electionId: z.string().transform((id) => parseInt(id)),
 });
 
 export const submit: Handler = async (req, res, next) => {
   try {
     if (!req.society) throw new AuthenticationError('Society ID missing');
+    if (!req.user) throw new UnauthorizedError('Not logged in');
     const submitBallotData = BallotSchema.parse(req.body);
 
-    const submitBallot = await ballot.submit({
-      ballotSubmitData: {
-        ...submitBallotData,
-        ...(submitBallotData.writeIn && {
-          electionOfficeId: submitBallotData.writeIn.electionOfficeId,
-          name: submitBallotData.writeIn.name,
-          societyId: req.society.id,
-          description: '',
-        }),
-        societyId: req.society.id,
-      },
-    });
+    const [member] = await db
+      .select()
+      .from(societyMember)
+      .where(
+        and(
+          eq(societyMember.userId, req.user.id),
+          eq(societyMember.societyId, req.society.id),
+        ),
+      );
 
-    res.send(submitBallot);
+    if (!member) {
+      throw new UnauthorizedError('Not a member of this society');
+    }
+
+    await ballot.submit(submitBallotData, member.id, req.society.id);
+
+    res.send(202);
   } catch (err) {
     next(err);
   }

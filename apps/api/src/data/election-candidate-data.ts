@@ -27,7 +27,7 @@ export const create = async ({ electionCandidateData }: Create) => {
 
 export type List = {
   electionId: number;
-  officeId: number;
+  officeId?: number;
   societyId: number;
 };
 
@@ -36,7 +36,7 @@ export type List = {
  */
 export const list = async ({ electionId, officeId, societyId }: List) => {
   try {
-    const electionCandidateData = await db
+    const electionCandidateQuery = db
       .select({
         ...getTableColumns(electionCandidate),
       })
@@ -46,15 +46,28 @@ export const list = async ({ electionId, officeId, societyId }: List) => {
         eq(electionCandidate.electionOfficeId, electionOffice.id),
       )
       .innerJoin(election, eq(electionOffice.electionId, election.id))
-      .where(
+      .$dynamic();
+
+    if (officeId) {
+      electionCandidateQuery.where(
         and(
           eq(election.id, electionId),
           eq(election.societyId, societyId),
           eq(electionOffice.id, officeId),
+          eq(electionCandidate.writeIn, false),
         ),
       );
+    } else {
+      electionCandidateQuery.where(
+        and(
+          eq(election.id, electionId),
+          eq(election.societyId, societyId),
+          eq(electionCandidate.writeIn, false),
+        ),
+      );
+    }
 
-    return electionCandidateData;
+    return await electionCandidateQuery;
   } catch (err) {
     throw new Error('Something went wrong listing election candidates.');
   }
@@ -62,15 +75,19 @@ export const list = async ({ electionId, officeId, societyId }: List) => {
 
 export type Lookup = {
   name: string;
+  officeId: number;
 };
 
 /**
  * Lookup a candidate.
  */
-export const lookup = async ({ name }: Lookup) => {
+export const lookup = async ({ name, officeId }: Lookup) => {
   try {
     const electionCandidateData = await db.query.electionCandidate.findFirst({
-      where: and(ilike(electionCandidate.name, name)),
+      where: and(
+        ilike(electionCandidate.name, name),
+        eq(electionCandidate.electionOfficeId, officeId),
+      ),
     });
     return electionCandidateData;
   } catch (err) {
