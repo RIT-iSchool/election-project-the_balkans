@@ -1,4 +1,4 @@
-import { useCreateElectionOffice } from '@/hooks/mutations/use-create-election-office';
+import { useCreateInitiativeOption } from '@/hooks/mutations/use-create-initiative-option';
 import { Plus16 } from '@frosted-ui/icons';
 import { useFormik } from 'formik';
 import {
@@ -16,21 +16,25 @@ import {
 import { useState } from 'react';
 import * as yup from 'yup';
 
-type NewOfficeProps = {
+type NewOptionProps = {
   electionId: string;
+  initiativeId: string;
   refetch: () => void;
 };
 
 const initialValues = {
-  maxVotes: '1',
-  officeName: '',
+  title: '',
 };
 
-export const NewOffice = ({ electionId, refetch }: NewOfficeProps) => {
+export const NewOption = ({
+  electionId,
+  initiativeId,
+  refetch,
+}: NewOptionProps) => {
   const [open, setOpen] = useState(false);
 
-  const { mutateAsync: createElectionOffice, isLoading } =
-    useCreateElectionOffice({
+  const { mutateAsync: createInitiativeOption, isLoading } =
+    useCreateInitiativeOption({
       onSuccess: () => {
         refetch();
         setOpen(false);
@@ -40,19 +44,16 @@ export const NewOffice = ({ electionId, refetch }: NewOfficeProps) => {
   const { getFieldProps, submitForm, errors, isValid } = useFormik({
     initialValues: initialValues,
     onSubmit: async (values, actions) => {
-      await createElectionOffice({
+      await createInitiativeOption({
         ...values,
-        electionId: parseInt(electionId, 10),
-        maxVotes: parseInt(values.maxVotes, 10),
+        initiativeId,
+        electionId,
       });
       actions.resetForm();
     },
     validationSchema: yup.object().shape({
-      maxVotes: yup.number().required('Please enter a number of max votes'),
-      officeName: yup.string().required('Please enter an office name'),
+      title: yup.string().required('Please enter a title'),
     }),
-    validateOnChange: false,
-    isInitialValid: false,
   });
 
   return (
@@ -60,49 +61,33 @@ export const NewOffice = ({ electionId, refetch }: NewOfficeProps) => {
       <DialogTrigger>
         <Button color="gray" variant="classic">
           <Plus16 />
-          Add office
+          Add option
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[500px]">
         <div className="flex flex-col">
           <DialogTitle weight="medium" className="mb-0">
-            New office
+            New option
           </DialogTitle>
           <DialogDescription color="gray">
-            Add an office to this election
+            Add an option to this initiative
           </DialogDescription>
         </div>
 
         <div className="space-y-3">
           <div className="flex flex-col gap-2">
             <div className="w-full">
-              <label className="text-sm font-medium">Position</label>
-              <TextFieldRoot className="w-1/2">
+              <label className="text-sm font-medium">Title</label>
+              <TextFieldRoot>
                 <TextFieldInput
-                  placeholder="Vice President"
+                  placeholder="Yes, we should increase the budget"
                   size="3"
-                  {...getFieldProps('officeName')}
+                  {...getFieldProps('title')}
                 />
               </TextFieldRoot>
-              {errors.officeName && (
+              {errors.title && (
                 <Text color="red" size="2" className="mt-0.5">
-                  {errors.officeName}
-                </Text>
-              )}
-            </div>
-
-            <div className="w-full">
-              <label className="text-sm font-medium">Max Votes</label>
-              <TextFieldRoot className="w-1/2">
-                <TextFieldInput
-                  placeholder="Vice President"
-                  size="3"
-                  {...getFieldProps('maxVotes')}
-                />
-              </TextFieldRoot>
-              {errors.maxVotes && (
-                <Text color="red" size="2" className="mt-0.5">
-                  {errors.maxVotes}
+                  {errors.title}
                 </Text>
               )}
             </div>

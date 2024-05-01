@@ -7,19 +7,22 @@ export type InitiativeOption = {
 };
 
 type UseInitiativeOptionOptions = {
-  electionId: string;
+  electionId: string | number;
+  initiativeId: string | number;
 };
 
 export const useInitiativeOptions = ({
   electionId,
+  initiativeId,
 }: UseInitiativeOptionOptions) => {
-  const { data, error, isLoading } = useSWR<InitiativeOption[]>(
-    `/api/v1/elections/${electionId}/initiative_options`,
+  const { data, error, isLoading, mutate } = useSWR<InitiativeOption[]>(
+    `/api/v1/elections/${electionId}/election_initiatives/${initiativeId}/initiative_options`,
   );
 
   return {
     data,
     error,
     isLoading,
+    mutate,
   };
 };

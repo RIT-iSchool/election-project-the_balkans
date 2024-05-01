@@ -8,14 +8,16 @@ export type ElectionInitiative = {
 };
 
 type UseElectionInitiativeOptions = {
+  electionId: string;
   initiativeId: string;
 };
 
 export const useElectionInitiative = ({
+  electionId,
   initiativeId,
 }: UseElectionInitiativeOptions) => {
   const { data, error, isLoading } = useSWR<ElectionInitiative>(
-    `/api/v1/elections/election_initiatives/${initiativeId}`,
+    `/api/v1/elections/${electionId}/election_initiatives/${initiativeId}`,
   );
 
   return {

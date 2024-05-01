@@ -694,10 +694,15 @@ paths:
       security:
         - bearer: []
 
-  /v1/elections/election_initiatives/{initiative_id}:
+  /v1/elections/{election_id}/election_initiatives/{initiative_id}:
     parameters:
       - in: 'path'
         name: 'initiative_id'
+        required: true
+        schema:
+          type: 'string'
+      - in: 'path'
+        name: 'election_id'
         required: true
         schema:
           type: 'string'
@@ -771,12 +776,21 @@ paths:
       security:
         - bearer: []
 
-  /v1/elections/{election_id}/initiative_options:
+  /v1/elections/{election_id}/election_initiatives/{initiative_id}/initiative_options:
     parameters:
+      - in: 'path'
+        name: 'option_id'
+        required: true
+        schema:
+          type: 'string'
       - in: 'path'
         name: 'election_id'
         required: true
-        description: 'The ID of the election this office should belong to'
+        schema:
+          type: 'string'
+      - in: 'path'
+        name: 'initiative_id'
+        required: true
         schema:
           type: 'string'
       - in: 'header'
@@ -833,8 +847,23 @@ paths:
       security:
         - bearer: []
 
-  /v1/elections/initiative_options/{option_id}:
+  /v1/elections/{election_id}/election_initiatives/{initiative_id}/initiative_options/{option_id}:
     parameters:
+      - in: 'path'
+        name: 'option_id'
+        required: true
+        schema:
+          type: 'string'
+      - in: 'path'
+        name: 'election_id'
+        required: true
+        schema:
+          type: 'string'
+      - in: 'path'
+        name: 'initiative_id'
+        required: true
+        schema:
+          type: 'string'
       - in: 'path'
         name: 'option_id'
         required: true
